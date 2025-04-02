@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Base</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .bases-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .base-card {
+            background: #fff;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 30px;
+            width: 250px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            color: #2c3e50;
+        }
+
+        .base-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            background-color: #f8f9fa;
+        }
+
+        .base-icon {
+            font-size: 60px;
+            margin: 20px 0;
+            color: #3498db;
+        }
+
+        .base-card h2 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .base-card p {
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Control de Fletes</h1>
+        <div class="bases-container">
+            <a href="flete_avgust.html" class="base-card">
+                <h2>Avgust</h2>
+                <div class="base-icon">🌱</div>
+                <p>Control de fletes para base Avgust</p>
+            </a>
+            
+            <a href="flete_cosmoagro.html" class="base-card">
+                <h2>Cosmoagro</h2>
+                <div class="base-icon">🌱</div>
+                <p>Control de fletes para base Cosmoagro</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
