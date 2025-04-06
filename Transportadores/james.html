@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Librerías para exportar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         /* Estilos adicionales para las agrupaciones flex */
         .form-columns {
@@ -112,6 +114,123 @@
             border-top: 1px solid #ddd;
         }
 
+        /* Estilos para el botón de imprimir */
+        .print-btn {
+            background: linear-gradient(135deg, #4a4e69, #22223b);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #22223b, #4a4e69);
+        }
+
+        /* Estilos para el botón de Excel */
+        .excel-btn {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-left: 15px;
+        }
+        
+        .excel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+        }
+
+        /* Estilos para la vista de impresión */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-section, .print-section * {
+                visibility: visible;
+            }
+            .print-section {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+            }
+            .no-print {
+                display: none;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+        }
+
+        /* Estilos para la sección de impresión en PDF */
+        #print-section {
+            background: white;
+            padding: 20px;
+            box-sizing: border-box;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        #print-fletes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        #print-fletes-table th, #print-fletes-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #print-fletes-table th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+
+        #print-retenciones {
+            margin-top: 30px;
+            page-break-inside: avoid;
+        }
+
         @media (max-width: 768px) {
             .form-columns {
                 flex-direction: column;
@@ -124,6 +243,16 @@
             .retenciones-grid {
                 grid-template-columns: 1fr;
             }
+
+            .download-buttons {
+                flex-direction: column;
+            }
+        }
+        .table-actions {
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+            margin: 20px 0;
         }
     </style>
 </head>
@@ -219,7 +348,16 @@
                     </button>
                 </form>
             </div>
-            
+            <!-- Botones de Imprimir y Excel -->
+            <div class="table-actions">
+                <button id="print-btn" class="print-btn">
+                    <i class="fas fa-print"></i> Imprimir Reporte
+                </button>
+                <button id="excel-btn" class="excel-btn">
+                    <i class="fas fa-file-excel"></i> Descargar Excel
+                </button>
+            </div>
+            <br>
             <div class="table-container">
                 <table id="fletes-table">
                     <thead>
@@ -274,6 +412,65 @@
                 <div class="total-pagar">
                     <span>Total a Pagar:</span>
                     <span id="totalPagar">$0</span>
+                </div>
+            </div>
+
+            <!-- Sección para impresión (oculta inicialmente) -->
+            <div id="print-section" class="print-section">
+                <h2 style="text-align: center;">Cuenta de cobro - James Saavedra</h2>
+                <p style="text-align: center; margin-bottom: 20px;">Fecha: <span id="print-date"></span></p>
+                
+                <table id="print-fletes-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Documento</th>
+                            <th>Empresa</th>
+                            <th>Cajas</th>
+                            <th>Destino</th>
+                            <th>Contacto</th>
+                            <th>Precio</th>
+                            <th>Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se cargarán dinámicamente con JavaScript -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="6" style="text-align: right; font-weight: bold;">TOTAL:</td>
+                            <td style="font-weight: bold;" id="print-total-value">$0</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>    
+                </table>
+
+                <div id="print-retenciones">
+                    <h3 style="text-align: center; color: #e63946; border-bottom: 2px solid #e63946; padding-bottom: 10px;">
+                        Cálculo de Retenciones
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-weight: 500; color: #555; margin-bottom: 5px;">Retención 1 (1%):</div>
+                            <div style="font-weight: 600; color: #333;" id="print-retencion1">$0</div>
+                        </div>
+                        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-weight: 500; color: #555; margin-bottom: 5px;">Retención ICA (0.0045%):</div>
+                            <div style="font-weight: 600; color: #333;" id="print-retencionICA">$0</div>
+                        </div>
+                        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-weight: 500; color: #555; margin-bottom: 5px;">Bomberil (6% sobre ICA):</div>
+                            <div style="font-weight: 600; color: #333;" id="print-retencionBomberil">$0</div>
+                        </div>
+                        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-weight: 500; color: #555; margin-bottom: 5px;">Total Retenciones:</div>
+                            <div style="font-weight: 600; color: #333;" id="print-totalRetenciones">$0</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 1.2rem; font-weight: 700; color: #2a9d8f; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd; text-align: right;">
+                        <span>Total a Pagar:</span>
+                        <span id="print-totalPagar">$0</span>
+                    </div>
                 </div>
             </div>
         </main>
@@ -361,10 +558,19 @@
                     document.getElementById('retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
                     document.getElementById('totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
                     document.getElementById('totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
+
+                    // Actualizar también los valores para impresión
+                    document.getElementById('print-retencion1').textContent = formatearMoneda(retenciones.retencion1);
+                    document.getElementById('print-retencionICA').textContent = formatearMoneda(retenciones.retencionICA);
+                    document.getElementById('print-retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
+                    document.getElementById('print-totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
+                    document.getElementById('print-totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
                 }
 
                 function renderizarTabla() {
                     tablaBody.innerHTML = '';
+                    const printTablaBody = document.querySelector('#print-fletes-table tbody');
+                    printTablaBody.innerHTML = '';
                     
                     if (fletes.length === 0) {
                         const tr = document.createElement('tr');
@@ -376,7 +582,16 @@
                         `;
                         tablaBody.appendChild(tr);
                         
+                        const printTr = document.createElement('tr');
+                        printTr.innerHTML = `
+                            <td colspan="8" style="text-align: center; padding: 2rem; color: #555;">
+                                No hay fletes registrados aún
+                            </td>
+                        `;
+                        printTablaBody.appendChild(printTr);
+                        
                         document.querySelector('.total-row').style.display = 'none';
+                        document.getElementById('print-total-value').textContent = formatearPrecioCOP(0);
                         actualizarRetenciones(0);
                         return;
                     }
@@ -402,16 +617,32 @@
                             </td>
                         `;
                         tablaBody.appendChild(tr);
+
+                        // Agregar también a la tabla de impresión (sin acciones)
+                        const printTr = document.createElement('tr');
+                        printTr.innerHTML = `
+                            <td>${formatearFecha(flete.fecha)}</td>
+                            <td>${flete.documento}</td>
+                            <td>${flete.empresa}</td>
+                            <td>${flete.cajas}</td>
+                            <td>${flete.destino}</td>
+                            <td>${flete.cliente}</td>
+                            <td>${formatearPrecioCOP(flete.precio)}</td>
+                            <td>${flete.observacion || '-'}</td>
+                        `;
+                        printTablaBody.appendChild(printTr);
                     });
 
                     const total = calcularTotal();
                     const totalRow = document.querySelector('.total-row');
                     totalRow.style.display = '';
                     document.querySelector('.total-value').textContent = formatearPrecioCOP(total);
+                    document.getElementById('print-total-value').textContent = formatearPrecioCOP(total);
 
                     // Actualizar retenciones
                     actualizarRetenciones(total);
 
+                    // Asignar event listeners a los botones de eliminar
                     document.querySelectorAll('.delete-btn').forEach(btn => {
                         btn.addEventListener('click', function() {
                             if (confirm('¿Estás seguro de eliminar este flete?')) {
@@ -424,6 +655,7 @@
                         });
                     });
 
+                    // Asignar event listeners a los botones de editar
                     document.querySelectorAll('.edit-btn').forEach(btn => {
                         btn.addEventListener('click', function() {
                             const index = parseInt(this.getAttribute('data-index'));
@@ -464,6 +696,83 @@
                         setTimeout(() => document.body.removeChild(notificacion), 300);
                     }, 3000);
                 }
+
+                // Función para imprimir el reporte
+                function imprimirReporte() {
+                    // Actualizar la fecha de impresión
+                    const ahora = new Date();
+                    document.getElementById('print-date').textContent = ahora.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        
+                    });
+                    
+                    // Mostrar la sección de impresión
+                    document.getElementById('print-section').style.display = 'block';
+                    
+                    // Imprimir
+                    window.print();
+                    
+                    // Ocultar nuevamente la sección de impresión
+                    document.getElementById('print-section').style.display = 'none';
+                }
+
+                // Event listener para el botón de imprimir
+                document.getElementById('print-btn').addEventListener('click', imprimirReporte);
+
+                // Función para exportar a Excel
+                document.getElementById('excel-btn').addEventListener('click', function() {
+                    // Crear un libro de Excel
+                    const wb = XLSX.utils.book_new();
+                    
+                    // Obtener los datos directamente del array fletes (no de la tabla HTML)
+                    const datosExcel = fletes.map(flete => ({
+                        'Fecha': formatearFecha(flete.fecha),
+                        'Documento': flete.documento,
+                        'Empresa': flete.empresa,
+                        'Cajas': flete.cajas,
+                        'Destino': flete.destino,
+                        'Contacto': flete.cliente,
+                        'Precio': flete.precio, // Usamos el valor numérico directo
+                        'Detalles': flete.observacion || '-'
+                    }));
+                    
+                    // Agregar fila de totales
+                    const total = calcularTotal();
+                    datosExcel.push({
+                        'Fecha': '',
+                        'Documento': '',
+                        'Empresa': '',
+                        'Cajas': '',
+                        'Destino': '',
+                        'Contacto': 'TOTAL:',
+                        'Precio': total, // Valor numérico directo
+                        'Detalles': ''
+                    });
+                    
+                    // Convertir los datos a hoja de cálculo
+                    const ws = XLSX.utils.json_to_sheet(datosExcel);
+                    
+                    // Configurar ancho de columnas
+                    ws['!cols'] = [
+                        {wch: 10}, // Fecha
+                        {wch: 15}, // Documento
+                        {wch: 20}, // Empresa
+                        {wch: 8},  // Cajas
+                        {wch: 25}, // Destino
+                        {wch: 20}, // Contacto
+                        {wch: 15}, // Precio
+                        {wch: 30}  // Detalles
+                    ];
+                    
+                    // Agregar la hoja al libro
+                    XLSX.utils.book_append_sheet(wb, ws, "Fletes");
+                    
+                    // Generar el archivo Excel
+                    const fecha = new Date().toISOString().slice(0, 10);
+                    XLSX.writeFile(wb, `fletes_${fecha}.xlsx`);
+                });
 
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
@@ -513,6 +822,7 @@
                     `;
                 });
 
+                // Renderizar la tabla al cargar la página
                 renderizarTabla();
                 document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
             }
@@ -539,6 +849,26 @@
                 background: #e0a800;
                 transform: translateY(-2px);
                 box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
+            }
+            
+            .delete-btn {
+                background: #dc3545;
+                color: white;
+                border: none;
+                padding: 0.6rem 1rem;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s;
+                font-size: 0.9rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+            }
+            
+            .delete-btn:hover {
+                background: #c82333;
+                transform: translateY(-2px);
+                box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
             }
             
             .total-row {
@@ -584,7 +914,7 @@
                 color: white;
             }
             
-            .notencion.error {
+            .notificacion.error {
                 background: #FF3333;
                 color: white;
             }

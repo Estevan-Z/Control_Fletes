@@ -7,6 +7,123 @@
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos para las retenciones */
+        .retenciones-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            border-top: 3px solid #e63946;
+        }
+
+        .retenciones-title {
+            font-size: 1.3rem;
+            color: #e63946;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .retenciones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .retencion-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .retencion-label {
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .retencion-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .total-pagar {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2a9d8f;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Estilos para el formulario */
+        .form-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .field-group {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4361ee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .field-group-title {
+            font-weight: 600;
+            color: #4361ee;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(67, 97, 238, 0.4);
+            background: linear-gradient(135deg, #3f37c9, #4361ee);
+        }
+
+        @media (max-width: 768px) {
+            .retenciones-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-columns {
+                flex-direction: column;
+            }
+            .field-group {
+                min-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -22,40 +139,70 @@
             <div class="form-container">
                 <h2 class="form-title"><i class="fas fa-plus-circle"></i> Nuevo Flete</h2>
                 <form id="flete-form">
-                    <div class="form-group">
-                        <label for="fecha"><i class="far fa-calendar-alt"></i> Fecha:</label>
-                        <input type="date" id="fecha" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="documento"><i class="fas fa-file-alt"></i> N° Documento:</label>
-                        <input type="text" id="documento" required placeholder="Ingrese el número de documento">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="destino"><i class="fas fa-map-marker-alt"></i> Destino:</label>
-                        <input type="text" id="destino" required placeholder="Ingrese el destino">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="cliente"><i class="fas fa-user"></i> Cliente:</label>
-                        <input type="text" id="cliente" required placeholder="Nombre del cliente">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="precio"><i class="fas fa-dollar-sign"></i> Precio (COP):</label>
-                        <div class="input-group">
-                            <span class="input-symbol">$</span>
-                            <input type="number" id="precio" placeholder="0 para sin costo" min="0" value="0">
+                    <!-- Primera fila de dos columnas -->
+                    <div class="form-columns">
+                        <!-- Grupo 1: Información básica -->
+                        <div class="field-group">
+                            <h3 class="field-group-title">
+                                <i class="fas fa-info-circle"></i> Información Básica
+                            </h3>
+                            <div class="form-group">
+                                <label for="fecha"><i class="far fa-calendar-alt"></i> Fecha:</label>
+                                <input type="date" id="fecha" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="documento"><i class="fas fa-file-alt"></i> N° Documento:</label>
+                                <input type="text" id="documento" required placeholder="Número de documento">
+                            </div>
+                        </div>
+                        
+                        <!-- Grupo 2: Valor del flete -->
+                        <div class="field-group">
+                            <h3 class="field-group-title">
+                                <i class="fas fa-file-invoice-dollar"></i> Valor del Flete
+                            </h3>
+                            <div class="form-group">
+                                <label for="precio"><i class="fas fa-dollar-sign"></i> Precio (COP):</label>
+                                <div class="input-group">
+                                    <span class="input-symbol">$</span>
+                                    <input type="number" id="precio" placeholder="0 para sin costo" min="0" value="0">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="observacion"><i class="fas fa-edit"></i> Observación:</label>
-                        <textarea id="observacion" placeholder="Notas adicionales (opcional)"></textarea>
+                    <!-- Segunda fila de dos columnas -->
+                    <div class="form-columns">
+                        <!-- Grupo 3: Destino -->
+                        <div class="field-group">
+                            <h3 class="field-group-title">
+                                <i class="fas fa-map-marked-alt"></i> Destino
+                            </h3>
+                            <div class="form-group">
+                                <label for="destino"><i class="fas fa-map-marker-alt"></i> Dirección Destino:</label>
+                                <input type="text" id="destino" required placeholder="Ingrese el destino">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="cliente"><i class="fas fa-user"></i> Cliente:</label>
+                                <input type="text" id="cliente" required placeholder="Nombre del cliente">
+                            </div>
+                        </div>
+                        
+                        <!-- Grupo 4: Observaciones -->
+                        <div class="field-group">
+                            <h3 class="field-group-title">
+                                <i class="fas fa-clipboard-check"></i> Observaciones
+                            </h3>
+                            <div class="form-group">
+                                <label for="observacion"><i class="fas fa-edit"></i> Detalles Adicionales:</label>
+                                <textarea id="observacion" placeholder="Notas adicionales (opcional)"></textarea>
+                            </div>
+                        </div>
                     </div>
                     
-                    <button type="submit">
+                    <button type="submit" class="submit-btn">
                         <i class="fas fa-save"></i> Guardar Flete
                     </button>
                 </form>
@@ -85,7 +232,35 @@
                         </tr>
                     </tfoot>
                 </table>
-        
+            </div>
+
+            <!-- Sección de Retenciones -->
+            <div class="retenciones-container">
+                <h3 class="retenciones-title">
+                    <i class="fas fa-percentage"></i> Cálculo de Retenciones (Aplica para fletes > $199,000)
+                </h3>
+                <div class="retenciones-grid">
+                    <div class="retencion-item">
+                        <div class="retencion-label">Retención 1 (1%):</div>
+                        <div class="retencion-value" id="retencion1">$0</div>
+                    </div>
+                    <div class="retencion-item">
+                        <div class="retencion-label">Retención ICA (0.0045%):</div>
+                        <div class="retencion-value" id="retencionICA">$0</div>
+                    </div>
+                    <div class="retencion-item">
+                        <div class="retencion-label">Bomberil (6% sobre ICA):</div>
+                        <div class="retencion-value" id="retencionBomberil">$0</div>
+                    </div>
+                    <div class="retencion-item">
+                        <div class="retencion-label">Total Retenciones:</div>
+                        <div class="retencion-value" id="totalRetenciones">$0</div>
+                    </div>
+                </div>
+                <div class="total-pagar">
+                    <span>Total a Pagar:</span>
+                    <span id="totalPagar">$0</span>
+                </div>
             </div>
         </main>
         
@@ -104,6 +279,16 @@
             const tablaBody = document.querySelector('#fletes-table tbody');
             let fleteEditando = null;
 
+            // Función para formatear moneda
+            function formatearMoneda(valor) {
+                return new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(valor);
+            }
+
             function formatearFecha(fechaStr) {
                 if (!fechaStr) return '';
                 const fecha = new Date(fechaStr);
@@ -118,16 +303,50 @@
                 if (precio === 0 || precio === '0') {
                     return 'Sin costo';
                 }
-                return new Intl.NumberFormat('es-CO', {
-                    style: 'currency',
-                    currency: 'COP',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                }).format(precio);
+                return formatearMoneda(precio);
             }
 
             function calcularTotal() {
                 return fletes.reduce((total, flete) => total + (parseFloat(flete.precio) || 0), 0);
+            }
+
+            // Función para calcular retenciones
+            function calcularRetenciones(total) {
+                const limiteRetenciones = 199000;
+                if (total <= limiteRetenciones) {
+                    return {
+                        retencion1: 0,
+                        retencionICA: 0,
+                        retencionBomberil: 0,
+                        totalRetenciones: 0,
+                        totalPagar: total
+                    };
+                }
+
+                const retencion1 = total * 0.01;
+                const retencionICA = total * 0.0045; // 0.0045%
+                const retencionBomberil = retencionICA * 0.06; // 6% sobre ICA
+                const totalRetenciones = retencion1 + retencionICA + retencionBomberil;
+                const totalPagar = total - totalRetenciones;
+
+                return {
+                    retencion1,
+                    retencionICA,
+                    retencionBomberil,
+                    totalRetenciones,
+                    totalPagar
+                };
+            }
+
+            // Función para actualizar las retenciones en la UI
+            function actualizarRetenciones(total) {
+                const retenciones = calcularRetenciones(total);
+                
+                document.getElementById('retencion1').textContent = formatearMoneda(retenciones.retencion1);
+                document.getElementById('retencionICA').textContent = formatearMoneda(retenciones.retencionICA);
+                document.getElementById('retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
+                document.getElementById('totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
+                document.getElementById('totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
             }
 
             function renderizarTabla() {
@@ -136,15 +355,15 @@
                 if (fletes.length === 0) {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td colspan="8" style="text-align: center; padding: 2rem; color: var(--gray);">
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray);">
                             <i class="fas fa-inbox"></i>
                             <p>No hay fletes registrados aún</p>
                         </td>
                     `;
                     tablaBody.appendChild(tr);
                     
-                    // Ocultar total si no hay datos
                     document.querySelector('.total-row').style.display = 'none';
+                    actualizarRetenciones(0);
                     return;
                 }
                 
@@ -169,12 +388,14 @@
                     tablaBody.appendChild(tr);
                 });
 
-                // Mostrar fila de total
+                const total = calcularTotal();
                 const totalRow = document.querySelector('.total-row');
                 totalRow.style.display = '';
-                document.querySelector('.total-value').textContent = formatearPrecioCOP(calcularTotal());
+                document.querySelector('.total-value').textContent = formatearPrecioCOP(total);
 
-                // Event listeners para botones
+                // Actualizar retenciones
+                actualizarRetenciones(total);
+
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         if (confirm('¿Estás seguro de eliminar este flete?')) {
@@ -193,7 +414,6 @@
                         fleteEditando = index;
                         const flete = fletes[index];
                         
-                        // Llenar formulario con datos a editar
                         document.getElementById('fecha').value = flete.fecha;
                         document.getElementById('documento').value = flete.documento;
                         document.getElementById('destino').value = flete.destino;
@@ -201,12 +421,10 @@
                         document.getElementById('precio').value = flete.precio;
                         document.getElementById('observacion').value = flete.observacion || '';
                         
-                        // Cambiar texto del botón
                         document.querySelector('button[type="submit"]').innerHTML = `
                             <i class="fas fa-save"></i> Actualizar Flete
                         `;
                         
-                        // Scroll al formulario
                         document.querySelector('.form-container').scrollIntoView({
                             behavior: 'smooth'
                         });
@@ -252,12 +470,10 @@
                 }
 
                 if (fleteEditando !== null) {
-                    // Actualizar flete existente
                     fletes[fleteEditando] = nuevoFlete;
                     mostrarNotificacion('Flete actualizado correctamente', 'success');
                     fleteEditando = null;
                 } else {
-                    // Agregar nuevo flete
                     fletes.push(nuevoFlete);
                     mostrarNotificacion('Flete registrado correctamente', 'success');
                 }
@@ -266,7 +482,6 @@
                 form.reset();
                 renderizarTabla();
                 
-                // Restaurar texto del botón
                 document.querySelector('button[type="submit"]').innerHTML = `
                     <i class="fas fa-save"></i> Guardar Flete
                 `;
@@ -314,6 +529,43 @@
         .total-value {
             color: var(--primary);
             font-size: 1.1rem;
+        }
+        
+        .notificacion {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            background: white;
+            color: var(--dark);
+            border-radius: 50px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notificacion.mostrar {
+            bottom: 30px;
+            opacity: 1;
+        }
+        
+        .notificacion.success {
+            background: #4BB543;
+            color: white;
+        }
+        
+        .notificacion.error {
+            background: #FF3333;
+            color: white;
+        }
+        
+        .notificacion i {
+            font-size: 1.2rem;
         }
     `;
     document.head.appendChild(estiloAdicional);
