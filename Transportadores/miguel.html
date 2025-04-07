@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Miguel Luna - Fletes</title>
+    
+    <!-- Hojas de estilo externas -->
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- Librerías para exportar -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Estilos CSS -->
     <style>
         /* Estilos para las retenciones */
         .retenciones-container {
@@ -169,6 +175,38 @@
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
         }
 
+        /* Estilo para el botón de vaciar tabla */
+        .clear-btn {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #b5179e, #f72585);
+        }
+
+        /* Ajuste para los botones de acción */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
         /* Estilos para la vista de impresión */
         @media print {
             body, html {
@@ -224,26 +262,26 @@
                 page-break-inside: avoid;
                 margin-top: 10mm;
             }
-            }
+        }
 
-            #print-section {
-                background: white;
-                padding: 10mm;
-                box-sizing: border-box;
-                width: 210mm;
-                min-height: 297mm;
-                margin: 0 auto;
-                box-shadow: none;
-                display: none;
-                }
+        #print-section {
+            background: white;
+            padding: 10mm;
+            box-sizing: border-box;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            box-shadow: none;
+            display: none;
+        }
 
-                .avoid-page-break {
-                    page-break-inside: avoid;
-                }
+        .avoid-page-break {
+            page-break-inside: avoid;
+        }
 
-                .force-page-break {
-                    page-break-after: always;
-                }
+        .force-page-break {
+            page-break-after: always;
+        }
 
         #print-fletes-table {
             width: 100%;
@@ -267,6 +305,7 @@
             page-break-inside: avoid;
         }
 
+        /* Estilos responsivos */
         @media (max-width: 768px) {
             .retenciones-grid {
                 grid-template-columns: 1fr;
@@ -282,50 +321,14 @@
             }
         }
 
-            @page :first {
-                margin-top: 0;
-            }
-            
-            @page {
-                size: auto;  /* auto es el valor inicial */
-                margin: 0mm; /* elimina los márgenes por defecto */
-                }
-         /* Estilo para el botón de vaciar tabla */
-        .clear-btn {
-            background: linear-gradient(135deg, #f72585, #b5179e);
-            color: white;
-            border: none;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        /* Estilos para la impresión */
+        @page :first {
+            margin-top: 0;
         }
         
-        .clear-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 7px 20px rgba(0,0,0,0.15);
-            background: linear-gradient(135deg, #b5179e, #f72585);
-        }
-
-        /* Ajuste para los botones de acción */
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        @media (max-width: 768px) {
-            .action-buttons {
-                flex-direction: column;
-            }
+        @page {
+            size: auto;  /* auto es el valor inicial */
+            margin: 0mm; /* elimina los márgenes por defecto */
         }
     </style>
 </head>
@@ -340,10 +343,10 @@
         </header>
         
         <main>
+            <!-- Formulario para nuevo flete -->
             <div class="form-container">
                 <h2 class="form-title"><i class="fas fa-plus-circle"></i> Nuevo Flete</h2>
                 <form id="flete-form">
-                    <!-- Primera fila de dos columnas -->
                     <div class="form-columns">
                         <!-- Grupo 1: Información básica -->
                         <div class="field-group">
@@ -360,6 +363,7 @@
                                 <input type="text" id="documento" required placeholder="Número de documento">
                             </div>
                         </div>
+                        
                         <!-- Grupo 2: Destino -->
                         <div class="field-group">
                             <h3 class="field-group-title">
@@ -375,7 +379,8 @@
                                 <input type="text" id="cliente" required placeholder="Nombre del cliente">
                             </div>
                         </div>
-                        <!-- Grupo 3: Observaciones -->
+                        
+                        <!-- Grupo 3: Valor y Observaciones -->
                         <div class="field-group">
                             <h3 class="field-group-title">
                                 <i class="fas fa-file-invoice-dollar"></i> Valor y Observaciones
@@ -392,8 +397,8 @@
                                 <textarea id="observacion" placeholder="Notas adicionales (opcional)"></textarea>
                             </div>
                         </div>  
-                    
                     </div>
+                    
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-save"></i> Guardar Flete
                     </button>
@@ -413,6 +418,7 @@
                 </button>
             </div>
 
+            <!-- Tabla de fletes -->
             <div class="table-container">
                 <table id="fletes-table">
                     <thead>
@@ -531,559 +537,570 @@
         </footer>
     </div>
     
+    <!-- Script JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    if (document.querySelector('.form-container')) {
-        const pathParts = window.location.pathname.split('/');
-        const conductor = pathParts[pathParts.length - 1].replace('.html', '');
-        let fletes = JSON.parse(localStorage.getItem(`fletes_${conductor}`)) || [];
-        const form = document.getElementById('flete-form');
-        const tablaBody = document.querySelector('#fletes-table tbody');
-        let fleteEditando = null;
+            if (document.querySelector('.form-container')) {
+                const pathParts = window.location.pathname.split('/');
+                const conductor = pathParts[pathParts.length - 1].replace('.html', '');
+                let fletes = JSON.parse(localStorage.getItem(`fletes_${conductor}`)) || [];
+                const form = document.getElementById('flete-form');
+                const tablaBody = document.querySelector('#fletes-table tbody');
+                let fleteEditando = null;
 
-        // Función para obtener la fecha en zona horaria de Colombia (UTC-5)
-        function obtenerFechaColombia(fechaStr) {
-            const fecha = new Date(fechaStr);
-            // Ajustar a zona horaria de Colombia (UTC-5)
-            const offset = fecha.getTimezoneOffset() + 300; // 300 minutos = 5 horas (UTC-5)
-            const fechaColombia = new Date(fecha.getTime() + offset * 60000);
-            return fechaColombia;
-        }
+                // Función para obtener la fecha en zona horaria de Colombia (UTC-5)
+                function obtenerFechaColombia(fechaStr) {
+                    const fecha = new Date(fechaStr);
+                    // Ajustar a zona horaria de Colombia (UTC-5)
+                    const offset = fecha.getTimezoneOffset() + 300; // 300 minutos = 5 horas (UTC-5)
+                    const fechaColombia = new Date(fecha.getTime() + offset * 60000);
+                    return fechaColombia;
+                }
 
-        // Función para formatear fecha en formato colombiano (dd/mm/aaaa)
-        function formatearFecha(fechaStr) {
-            if (!fechaStr) return '';
-            const fecha = obtenerFechaColombia(fechaStr);
-            return fecha.toLocaleDateString('es-CO', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                timeZone: 'America/Bogota'
-            });
-        }
+                // Función para formatear fecha en formato colombiano (dd/mm/aaaa)
+                function formatearFecha(fechaStr) {
+                    if (!fechaStr) return '';
+                    const fecha = obtenerFechaColombia(fechaStr);
+                    return fecha.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        timeZone: 'America/Bogota'
+                    });
+                }
 
-        // Función para formatear moneda
-        function formatearMoneda(valor) {
-            return new Intl.NumberFormat('es-CO', {
-                style: 'currency',
-                currency: 'COP',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(valor);
-        }
+                // Función para formatear moneda
+                function formatearMoneda(valor) {
+                    return new Intl.NumberFormat('es-CO', {
+                        style: 'currency',
+                        currency: 'COP',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(valor);
+                }
 
-        function formatearPrecioCOP(precio) {
-            if (precio === 0 || precio === '0') {
-                return 'Sin costo';
-            }
-            return formatearMoneda(precio);
-        }
+                function formatearPrecioCOP(precio) {
+                    if (precio === 0 || precio === '0') {
+                        return 'Sin costo';
+                    }
+                    return formatearMoneda(precio);
+                }
 
-        function calcularTotal() {
-            return fletes.reduce((total, flete) => total + (parseFloat(flete.precio) || 0), 0);
-        }
+                function calcularTotal() {
+                    return fletes.reduce((total, flete) => total + (parseFloat(flete.precio) || 0), 0);
+                }
 
-        // Función para calcular retenciones
-        function calcularRetenciones(total) {
-            const limiteRetenciones = 199000;
-            if (total <= limiteRetenciones) {
-                return {
-                    retencion1: 0,
-                    retencionICA: 0,
-                    retencionBomberil: 0,
-                    totalRetenciones: 0,
-                    totalPagar: total
-                };
-            }
+                // Función para calcular retenciones
+                function calcularRetenciones(total) {
+                    const limiteRetenciones = 199000;
+                    if (total <= limiteRetenciones) {
+                        return {
+                            retencion1: 0,
+                            retencionICA: 0,
+                            retencionBomberil: 0,
+                            totalRetenciones: 0,
+                            totalPagar: total
+                        };
+                    }
 
-            const retencion1 = total * 0.01;
-            const retencionICA = total * 0.0045; // 0.0045%
-            const retencionBomberil = retencionICA * 0.06; // 6% sobre ICA
-            const totalRetenciones = retencion1 + retencionICA + retencionBomberil;
-            const totalPagar = total - totalRetenciones;
+                    const retencion1 = total * 0.01;
+                    const retencionICA = total * 0.0045; // 0.0045%
+                    const retencionBomberil = retencionICA * 0.06; // 6% sobre ICA
+                    const totalRetenciones = retencion1 + retencionICA + retencionBomberil;
+                    const totalPagar = total - totalRetenciones;
 
-            return {
-                retencion1,
-                retencionICA,
-                retencionBomberil,
-                totalRetenciones,
-                totalPagar
-            };
-        }
+                    return {
+                        retencion1,
+                        retencionICA,
+                        retencionBomberil,
+                        totalRetenciones,
+                        totalPagar
+                    };
+                }
 
-        // Función para actualizar las retenciones en la UI
-        function actualizarRetenciones(total) {
-            const retenciones = calcularRetenciones(total);
-            
-            document.getElementById('retencion1').textContent = formatearMoneda(retenciones.retencion1);
-            document.getElementById('retencionICA').textContent = formatearMoneda(retenciones.retencionICA);
-            document.getElementById('retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
-            document.getElementById('totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
-            document.getElementById('totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
+                // Función para actualizar las retenciones en la UI
+                function actualizarRetenciones(total) {
+                    const retenciones = calcularRetenciones(total);
+                    
+                    document.getElementById('retencion1').textContent = formatearMoneda(retenciones.retencion1);
+                    document.getElementById('retencionICA').textContent = formatearMoneda(retenciones.retencionICA);
+                    document.getElementById('retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
+                    document.getElementById('totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
+                    document.getElementById('totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
 
-            // Actualizar también los valores para impresión
-            document.getElementById('print-retencion1').textContent = formatearMoneda(retenciones.retencion1);
-            document.getElementById('print-retencionICA').textContent = formatearMoneda(retenciones.retencionICA);
-            document.getElementById('print-retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
-            document.getElementById('print-totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
-            document.getElementById('print-totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
-        }
+                    // Actualizar también los valores para impresión
+                    document.getElementById('print-retencion1').textContent = formatearMoneda(retenciones.retencion1);
+                    document.getElementById('print-retencionICA').textContent = formatearMoneda(retenciones.retencionICA);
+                    document.getElementById('print-retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
+                    document.getElementById('print-totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
+                    document.getElementById('print-totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
+                }
 
-        function renderizarTabla() {
-            tablaBody.innerHTML = '';
-            const printTablaBody = document.querySelector('#print-fletes-table tbody');
-            printTablaBody.innerHTML = '';
-            
-            if (fletes.length === 0) {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray);">
-                        <i class="fas fa-inbox"></i>
-                        <p>No hay fletes registrados aún</p>
-                    </td>
-                `;
-                tablaBody.appendChild(tr);
-                
-                const printTr = document.createElement('tr');
-                printTr.innerHTML = `
-                    <td colspan="6" style="text-align: center; padding: 2rem; color: #555;">
-                        No hay fletes registrados aún
-                    </td>
-                `;
-                printTablaBody.appendChild(printTr);
-                
-                document.querySelector('.total-row').style.display = 'none';
-                document.getElementById('print-total-value').textContent = formatearPrecioCOP(0);
-                actualizarRetenciones(0);
-                return;
-            }
-            
-            fletes.forEach((flete, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${formatearFecha(flete.fecha)}</td>
-                    <td>${flete.documento}</td>
-                    <td>${flete.destino}</td>
-                    <td>${flete.cliente}</td>
-                    <td data-price="${flete.precio}">${formatearPrecioCOP(flete.precio)}</td>
-                    <td>${flete.observacion || '-'}</td>
-                    <td>
-                        <button class="edit-btn" data-index="${index}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="delete-btn" data-index="${index}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                `;
-                tablaBody.appendChild(tr);
+                function renderizarTabla() {
+                    tablaBody.innerHTML = '';
+                    const printTablaBody = document.querySelector('#print-fletes-table tbody');
+                    printTablaBody.innerHTML = '';
+                    
+                    if (fletes.length === 0) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray);">
+                                <i class="fas fa-inbox"></i>
+                                <p>No hay fletes registrados aún</p>
+                            </td>
+                        `;
+                        tablaBody.appendChild(tr);
+                        
+                        const printTr = document.createElement('tr');
+                        printTr.innerHTML = `
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: #555;">
+                                No hay fletes registrados aún
+                            </td>
+                        `;
+                        printTablaBody.appendChild(printTr);
+                        
+                        document.querySelector('.total-row').style.display = 'none';
+                        document.getElementById('print-total-value').textContent = formatearPrecioCOP(0);
+                        actualizarRetenciones(0);
+                        return;
+                    }
+                    
+                    fletes.forEach((flete, index) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${formatearFecha(flete.fecha)}</td>
+                            <td>${flete.documento}</td>
+                            <td>${flete.destino}</td>
+                            <td>${flete.cliente}</td>
+                            <td data-price="${flete.precio}">${formatearPrecioCOP(flete.precio)}</td>
+                            <td>${flete.observacion || '-'}</td>
+                            <td>
+                                <button class="edit-btn" data-index="${index}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="delete-btn" data-index="${index}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        `;
+                        tablaBody.appendChild(tr);
 
-                // Agregar también a la tabla de impresión (sin acciones)
-                const printTr = document.createElement('tr');
-                printTr.innerHTML = `
-                    <td>${formatearFecha(flete.fecha)}</td>
-                    <td>${flete.documento}</td>
-                    <td>${flete.destino}</td>
-                    <td>${flete.cliente}</td>
-                    <td>${formatearPrecioCOP(flete.precio)}</td>
-                    <td>${flete.observacion || '-'}</td>
-                `;
-                printTablaBody.appendChild(printTr);
-            });
+                        // Agregar también a la tabla de impresión (sin acciones)
+                        const printTr = document.createElement('tr');
+                        printTr.innerHTML = `
+                            <td>${formatearFecha(flete.fecha)}</td>
+                            <td>${flete.documento}</td>
+                            <td>${flete.destino}</td>
+                            <td>${flete.cliente}</td>
+                            <td>${formatearPrecioCOP(flete.precio)}</td>
+                            <td>${flete.observacion || '-'}</td>
+                        `;
+                        printTablaBody.appendChild(printTr);
+                    });
 
-            const total = calcularTotal();
-            const totalRow = document.querySelector('.total-row');
-            totalRow.style.display = '';
-            document.querySelector('.total-value').textContent = formatearPrecioCOP(total);
-            document.getElementById('print-total-value').textContent = formatearPrecioCOP(total);
+                    const total = calcularTotal();
+                    const totalRow = document.querySelector('.total-row');
+                    totalRow.style.display = '';
+                    document.querySelector('.total-value').textContent = formatearPrecioCOP(total);
+                    document.getElementById('print-total-value').textContent = formatearPrecioCOP(total);
 
-            // Actualizar retenciones
-            actualizarRetenciones(total);
+                    // Actualizar retenciones
+                    actualizarRetenciones(total);
 
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    const flete = fletes[index];
+                    document.querySelectorAll('.delete-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const index = parseInt(this.getAttribute('data-index'));
+                            const flete = fletes[index];
+                            
+                            Swal.fire({
+                                title: '¿Eliminar flete?',
+                                html: `¿Estás seguro de eliminar el flete del cliente <b>${flete.cliente}</b> con destino a <b>${flete.destino}</b>?`,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Sí, eliminar',
+                                cancelButtonText: 'Cancelar',
+                                background: '#ffffff',
+                                backdrop: `
+                                    rgba(0,0,0,0.5)
+                                    url("/images/trash.gif")
+                                    left top
+                                    no-repeat
+                                `,
+                                customClass: {
+                                    confirmButton: 'swal-confirm-btn',
+                                    cancelButton: 'swal-cancel-btn'
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    fletes.splice(index, 1);
+                                    localStorage.setItem(`fletes_${conductor}`, JSON.stringify(fletes));
+                                    renderizarTabla();
+                                    mostrarNotificacion('Flete eliminado correctamente', 'success');
+                                    
+                                    Swal.fire(
+                                        '¡Eliminado!',
+                                        'El flete ha sido eliminado.',
+                                        'success'
+                                    );
+                                }
+                            });
+                        });
+                    });
+
+                    document.querySelectorAll('.edit-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const index = parseInt(this.getAttribute('data-index'));
+                            fleteEditando = index;
+                            const flete = fletes[index];
+                            
+                            document.getElementById('fecha').value = flete.fecha;
+                            document.getElementById('documento').value = flete.documento;
+                            document.getElementById('destino').value = flete.destino;
+                            document.getElementById('cliente').value = flete.cliente;
+                            document.getElementById('precio').value = flete.precio;
+                            document.getElementById('observacion').value = flete.observacion || '';
+                            
+                            document.querySelector('button[type="submit"]').innerHTML = `
+                                <i class="fas fa-save"></i> Actualizar Flete
+                            `;
+                            
+                            document.querySelector('.form-container').scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        });
+                    });
+                }
+
+                // Función para vaciar la tabla
+                function vaciarTabla() {
+                    if (fletes.length === 0) {
+                        Swal.fire({
+                            title: 'Tabla vacía',
+                            text: 'No hay fletes para eliminar',
+                            icon: 'info',
+                            confirmButtonText: 'Entendido'
+                        });
+                        return;
+                    }
                     
                     Swal.fire({
-                        title: '¿Eliminar flete?',
-                        html: `¿Estás seguro de eliminar el flete del cliente <b>${flete.cliente}</b> con destino a <b>${flete.destino}</b>?`,
+                        title: '¿Vaciar toda la tabla?',
+                        html: `Estás a punto de eliminar <b>${fletes.length}</b> fletes registrados.<br>Esta acción no se puede deshacer.`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
                         cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Sí, eliminar',
+                        confirmButtonText: 'Sí, vaciar tabla',
                         cancelButtonText: 'Cancelar',
                         background: '#ffffff',
-                        backdrop: `
-                            rgba(0,0,0,0.5)
-                            url("/images/trash.gif")
-                            left top
-                            no-repeat
-                        `,
                         customClass: {
                             confirmButton: 'swal-confirm-btn',
                             cancelButton: 'swal-cancel-btn'
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            fletes.splice(index, 1);
+                            fletes = [];
                             localStorage.setItem(`fletes_${conductor}`, JSON.stringify(fletes));
                             renderizarTabla();
-                            mostrarNotificacion('Flete eliminado correctamente', 'success');
                             
                             Swal.fire(
-                                '¡Eliminado!',
-                                'El flete ha sido eliminado.',
+                                '¡Tabla vaciada!',
+                                'Todos los fletes han sido eliminados.',
                                 'success'
                             );
                         }
                     });
-                });
-            });
-
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    fleteEditando = index;
-                    const flete = fletes[index];
-                    
-                    document.getElementById('fecha').value = flete.fecha;
-                    document.getElementById('documento').value = flete.documento;
-                    document.getElementById('destino').value = flete.destino;
-                    document.getElementById('cliente').value = flete.cliente;
-                    document.getElementById('precio').value = flete.precio;
-                    document.getElementById('observacion').value = flete.observacion || '';
-                    
-                    document.querySelector('button[type="submit"]').innerHTML = `
-                        <i class="fas fa-save"></i> Actualizar Flete
-                    `;
-                    
-                    document.querySelector('.form-container').scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            });
-        }
-
-        // Función para vaciar la tabla
-        function vaciarTabla() {
-            if (fletes.length === 0) {
-                Swal.fire({
-                    title: 'Tabla vacía',
-                    text: 'No hay fletes para eliminar',
-                    icon: 'info',
-                    confirmButtonText: 'Entendido'
-                });
-                return;
-            }
-            
-            Swal.fire({
-                title: '¿Vaciar toda la tabla?',
-                html: `Estás a punto de eliminar <b>${fletes.length}</b> fletes registrados.<br>Esta acción no se puede deshacer.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, vaciar tabla',
-                cancelButtonText: 'Cancelar',
-                background: '#ffffff',
-                customClass: {
-                    confirmButton: 'swal-confirm-btn',
-                    cancelButton: 'swal-cancel-btn'
                 }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fletes = [];
+
+                // Event listener para el botón de vaciar tabla
+                document.getElementById('clear-btn').addEventListener('click', vaciarTabla);
+
+                function mostrarNotificacion(mensaje, tipo) {
+                    const notificacion = document.createElement('div');
+                    notificacion.className = `notificacion ${tipo}`;
+                    notificacion.innerHTML = `
+                        <i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                        ${mensaje}
+                    `;
+                    document.body.appendChild(notificacion);
+                    setTimeout(() => notificacion.classList.add('mostrar'), 10);
+                    setTimeout(() => {
+                        notificacion.classList.remove('mostrar');
+                        setTimeout(() => document.body.removeChild(notificacion), 300);
+                    }, 3000);
+                }
+
+                function imprimirReporte() {
+                    // Actualizar la fecha de impresión
+                    const ahora = new Date();
+                    document.getElementById('print-date').textContent = ahora.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                    
+                    // Mostrar la sección de impresión
+                    const printSection = document.getElementById('print-section');
+                    printSection.style.display = 'block';
+                    
+                    // Ajustar dinámicamente el tamaño si es necesario
+                    const contentHeight = printSection.scrollHeight;
+                    const pageHeight = 297; // mm
+                    
+                    if (contentHeight > pageHeight * 3.78) { // Convertir mm a px (aproximadamente)
+                        // Reducir el padding si el contenido es muy grande
+                        printSection.style.padding = '5mm';
+                    }
+                    
+                    // Imprimir después de un pequeño retraso para permitir el renderizado
+                    setTimeout(() => {
+                        window.print();
+                        // Ocultar nuevamente la sección de impresión
+                        printSection.style.display = 'none';
+                        // Restaurar el padding original
+                        printSection.style.padding = '10mm';
+                    }, 100);
+                }
+
+                // Event listener para el botón de imprimir
+                document.getElementById('print-btn').addEventListener('click', imprimirReporte);
+
+                // Función para exportar a Excel
+                document.getElementById('excel-btn').addEventListener('click', function() {
+                    // Crear un libro de Excel
+                    const wb = XLSX.utils.book_new();
+                    
+                    // Obtener los datos directamente del array fletes (no de la tabla HTML)
+                    const datosExcel = fletes.map(flete => ({
+                        'Fecha': formatearFecha(flete.fecha),
+                        'Documento': flete.documento,
+                        'Destino': flete.destino,
+                        'Cliente': flete.cliente,
+                        'Precio (COP)': flete.precio, // Usamos el valor numérico directo
+                        'Observación': flete.observacion || '-'
+                    }));
+                    
+                    // Agregar fila de totales
+                    const total = calcularTotal();
+                    datosExcel.push({
+                        'Fecha': '',
+                        'Documento': '',
+                        'Destino': '',
+                        'Cliente': 'TOTAL:',
+                        'Precio (COP)': total, // Valor numérico directo
+                        'Observación': ''
+                    });
+                    
+                    // Convertir los datos a hoja de cálculo
+                    const ws = XLSX.utils.json_to_sheet(datosExcel);
+                    
+                    // Configurar ancho de columnas
+                    ws['!cols'] = [
+                        {wch: 10}, // Fecha
+                        {wch: 15}, // Documento
+                        {wch: 25}, // Destino
+                        {wch: 20}, // Cliente
+                        {wch: 15}, // Precio
+                        {wch: 30}  // Observación
+                    ];
+                    
+                    // Agregar la hoja al libro
+                    XLSX.utils.book_append_sheet(wb, ws, "Fletes");
+                    
+                    // Generar el archivo Excel
+                    const fecha = new Date().toISOString().slice(0, 10);
+                    XLSX.writeFile(wb, `fletes_miguel_${fecha}.xlsx`);
+                });
+
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Obtener la fecha en zona horaria de Colombia
+                    const fechaInput = document.getElementById('fecha').value;
+                    if (!fechaInput) {
+                        mostrarNotificacion('Por favor ingrese una fecha', 'error');
+                        return;
+                    }
+                    
+                    const fechaColombia = obtenerFechaColombia(fechaInput + 'T00:00:00-05:00');
+                    const fechaISO = fechaColombia.toISOString().split('T')[0];
+                    
+                    const nuevoFlete = {
+                        fecha: fechaISO, // Guardamos en formato ISO pero ajustado a Colombia
+                        documento: document.getElementById('documento').value.trim(),
+                        destino: document.getElementById('destino').value.trim(),
+                        cliente: document.getElementById('cliente').value.trim(),
+                        precio: parseFloat(document.getElementById('precio').value) || 0,
+                        observacion: document.getElementById('observacion').value.trim()
+                    };
+
+                    if (!nuevoFlete.fecha || !nuevoFlete.documento || !nuevoFlete.destino || !nuevoFlete.cliente) {
+                        mostrarNotificacion('Por favor complete todos los campos requeridos', 'error');
+                        return;
+                    }
+
+                    if (isNaN(nuevoFlete.precio) || nuevoFlete.precio < 0) {
+                        mostrarNotificacion('El precio no puede ser negativo', 'error');
+                        return;
+                    }
+
+                    if (fleteEditando !== null) {
+                        fletes[fleteEditando] = nuevoFlete;
+                        mostrarNotificacion('Flete actualizado correctamente', 'success');
+                        fleteEditando = null;
+                    } else {
+                        fletes.push(nuevoFlete);
+                        mostrarNotificacion('Flete registrado correctamente', 'success');
+                    }
+
                     localStorage.setItem(`fletes_${conductor}`, JSON.stringify(fletes));
+                    form.reset();
                     renderizarTabla();
                     
-                    Swal.fire(
-                        '¡Tabla vaciada!',
-                        'Todos los fletes han sido eliminados.',
-                        'success'
-                    );
-                }
-            });
-        }
+                    document.querySelector('button[type="submit"]').innerHTML = `
+                        <i class="fas fa-save"></i> Guardar Flete
+                    `;
+                });
 
-        // Event listener para el botón de vaciar tabla
-        document.getElementById('clear-btn').addEventListener('click', vaciarTabla);
-
-        function mostrarNotificacion(mensaje, tipo) {
-            const notificacion = document.createElement('div');
-            notificacion.className = `notificacion ${tipo}`;
-            notificacion.innerHTML = `
-                <i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                ${mensaje}
-            `;
-            document.body.appendChild(notificacion);
-            setTimeout(() => notificacion.classList.add('mostrar'), 10);
-            setTimeout(() => {
-                notificacion.classList.remove('mostrar');
-                setTimeout(() => document.body.removeChild(notificacion), 300);
-            }, 3000);
-        }
-
-        // Función para imprimir el reporte
-        function imprimirReporte() {
-            // Actualizar la fecha de impresión
-            const ahora = new Date();
-            document.getElementById('print-date').textContent = ahora.toLocaleDateString('es-CO', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-            
-            // Mostrar la sección de impresión
-            document.getElementById('print-section').style.display = 'block';
-            
-            // Imprimir
-            window.print();
-            
-            // Ocultar nuevamente la sección de impresión
-            document.getElementById('print-section').style.display = 'none';
-        }
-
-        // Event listener para el botón de imprimir
-        document.getElementById('print-btn').addEventListener('click', imprimirReporte);
-
-        // Función para exportar a Excel
-        document.getElementById('excel-btn').addEventListener('click', function() {
-            // Crear un libro de Excel
-            const wb = XLSX.utils.book_new();
-            
-            // Obtener los datos directamente del array fletes (no de la tabla HTML)
-            const datosExcel = fletes.map(flete => ({
-                'Fecha': formatearFecha(flete.fecha),
-                'Documento': flete.documento,
-                'Destino': flete.destino,
-                'Cliente': flete.cliente,
-                'Precio (COP)': flete.precio, // Usamos el valor numérico directo
-                'Observación': flete.observacion || '-'
-            }));
-            
-            // Agregar fila de totales
-            const total = calcularTotal();
-            datosExcel.push({
-                'Fecha': '',
-                'Documento': '',
-                'Destino': '',
-                'Cliente': 'TOTAL:',
-                'Precio (COP)': total, // Valor numérico directo
-                'Observación': ''
-            });
-            
-            // Convertir los datos a hoja de cálculo
-            const ws = XLSX.utils.json_to_sheet(datosExcel);
-            
-            // Configurar ancho de columnas
-            ws['!cols'] = [
-                {wch: 10}, // Fecha
-                {wch: 15}, // Documento
-                {wch: 25}, // Destino
-                {wch: 20}, // Cliente
-                {wch: 15}, // Precio
-                {wch: 30}  // Observación
-            ];
-            
-            // Agregar la hoja al libro
-            XLSX.utils.book_append_sheet(wb, ws, "Fletes");
-            
-            // Generar el archivo Excel
-            const fecha = new Date().toISOString().slice(0, 10);
-            XLSX.writeFile(wb, `fletes_miguel_${fecha}.xlsx`);
+                // Renderizar la tabla al cargar la página
+                renderizarTabla();
+            }
         });
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Obtener la fecha en zona horaria de Colombia
-            const fechaInput = document.getElementById('fecha').value;
-            if (!fechaInput) {
-                mostrarNotificacion('Por favor ingrese una fecha', 'error');
-                return;
+        // Estilos CSS adicionales para los nuevos elementos
+        const estiloAdicional = document.createElement('style');
+        estiloAdicional.textContent = `
+            .edit-btn {
+                background: #ffc107;
+                color: #212529;
+                border: none;
+                padding: 0.6rem 1rem;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s;
+                font-size: 0.9rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                margin-right: 8px;
             }
             
-            const fechaColombia = obtenerFechaColombia(fechaInput + 'T00:00:00-05:00');
-            const fechaISO = fechaColombia.toISOString().split('T')[0];
+            .edit-btn:hover {
+                background: #e0a800;
+                transform: translateY(-2px);
+                box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
+            }
             
-            const nuevoFlete = {
-                fecha: fechaISO, // Guardamos en formato ISO pero ajustado a Colombia
-                documento: document.getElementById('documento').value.trim(),
-                destino: document.getElementById('destino').value.trim(),
-                cliente: document.getElementById('cliente').value.trim(),
-                precio: parseFloat(document.getElementById('precio').value) || 0,
-                observacion: document.getElementById('observacion').value.trim()
-            };
-
-            if (!nuevoFlete.fecha || !nuevoFlete.documento || !nuevoFlete.destino || !nuevoFlete.cliente) {
-                mostrarNotificacion('Por favor complete todos los campos requeridos', 'error');
-                return;
+            .delete-btn {
+                background: #dc3545;
+                color: white;
+                border: none;
+                padding: 0.6rem 1rem;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s;
+                font-size: 0.9rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
             }
-
-            if (isNaN(nuevoFlete.precio) || nuevoFlete.precio < 0) {
-                mostrarNotificacion('El precio no puede ser negativo', 'error');
-                return;
-            }
-
-            if (fleteEditando !== null) {
-                fletes[fleteEditando] = nuevoFlete;
-                mostrarNotificacion('Flete actualizado correctamente', 'success');
-                fleteEditando = null;
-            } else {
-                fletes.push(nuevoFlete);
-                mostrarNotificacion('Flete registrado correctamente', 'success');
-            }
-
-            localStorage.setItem(`fletes_${conductor}`, JSON.stringify(fletes));
-            form.reset();
-            renderizarTabla();
             
-            document.querySelector('button[type="submit"]').innerHTML = `
-                <i class="fas fa-save"></i> Guardar Flete
-            `;
-        });
+            .delete-btn:hover {
+                background: #c82333;
+                transform: translateY(-2px);
+                box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+            }
+            
+            .total-row {
+                background-color: #f8f9fa;
+                font-weight: bold;
+            }
+            
+            .total-label {
+                text-align: right;
+                padding-right: 20px;
+            }
+            
+            .total-value {
+                color: var(--primary);
+                font-size: 1.1rem;
+            }
+            
+            .notificacion {
+                position: fixed;
+                bottom: -100px;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 1rem 2rem;
+                background: white;
+                color: var(--dark);
+                border-radius: 50px;
+                box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                z-index: 1000;
+                opacity: 0;
+                transition: all 0.3s ease;
+            }
+            
+            .notificacion.mostrar {
+                bottom: 30px;
+                opacity: 1;
+            }
+            
+            .notificacion.success {
+                background: #4BB543;
+                color: white;
+            }
+            
+            .notificacion.error {
+                background: #FF3333;
+                color: white;
+            }
+            
+            .notificacion i {
+                font-size: 1.2rem;
+            }
 
-        // Renderizar la tabla al cargar la página
-        renderizarTabla();
-        
-        
-    }
-});
+            /* Estilos para los botones de SweetAlert */
+            .swal-confirm-btn {
+                background: linear-gradient(135deg, #f72585, #b5179e) !important;
+                border: none !important;
+                padding: 0.8rem 1.5rem !important;
+                font-size: 1rem !important;
+                border-radius: 8px !important;
+                transition: all 0.3s !important;
+                font-weight: 600 !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+            }
 
-// Estilos CSS adicionales para los nuevos elementos
-const estiloAdicional = document.createElement('style');
-estiloAdicional.textContent = `
-    .edit-btn {
-        background: #ffc107;
-        color: #212529;
-        border: none;
-        padding: 0.6rem 1rem;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 0.9rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        margin-right: 8px;
-    }
-    
-    .edit-btn:hover {
-        background: #e0a800;
-        transform: translateY(-2px);
-        box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
-    }
-    
-    .delete-btn {
-        background: #dc3545;
-        color: white;
-        border: none;
-        padding: 0.6rem 1rem;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 0.9rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-    }
-    
-    .delete-btn:hover {
-        background: #c82333;
-        transform: translateY(-2px);
-        box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
-    }
-    
-    .total-row {
-        background-color: #f8f9fa;
-        font-weight: bold;
-    }
-    
-    .total-label {
-        text-align: right;
-        padding-right: 20px;
-    }
-    
-    .total-value {
-        color: var(--primary);
-        font-size: 1.1rem;
-    }
-    
-    .notificacion {
-        position: fixed;
-        bottom: -100px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 1rem 2rem;
-        background: white;
-        color: var(--dark);
-        border-radius: 50px;
-        box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        z-index: 1000;
-        opacity: 0;
-        transition: all 0.3s ease;
-    }
-    
-    .notificacion.mostrar {
-        bottom: 30px;
-        opacity: 1;
-    }
-    
-    .notificacion.success {
-        background: #4BB543;
-        color: white;
-    }
-    
-    .notificacion.error {
-        background: #FF3333;
-        color: white;
-    }
-    
-    .notificacion i {
-        font-size: 1.2rem;
-    }
+            .swal-confirm-btn:hover {
+                transform: translateY(-2px) !important;
+                box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
+                background: linear-gradient(135deg, #b5179e, #f72585) !important;
+            }
 
-    /* Estilos para los botones de SweetAlert */
-    .swal-confirm-btn {
-        background: linear-gradient(135deg, #f72585, #b5179e) !important;
-        border: none !important;
-        padding: 0.8rem 1.5rem !important;
-        font-size: 1rem !important;
-        border-radius: 8px !important;
-        transition: all 0.3s !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-    }
+            .swal-cancel-btn {
+                background: linear-gradient(135deg, #4361ee, #3f37c9) !important;
+                border: none !important;
+                padding: 0.8rem 1.5rem !important;
+                font-size: 1rem !important;
+                border-radius: 8px !important;
+                transition: all 0.3s !important;
+                font-weight: 600 !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+            }
 
-    .swal-confirm-btn:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
-        background: linear-gradient(135deg, #b5179e, #f72585) !important;
-    }
-
-    .swal-cancel-btn {
-        background: linear-gradient(135deg, #4361ee, #3f37c9) !important;
-        border: none !important;
-        padding: 0.8rem 1.5rem !important;
-        font-size: 1rem !important;
-        border-radius: 8px !important;
-        transition: all 0.3s !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-    }
-
-    .swal-cancel-btn:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
-        background: linear-gradient(135deg, #3f37c9, #4361ee) !important;
-    }
-`;
-document.head.appendChild(estiloAdicional);
+            .swal-cancel-btn:hover {
+                transform: translateY(-2px) !important;
+                box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
+                background: linear-gradient(135deg, #3f37c9, #4361ee) !important;
+            }
+        `;
+        document.head.appendChild(estiloAdicional);
     </script>
 </body>
 </html>
