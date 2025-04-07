@@ -171,47 +171,79 @@
 
         /* Estilos para la vista de impresión */
         @media print {
+            body, html {
+                width: 210mm;   
+                height: 297mm;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
             body * {
                 visibility: hidden;
             }
+            
             .print-section, .print-section * {
                 visibility: visible;
             }
+            
             .print-section {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
-                padding: 20px;
+                height: 100%;
+                margin: 0;
+                padding: 10mm;
+                box-sizing: border-box;
+                page-break-after: avoid;
+                page-break-before: avoid;
             }
+            
             .no-print {
-                display: none;
+                display: none !important;
             }
+            
             table {
                 width: 100%;
                 border-collapse: collapse;
+                page-break-inside: avoid;
             }
+            
             th, td {
                 border: 1px solid #ddd;
-                padding: 8px;
+                padding: 6px;
                 text-align: left;
+                font-size: 12pt;
             }
+            
             th {
                 background-color: #f2f2f2;
             }
-        }
+            
+            #print-retenciones {
+                page-break-inside: avoid;
+                margin-top: 10mm;
+            }
+            }
 
-        /* Estilos para la sección de impresión */
-        #print-section {
-            background: white;
-            padding: 20px;
-            box-sizing: border-box;
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0 auto;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
-            display: none;
-        }
+            #print-section {
+                background: white;
+                padding: 10mm;
+                box-sizing: border-box;
+                width: 210mm;
+                min-height: 297mm;
+                margin: 0 auto;
+                box-shadow: none;
+                display: none;
+                }
+
+                .avoid-page-break {
+                    page-break-inside: avoid;
+                }
+
+                .force-page-break {
+                    page-break-after: always;
+                }
 
         #print-fletes-table {
             width: 100%;
@@ -250,15 +282,14 @@
             }
         }
 
-                /* Ocultar encabezados y pies de página del navegador */
             @page :first {
                 margin-top: 0;
             }
             
             @page {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
+                size: auto;  /* auto es el valor inicial */
+                margin: 0mm; /* elimina los márgenes por defecto */
+                }
          /* Estilo para el botón de vaciar tabla */
         .clear-btn {
             background: linear-gradient(135deg, #f72585, #b5179e);
@@ -917,8 +948,7 @@
         // Renderizar la tabla al cargar la página
         renderizarTabla();
         
-        // Eliminamos la asignación automática de fecha al input
-        // document.getElementById('fecha').value = obtenerFechaInput();
+        
     }
 });
 
