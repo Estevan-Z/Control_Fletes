@@ -459,27 +459,6 @@
         const tablaBody = document.querySelector('#fletes-table tbody');
         let fleteEditando = null;
 
-        // Función para obtener la fecha en zona horaria de Colombia (UTC-5)
-        function obtenerFechaColombia(fechaStr) {
-            const fecha = new Date(fechaStr);
-            // Ajustar a zona horaria de Colombia (UTC-5)
-            const offset = fecha.getTimezoneOffset() + 300; // 300 minutos = 5 horas (UTC-5)
-            const fechaColombia = new Date(fecha.getTime() + offset * 60000);
-            return fechaColombia;
-        }
-
-        // Función para formatear fecha en formato colombiano (dd/mm/aaaa)
-        function formatearFecha(fechaStr) {
-            if (!fechaStr) return '';
-            const fecha = obtenerFechaColombia(fechaStr);
-            return fecha.toLocaleDateString('es-CO', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                timeZone: 'America/Bogota'
-            });
-        }
-
         // Función para formatear moneda
         function formatearMoneda(valor) {
             return new Intl.NumberFormat('es-CO', {
@@ -488,6 +467,16 @@
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             }).format(valor);
+        }
+
+        function formatearFecha(fechaStr) {
+            if (!fechaStr) return '';
+            const fecha = new Date(fechaStr);
+            return fecha.toLocaleDateString('es-CO', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
         }
 
         function formatearPeso(peso) {
@@ -572,7 +561,7 @@
                 html: `Estás a punto de eliminar <b>${fletes.length}</b> fletes registrados.<br>Esta acción no se puede deshacer.`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#e63946',
+                confirmButtonColor: '#f72585',
                 cancelButtonColor: '#4361ee',
                 confirmButtonText: 'Sí, vaciar tabla',
                 cancelButtonText: 'Cancelar',
@@ -696,62 +685,41 @@
                     const flete = fletes[index];
                     
                     Swal.fire({
-                        title: '¿Eliminar este flete?',
-                        html: `
-                            <div style="text-align: left; margin: 1rem 0;">
-                                <p><strong>Documento:</strong> ${flete.documento}</p>
-                                <p><strong>Cliente:</strong> ${flete.cliente}</p>
-                                <p><strong>Destino:</strong> ${flete.destino}</p>
-                                <p><strong>Valor:</strong> ${formatearPrecioCOP(flete.precio)}</p>
-                            </div>
-                            <p style="color: #e63946; font-weight: bold;">¿Estás seguro de eliminar este registro?</p>
-                        `,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#e63946',
-                        cancelButtonColor: '#4361ee',
-                        confirmButtonText: '<i class="fas fa-trash"></i> Eliminar',
-                        cancelButtonText: '<i class="fas fa-times"></i> Cancelar',
-                        background: '#ffffff',
-                        backdrop: `
-                            rgba(0,0,123,0.4)
-                            url("/images/trash.gif")
-                            left top
-                            no-repeat
-                        `,
-                        customClass: {
-                            confirmButton: 'swal-confirm-btn',
-                            cancelButton: 'swal-cancel-btn'
-                        },
-                        showLoaderOnConfirm: true,
-                        preConfirm: () => {
-                            return new Promise((resolve) => {
-                                setTimeout(() => {
+                                title: '¿Eliminar flete?',
+                                html: `¿Estás seguro de eliminar el flete del cliente <b>${flete.cliente}</b> con destino a <b>${flete.destino}</b>?`,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Sí, eliminar',
+                                cancelButtonText: 'Cancelar',
+                                background: '#ffffff',
+                                backdrop: `
+                                    rgba(0,0,0,0.5)
+                                    url("/images/trash.gif")
+                                    left top
+                                    no-repeat
+                                `,
+                                customClass: {
+                                    confirmButton: 'swal-confirm-btn',
+                                    cancelButton: 'swal-cancel-btn'
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
                                     fletes.splice(index, 1);
                                     localStorage.setItem(`fletes_${conductor}`, JSON.stringify(fletes));
                                     renderizarTabla();
-                                    resolve();
-                                }, 800);
-                            });
-                        },
-                        allowOutsideClick: () => !Swal.isLoading()
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.fire({
-                                title: '¡Eliminado!',
-                                text: 'El flete ha sido eliminado correctamente',
-                                icon: 'success',
-                                confirmButtonColor: '#4361ee',
-                                timer: 1500,
-                                timerProgressBar: true,
-                                customClass: {
-                                    confirmButton: 'swal-confirm-btn'
+                                    mostrarNotificacion('Flete eliminado correctamente', 'success');
+                                    
+                                    Swal.fire(
+                                        '¡Eliminado!',
+                                        'El flete ha sido eliminado.',
+                                        'success'
+                                    );
                                 }
                             });
-                        }
+                        });
                     });
-                });
-            });
 
             // Asignar event listeners a los botones de editar
             document.querySelectorAll('.edit-btn').forEach(btn => {
@@ -1018,7 +986,7 @@ estiloAdicional.textContent = `
     }
     
     .clear-btn {
-        background: linear-gradient(135deg, #e63946, #d90429);
+        background: linear-gradient(135deg, #f72585, #b5179e);
         color: white;
         border: none;
         padding: 1rem 1.5rem;
@@ -1037,7 +1005,7 @@ estiloAdicional.textContent = `
     .clear-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 7px 20px rgba(0,0,0,0.15);
-        background: linear-gradient(135deg, #d90429, #e63946);
+        background: linear-gradient(135deg, #b5179e, #f72585);
     }
     
     /* Estilos personalizados para SweetAlert2 */
@@ -1079,7 +1047,7 @@ estiloAdicional.textContent = `
     }
     
     .swal-confirm-btn {
-        background: linear-gradient(135deg, #e63946, #d90429) !important;
+        background: linear-gradient(135deg, #f72585, #b5179e) !important;
         border: none !important;
         padding: 0.8rem 1.5rem !important;
         font-size: 1rem !important;
@@ -1093,7 +1061,7 @@ estiloAdicional.textContent = `
     .swal-confirm-btn:hover {
         transform: translateY(-2px) !important;
         box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
-        background: linear-gradient(135deg, #d90429, #e63946) !important;
+        background: linear-gradient(135deg, #b5179e, #f72585) !important;
     }
     
     .swal-cancel-btn {
