@@ -7,8 +7,12 @@
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Librerías para exportar -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         /* Estilos adicionales para las retenciones */
         .retenciones-container {
@@ -320,6 +324,9 @@
                 <button id="excel-btn" class="excel-btn">
                     <i class="fas fa-file-excel"></i> Descargar Excel
                 </button>
+                <button id="clear-btn" class="clear-btn">
+                    <i class="fas fa-trash"></i> Vaciar Tabla
+                </button>
             </div>
 
             <div class="table-container">
@@ -438,7 +445,7 @@
         </main>
         
         <footer>
-            <p><i class="far fa-copyright"></i> 2023 Sistema de Gestión de Fletes | Orlando Buitrago</p>
+            <p><i class="far fa-copyright"></i> 2025 Sistema de Gestión de Fletes | Todos los derechos reservados</p>
         </footer>
     </div>
     
@@ -452,6 +459,27 @@
         const tablaBody = document.querySelector('#fletes-table tbody');
         let fleteEditando = null;
 
+        // Función para obtener la fecha en zona horaria de Colombia (UTC-5)
+        function obtenerFechaColombia(fechaStr) {
+            const fecha = new Date(fechaStr);
+            // Ajustar a zona horaria de Colombia (UTC-5)
+            const offset = fecha.getTimezoneOffset() + 300; // 300 minutos = 5 horas (UTC-5)
+            const fechaColombia = new Date(fecha.getTime() + offset * 60000);
+            return fechaColombia;
+        }
+
+        // Función para formatear fecha en formato colombiano (dd/mm/aaaa)
+        function formatearFecha(fechaStr) {
+            if (!fechaStr) return '';
+            const fecha = obtenerFechaColombia(fechaStr);
+            return fecha.toLocaleDateString('es-CO', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                timeZone: 'America/Bogota'
+            });
+        }
+
         // Función para formatear moneda
         function formatearMoneda(valor) {
             return new Intl.NumberFormat('es-CO', {
@@ -460,16 +488,6 @@
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             }).format(valor);
-        }
-
-        function formatearFecha(fechaStr) {
-            if (!fechaStr) return '';
-            const fecha = new Date(fechaStr);
-            return fecha.toLocaleDateString('es-CO', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
         }
 
         function formatearPeso(peso) {
@@ -532,6 +550,70 @@
             document.getElementById('print-retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
             document.getElementById('print-totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
             document.getElementById('print-totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
+        }
+
+        // Función para vaciar todos los fletes con SweetAlert2 personalizado
+        function vaciarTabla() {
+            if (fletes.length === 0) {
+                Swal.fire({
+                    title: 'Tabla vacía',
+                    text: 'No hay fletes para eliminar',
+                    icon: 'info',
+                    confirmButtonText: 'Entendido',
+                    customClass: {
+                        confirmButton: 'swal-confirm-btn'
+                    }
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: '¿Vaciar todos los registros?',
+                html: `Estás a punto de eliminar <b>${fletes.length}</b> fletes registrados.<br>Esta acción no se puede deshacer.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e63946',
+                cancelButtonColor: '#4361ee',
+                confirmButtonText: 'Sí, vaciar tabla',
+                cancelButtonText: 'Cancelar',
+                background: '#ffffff',
+                backdrop: `
+                    rgba(0,0,123,0.4)
+                    url("/images/nyan-cat.gif")
+                    left top
+                    no-repeat
+                `,
+                customClass: {
+                    confirmButton: 'swal-confirm-btn',
+                    cancelButton: 'swal-cancel-btn'
+                },
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            fletes = [];
+                            localStorage.setItem(`fletes_${conductor}`, JSON.stringify(fletes));
+                            renderizarTabla();
+                            resolve();
+                        }, 1000);
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: '¡Tabla vaciada!',
+                        text: 'Todos los fletes han sido eliminados correctamente',
+                        icon: 'success',
+                        confirmButtonColor: '#4361ee',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'swal-confirm-btn'
+                        }
+                    });
+                }
+            });
         }
 
         function renderizarTabla() {
@@ -607,16 +689,67 @@
             // Actualizar retenciones
             actualizarRetenciones(total);
 
-            // Asignar event listeners a los botones de eliminar
+            // Asignar event listeners a los botones de eliminar con SweetAlert2 personalizado
             document.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    if (confirm('¿Estás seguro de eliminar este flete?')) {
-                        const index = parseInt(this.getAttribute('data-index'));
-                        fletes.splice(index, 1);
-                        localStorage.setItem(`fletes_${conductor}`, JSON.stringify(fletes));
-                        renderizarTabla();
-                        mostrarNotificacion('Flete eliminado correctamente', 'success');
-                    }
+                    const index = parseInt(this.getAttribute('data-index'));
+                    const flete = fletes[index];
+                    
+                    Swal.fire({
+                        title: '¿Eliminar este flete?',
+                        html: `
+                            <div style="text-align: left; margin: 1rem 0;">
+                                <p><strong>Documento:</strong> ${flete.documento}</p>
+                                <p><strong>Cliente:</strong> ${flete.cliente}</p>
+                                <p><strong>Destino:</strong> ${flete.destino}</p>
+                                <p><strong>Valor:</strong> ${formatearPrecioCOP(flete.precio)}</p>
+                            </div>
+                            <p style="color: #e63946; font-weight: bold;">¿Estás seguro de eliminar este registro?</p>
+                        `,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#e63946',
+                        cancelButtonColor: '#4361ee',
+                        confirmButtonText: '<i class="fas fa-trash"></i> Eliminar',
+                        cancelButtonText: '<i class="fas fa-times"></i> Cancelar',
+                        background: '#ffffff',
+                        backdrop: `
+                            rgba(0,0,123,0.4)
+                            url("/images/trash.gif")
+                            left top
+                            no-repeat
+                        `,
+                        customClass: {
+                            confirmButton: 'swal-confirm-btn',
+                            cancelButton: 'swal-cancel-btn'
+                        },
+                        showLoaderOnConfirm: true,
+                        preConfirm: () => {
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    fletes.splice(index, 1);
+                                    localStorage.setItem(`fletes_${conductor}`, JSON.stringify(fletes));
+                                    renderizarTabla();
+                                    resolve();
+                                }, 800);
+                            });
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: '¡Eliminado!',
+                                text: 'El flete ha sido eliminado correctamente',
+                                icon: 'success',
+                                confirmButtonColor: '#4361ee',
+                                timer: 1500,
+                                timerProgressBar: true,
+                                customClass: {
+                                    confirmButton: 'swal-confirm-btn'
+                                }
+                            });
+                        }
+                    });
                 });
             });
 
@@ -646,19 +779,27 @@
             });
         }
 
+        // Función para mostrar notificaciones con SweetAlert2
         function mostrarNotificacion(mensaje, tipo) {
-            const notificacion = document.createElement('div');
-            notificacion.className = `notificacion ${tipo}`;
-            notificacion.innerHTML = `
-                <i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                ${mensaje}
-            `;
-            document.body.appendChild(notificacion);
-            setTimeout(() => notificacion.classList.add('mostrar'), 10);
-            setTimeout(() => {
-                notificacion.classList.remove('mostrar');
-                setTimeout(() => document.body.removeChild(notificacion), 300);
-            }, 3000);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                background: '#ffffff',
+                color: '#333',
+                iconColor: tipo === 'success' ? '#4BB543' : '#FF3333',
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+
+            Toast.fire({
+                icon: tipo,
+                title: mensaje
+            });
         }
 
         // Función para imprimir el reporte
@@ -684,6 +825,9 @@
 
         // Event listener para el botón de imprimir
         document.getElementById('print-btn').addEventListener('click', imprimirReporte);
+
+        // Event listener para el botón de vaciar tabla
+        document.getElementById('clear-btn').addEventListener('click', vaciarTabla);
 
         // Función para exportar a Excel
         document.getElementById('excel-btn').addEventListener('click', function() {
@@ -733,6 +877,9 @@
             // Generar el archivo Excel
             const fecha = new Date().toISOString().slice(0, 10);
             XLSX.writeFile(wb, `fletes_orlando_${fecha}.xlsx`);
+            
+            // Mostrar notificación
+            mostrarNotificacion('Archivo Excel generado correctamente', 'success');
         });
 
         form.addEventListener('submit', function(e) {
@@ -783,7 +930,6 @@
 
         // Renderizar la tabla al cargar la página
         renderizarTabla();
-        document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
     }
 });
 
@@ -846,43 +992,6 @@ estiloAdicional.textContent = `
         font-size: 1.1rem;
     }
     
-    .notificacion {
-        position: fixed;
-        bottom: -100px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 1rem 2rem;
-        background: white;
-        color: var(--dark);
-        border-radius: 50px;
-        box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        z-index: 1000;
-        opacity: 0;
-        transition: all 0.3s ease;
-    }
-    
-    .notificacion.mostrar {
-        bottom: 30px;
-        opacity: 1;
-    }
-    
-    .notificacion.success {
-        background: #4BB543;
-        color: white;
-    }
-    
-    .notificacion.error {
-        background: #FF3333;
-        color: white;
-    }
-    
-    .notificacion i {
-        font-size: 1.2rem;
-    }
-    
     .submit-btn {
         background: linear-gradient(135deg, #4361ee, #3f37c9);
         color: white;
@@ -906,6 +1015,120 @@ estiloAdicional.textContent = `
         transform: translateY(-3px);
         box-shadow: 0 7px 20px rgba(67, 97, 238, 0.4);
         background: linear-gradient(135deg, #3f37c9, #4361ee);
+    }
+    
+    .clear-btn {
+        background: linear-gradient(135deg, #e63946, #d90429);
+        color: white;
+        border: none;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .clear-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 20px rgba(0,0,0,0.15);
+        background: linear-gradient(135deg, #d90429, #e63946);
+    }
+    
+    /* Estilos personalizados para SweetAlert2 */
+    .swal2-popup {
+        font-family: 'Poppins', sans-serif !important;
+        border-radius: 10px !important;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15) !important;
+    }
+    
+    .swal2-title {
+        font-size: 1.5rem !important;
+        color: #333 !important;
+    }
+    
+    .swal2-html-container {
+        font-size: 1rem !important;
+        color: #555 !important;
+    }
+    
+    .swal2-icon {
+        width: 4em !important;
+        height: 4em !important;
+        margin: 1.5em auto 1em !important;
+    }
+    
+    .swal2-icon.swal2-warning {
+        border-color: #ffc107 !important;
+        color: #ffc107 !important;
+    }
+    
+    .swal2-icon.swal2-error {
+        border-color: #dc3545 !important;
+        color: #dc3545 !important;
+    }
+    
+    .swal2-icon.swal2-success {
+        border-color: #28a745 !important;
+        color: #28a745 !important;
+    }
+    
+    .swal-confirm-btn {
+        background: linear-gradient(135deg, #e63946, #d90429) !important;
+        border: none !important;
+        padding: 0.8rem 1.5rem !important;
+        font-size: 1rem !important;
+        border-radius: 8px !important;
+        transition: all 0.3s !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        color: white !important;
+    }
+    
+    .swal-confirm-btn:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
+        background: linear-gradient(135deg, #d90429, #e63946) !important;
+    }
+    
+    .swal-cancel-btn {
+        background: linear-gradient(135deg, #4361ee, #3f37c9) !important;
+        border: none !important;
+        padding: 0.8rem 1.5rem !important;
+        font-size: 1rem !important;
+        border-radius: 8px !important;
+        transition: all 0.3s !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        color: white !important;
+        margin-right: 10px !important;
+    }
+    
+    .swal-cancel-btn:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
+        background: linear-gradient(135deg, #3f37c9, #4361ee) !important;
+    }
+    
+    .swal2-styled:focus {
+        box-shadow: none !important;
+    }
+    
+    .swal2-progress-steps .swal2-progress-step {
+        background: #4361ee !important;
+    }
+    
+    .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step {
+        background: #3f37c9 !important;
+    }
+    
+    .swal2-progress-steps .swal2-progress-step-line {
+        background: rgba(67, 97, 238, 0.3) !important;
     }
 `;
 document.head.appendChild(estiloAdicional);
