@@ -438,7 +438,7 @@
                             <th><i class="fas fa-weight-hanging"></i> Peso</th>
                             <th><i class="fas fa-map-marker-alt"></i> Destino</th>
                             <th><i class="fas fa-user"></i> Cliente</th>
-                            <th><i class="fas fa-dollar-sign"></i> Precio (COP)</th>
+                            <th><i class="fas fa-dollar-sign"></i> Precio </th>
                             <th><i class="fas fa-edit"></i> Observación</th>
                             <th>Acciones</th>
                         </tr>
@@ -895,6 +895,7 @@
                     const datosExcel = fletes.map(flete => ({
                         'Fecha': formatearFecha(flete.fecha),
                         'Documento': flete.documento,
+                        'Peso (kg)': flete.peso || 0,
                         'Destino': flete.destino,
                         'Cliente': flete.cliente,
                         'Precio (COP)': flete.precio, // Usamos el valor numérico directo
@@ -906,6 +907,7 @@
                     datosExcel.push({
                         'Fecha': '',
                         'Documento': '',
+                        'Peso (kg)': '',
                         'Destino': '',
                         'Cliente': 'TOTAL:',
                         'Precio (COP)': total, // Valor numérico directo
@@ -919,6 +921,7 @@
                     ws['!cols'] = [
                         {wch: 10}, // Fecha
                         {wch: 15}, // Documento
+                        {wch: 10}, // Peso
                         {wch: 25}, // Destino
                         {wch: 20}, // Cliente
                         {wch: 15}, // Precio
@@ -930,7 +933,7 @@
                     
                     // Generar el archivo Excel
                     const fecha = new Date().toISOString().slice(0, 10);
-                    XLSX.writeFile(wb, `fletes_miguel_${fecha}.xlsx`);
+                    XLSX.writeFile(wb, `fletes_Orlando_${fecha}.xlsx`);
                 });
 
                 form.addEventListener('submit', function(e) {
