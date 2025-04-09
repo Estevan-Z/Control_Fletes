@@ -214,6 +214,7 @@
                 height: 297mm;
                 margin: 0 !important;
                 padding: 0 !important;
+                font-size: 10pt;
             }
             
             body * {
@@ -222,6 +223,7 @@
             
             .print-section, .print-section * {
                 visibility: visible;
+                font-size: inherit;
             }
             
             .print-section {
@@ -245,22 +247,26 @@
                 width: 100%;
                 border-collapse: collapse;
                 page-break-inside: avoid;
+                font-size: 9pt;
             }
             
             th, td {
                 border: 1px solid #ddd;
-                padding: 6px;
+                padding: 4px; /* Reducir padding */
                 text-align: left;
-                font-size: 12pt;
             }
-            
+                    
             th {
                 background-color: #f2f2f2;
+                font-size: 9pt; /* Tamaño consistente para headers */
+            }/* Asegurar que los textos largos no hagan muy anchas las celdas */
+            td {
+                word-wrap: break-word;
+                max-width: 50mm;
             }
-            
-            #print-retenciones {
-                page-break-inside: avoid;
-                margin-top: 10mm;
+            h2 {
+                font-size: 12pt !important; /* Título más pequeño */
+                margin-bottom: 5mm !important;
             }
         }
 

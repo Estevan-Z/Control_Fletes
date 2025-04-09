@@ -285,6 +285,7 @@ button[type="submit"]:hover {
 }
 
 table {
+    
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
@@ -300,19 +301,19 @@ th {
     padding: 1.2rem 1.5rem;
     text-align: left;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 th i {
     margin-right: 8px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 td {
-    padding: 1.2rem 1.5rem;
+    padding: 1rem;
     border-bottom: 1px solid rgba(0,0,0,0.03);
     vertical-align: middle;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 tr:last-child td {
