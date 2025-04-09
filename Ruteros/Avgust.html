@@ -18,57 +18,6 @@
     
     <!-- Estilos CSS -->
     <style>
-        /* Estilos para las retenciones */
-        .retenciones-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            margin-top: 30px;
-            border-top: 3px solid #e63946;
-        }
-
-        .retenciones-title {
-            font-size: 1.3rem;
-            color: #e63946;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .retenciones-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .retencion-item {
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
-        }
-
-        .retencion-label {
-            font-weight: 500;
-            color: #555;
-            margin-bottom: 5px;
-        }
-
-        .retencion-value {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .total-pagar {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #2a9d8f;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-        }
-
         /* Estilos para el formulario */
         .form-columns {
             display: flex;
@@ -127,6 +76,7 @@
             display: flex;
             gap: 15px;
             margin: 20px 0;
+            flex-wrap: wrap;
         }
 
         .print-btn {
@@ -199,14 +149,6 @@
             background: linear-gradient(135deg, #b5179e, #f72585);
         }
 
-        /* Ajuste para los botones de acción */
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
         /* Estilos para la vista de impresión */
         @media print {
             body, html {
@@ -257,11 +199,6 @@
             th {
                 background-color: #f2f2f2;
             }
-            
-            #print-retenciones {
-                page-break-inside: avoid;
-                margin-top: 10mm;
-            }
         }
 
         #print-section {
@@ -277,10 +214,6 @@
 
         .avoid-page-break {
             page-break-inside: avoid;
-        }
-
-        .force-page-break {
-            page-break-after: always;
         }
 
         #print-fletes-table {
@@ -300,16 +233,8 @@
             font-weight: 600;
         }
 
-        #print-retenciones {
-            margin-top: 30px;
-            page-break-inside: avoid;
-        }
-
         /* Estilos responsivos */
         @media (max-width: 768px) {
-            .retenciones-grid {
-                grid-template-columns: 1fr;
-            }
             .form-columns {
                 flex-direction: column;
             }
@@ -322,21 +247,151 @@
         }
 
         /* Estilos para la impresión */
-        @page :first {
-            margin-top: 0;
+        @page {
+            size: auto;
+            margin: 0mm;
         }
         
-        @page {
-            size: auto;  /* auto es el valor inicial */
-            margin: 0mm; /* elimina los márgenes por defecto */
+        .Logo {
+            width: 90px;
+            height: auto;
+        }
+        
+        /* Estilos para botones de edición/eliminación */
+        .edit-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 8px;
+        }
+        
+        .edit-btn:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+        }
+        
+        .total-row {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .total-label {
+            text-align: right;
+            padding-right: 20px;
+        }
+        
+        .total-value {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        .notificacion {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            background: white;
+            color: var(--dark);
+            border-radius: 50px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notificacion.mostrar {
+            bottom: 30px;
+            opacity: 1;
+        }
+        
+        .notificacion.success {
+            background: #4BB543;
+            color: white;
+        }
+        
+        .notificacion.error {
+            background: #FF3333;
+            color: white;
+        }
+        
+        .notificacion i {
+            font-size: 1.2rem;
+        }
+
+        /* Estilos para los botones de SweetAlert */
+        .swal-confirm-btn {
+            background: linear-gradient(135deg, #f72585, #b5179e) !important;
+            border: none !important;
+            padding: 0.8rem 1.5rem !important;
+            font-size: 1rem !important;
+            border-radius: 8px !important;
+            transition: all 0.3s !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        }
+
+        .swal-confirm-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
+            background: linear-gradient(135deg, #b5179e, #f72585) !important;
+        }
+
+        .swal-cancel-btn {
+            background: linear-gradient(135deg, #4361ee, #3f37c9) !important;
+            border: none !important;
+            padding: 0.8rem 1.5rem !important;
+            font-size: 1rem !important;
+            border-radius: 8px !important;
+            transition: all 0.3s !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        }
+
+        .swal-cancel-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
+            background: linear-gradient(135deg, #3f37c9, #4361ee) !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-user-tie"></i> Avgust</h1>
-            <p>Registro de Ruteros </p>
+            <h1><img class="Logo" src="../img/avgust_logo.png" alt=""> Avgust</h1>
+            <p>Registro de Ruteros</p>
             <a href="../index.html" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Volver
             </a>
@@ -380,13 +435,12 @@
                             </div>
                             <div class="form-group">
                                 <label for="destino"><i class="fas fa-map-marker-alt"></i> Dirección Destino:</label>
-                                <input  type="text" id="destino" required placeholder="Dirección completa con referencias"></input>
+                                <input type="text" id="destino" required placeholder="Dirección completa con referencias">
                             </div>
                             <div class="form-group">
                                 <label for="cliente"><i class="fas fa-user-tie"></i> Cliente:</label>
                                 <input type="text" id="cliente" required placeholder="Persona que recibe">
                             </div>
-                        
                         </div>
                         <!-- Grupo 3: Destino -->
                         <div class="field-group">
@@ -395,11 +449,11 @@
                             </h3>
                             <div class="form-group">
                                 <label for="cajas"><i class="fas fa-box"></i> N° Cajas/Bultos:</label>
-                                <input type="number" id="cajas" required placeholder="Cantidad total" min="" value="">
+                                <input type="number" id="cajas" required placeholder="Cantidad total" min="1" value="1">
                             </div>
                             <div class="form-group">
                                 <label for="domicilios"><i class="fas fa-box"></i> N° Domicilios:</label>
-                                <input type="number" id="domicilios" required placeholder="Cantidad total" min="" value="">
+                                <input type="number" id="domicilios" required placeholder="Cantidad total" min="1" value="1">
                             </div>
                             <div class="form-group">
                                 <label for="precio"><i class="fas fa-dollar-sign"></i> Valor del Flete (COP):</label>
@@ -408,7 +462,6 @@
                                     <input type="number" id="precio" placeholder="0 si no aplica" min="0" value="0">
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     
@@ -430,7 +483,6 @@
                         <i class="fas fa-save"></i> Registrar Flete
                     </button>
                 </form>
-
             </div>
             
             <!-- Botones de acción sobre la tabla -->
@@ -458,7 +510,7 @@
                             <th><i class="fas fa-map-marker-alt"></i> Destino</th>
                             <th><i class="fas fa-user"></i> Cliente</th>
                             <th><i class="fas fa-box"></i> Cajas</th>
-                            <th><i class="fas fa-box"></i> Domicilios </th>
+                            <th><i class="fas fa-box"></i> Domicilios</th>
                             <th><i class="fas fa-dollar-sign"></i> Precio</th>
                             <th><i class="fas fa-clipboard-check"></i> Detalles</th>
                             <th>Acciones</th>
@@ -469,29 +521,29 @@
                     </tbody>
                     <tfoot>
                         <tr class="total-row">
-                            <td colspan="7" class="total-label">TOTAL:</td>
+                            <td colspan="8" class="total-label">TOTAL:</td>
                             <td class="total-value">$0</td>
+                            <td></td>
                             <td></td>
                         </tr>
                     </tfoot>    
                 </table>
-
             </div>
 
             <!-- Sección para impresión (oculta inicialmente) -->
             <div id="print-section" class="print-section">
-                <h2 style="text-align: center;">Cuenta de cobro - James Saavedra</h2>
-                <p style="text-align: center; margin-bottom: 20px;">Fecha: <span id="print-date"></span></p>
+                <h2 style="text-align: center;">Corte de Fletes Avgust</h2>
                 
                 <table id="print-fletes-table">
                     <thead>
                         <tr>
                             <th>Fecha</th>
                             <th>Documento</th>
-                            <th>Empresa</th>
-                            <th>Cajas</th>
+                            <th>Origen</th>
                             <th>Destino</th>
-                            <th>Contacto</th>
+                            <th>Cliente</th>
+                            <th>Cajas</th>
+                            <th>Domicilios</th>
                             <th>Precio</th>
                             <th>Detalles</th>
                         </tr>
@@ -501,15 +553,12 @@
                     </tbody>
                     <tfoot>
                         <tr class="total-row">
-                            <td colspan="6" style="text-align: right; font-weight: bold;">TOTAL:</td>
+                            <td colspan="7" style="text-align: right; font-weight: bold;">TOTAL:</td>
                             <td style="font-weight: bold;" id="print-total-value">$0</td>
-                            <td></td>
                         </tr>
                     </tfoot>    
                 </table>
-
             </div>
-
         </main>
         
         <footer>
@@ -533,8 +582,7 @@
                     const fecha = new Date(fechaStr);
                     // Ajustar a zona horaria de Colombia (UTC-5)
                     const offset = fecha.getTimezoneOffset() + 300; // 300 minutos = 5 horas (UTC-5)
-                    const fechaColombia = new Date(fecha.getTime() + offset * 60000);
-                    return fechaColombia;
+                    return new Date(fecha.getTime() + offset * 60000);
                 }
 
                 // Función para formatear fecha en formato colombiano (dd/mm/aaaa)
@@ -569,6 +617,7 @@
                 function calcularTotal() {
                     return fletes.reduce((total, flete) => total + (parseFloat(flete.precio) || 0), 0);
                 }
+
                 function renderizarTabla() {
                     tablaBody.innerHTML = '';
                     const printTablaBody = document.querySelector('#print-fletes-table tbody');
@@ -577,7 +626,7 @@
                     if (fletes.length === 0) {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray);">
+                            <td colspan="11" style="text-align: center; padding: 2rem; color: var(--gray);">
                                 <i class="fas fa-inbox"></i>
                                 <p>No hay fletes registrados aún</p>
                             </td>
@@ -586,7 +635,7 @@
                         
                         const printTr = document.createElement('tr');
                         printTr.innerHTML = `
-                            <td colspan="6" style="text-align: center; padding: 2rem; color: #555;">
+                            <td colspan="9" style="text-align: center; padding: 2rem; color: #555;">
                                 No hay fletes registrados aún
                             </td>
                         `;
@@ -594,7 +643,6 @@
                         
                         document.querySelector('.total-row').style.display = 'none';
                         document.getElementById('print-total-value').textContent = formatearPrecioCOP(0);
-                        actualizarRetenciones(0);
                         return;
                     }
                     
@@ -627,7 +675,6 @@
                         printTr.innerHTML = `
                             <td>${formatearFecha(flete.fecha)}</td>
                             <td>${flete.documento}</td>
-                            <td>${flete.transportador}</td>
                             <td>${flete.origen}</td>
                             <td>${flete.destino}</td>
                             <td>${flete.cliente}</td>
@@ -639,14 +686,11 @@
                         printTablaBody.appendChild(printTr);
                     });
 
-
                     const total = calcularTotal();
                     const totalRow = document.querySelector('.total-row');
                     totalRow.style.display = '';
                     document.querySelector('.total-value').textContent = formatearPrecioCOP(total);
                     document.getElementById('print-total-value').textContent = formatearPrecioCOP(total);
-
-        
 
                     document.querySelectorAll('.delete-btn').forEach(btn => {
                         btn.addEventListener('click', function() {
@@ -655,36 +699,20 @@
                             
                             Swal.fire({
                                 title: '¿Eliminar flete?',
-                                html: `¿Estás seguro de eliminar el flete del cliente <b>${flete.cliente}</b> con destino a <b>${flete.precio}</b>?`,
+                                html: `¿Estás seguro de eliminar el flete del cliente <b>${flete.cliente}</b> con destino a <b>${flete.destino}</b>?`,
                                 icon: 'warning',
                                 showCancelButton: true,
                                 confirmButtonColor: '#d33',
                                 cancelButtonColor: '#3085d6',
                                 confirmButtonText: 'Sí, eliminar',
                                 cancelButtonText: 'Cancelar',
-                                background: '#ffffff',
-                                backdrop: `
-                                    rgba(0,0,0,0.5)
-                                    url("/images/trash.gif")
-                                    left top
-                                    no-repeat
-                                `,
-                                customClass: {
-                                    confirmButton: 'swal-confirm-btn',
-                                    cancelButton: 'swal-cancel-btn'
-                                }
+                                background: '#ffffff'
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     fletes.splice(index, 1);
                                     localStorage.setItem(`fletes_${conductor}`, JSON.stringify(fletes));
                                     renderizarTabla();
                                     mostrarNotificacion('Flete eliminado correctamente', 'success');
-                                    
-                                    Swal.fire(
-                                        '¡Eliminado!',
-                                        'El flete ha sido eliminado.',
-                                        'success'
-                                    );
                                 }
                             });
                         });
@@ -718,7 +746,6 @@
                     });
                 }
 
-
                 // Función para vaciar la tabla
                 function vaciarTabla() {
                     if (fletes.length === 0) {
@@ -740,22 +767,12 @@
                         cancelButtonColor: '#3085d6',
                         confirmButtonText: 'Sí, vaciar tabla',
                         cancelButtonText: 'Cancelar',
-                        background: '#ffffff',
-                        customClass: {
-                            confirmButton: 'swal-confirm-btn',
-                            cancelButton: 'swal-cancel-btn'
-                        }
+                        background: '#ffffff'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             fletes = [];
                             localStorage.setItem(`fletes_${conductor}`, JSON.stringify(fletes));
                             renderizarTabla();
-                            
-                            Swal.fire(
-                                '¡Tabla vaciada!',
-                                'Todos los fletes han sido eliminados.',
-                                'success'
-                            );
                         }
                     });
                 }
@@ -779,14 +796,6 @@
                 }
 
                 function imprimirReporte() {
-                    // Actualizar la fecha de impresión
-                    const ahora = new Date();
-                    document.getElementById('print-date').textContent = ahora.toLocaleDateString('es-CO', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                    });
-                    
                     // Mostrar la sección de impresión
                     const printSection = document.getElementById('print-section');
                     printSection.style.display = 'block';
@@ -822,41 +831,46 @@
                     const datosExcel = fletes.map(flete => ({
                         'Fecha': formatearFecha(flete.fecha),
                         'Documento': flete.documento,
-                        'Empresa': flete.empresa,
-                        'Cajas': flete.cajas,
+                        'Transportador': flete.transportador,
+                        'Origen': flete.origen,
                         'Destino': flete.destino,
-                        'Contacto': flete.cliente,
-                        'Precio': flete.precio, // Usamos el valor numérico directo
+                        'Cliente': flete.cliente,
+                        'Cajas': flete.cajas,
+                        'Domicilios': flete.domicilios,
+                        'Precio': flete.precio,
                         'Detalles': flete.observacion || '-'
                     }));
+                    
                     // Agregar fila de totales
                     const total = calcularTotal();
                     datosExcel.push({
                         'Fecha': '',
                         'Documento': '',
-                        'Empresa': '',
-                        'Cajas': '',
+                        'Transportador': '',
+                        'Origen': '',
                         'Destino': '',
-                        'Contacto': 'TOTAL:',
-                        'Precio': total, // Valor numérico directo
+                        'Cliente': 'TOTAL:',
+                        'Cajas': '',
+                        'Domicilios': '',
+                        'Precio': total,
                         'Detalles': ''
                     });
 
-                    
                     // Convertir los datos a hoja de cálculo
                     const ws = XLSX.utils.json_to_sheet(datosExcel);
                     
                     // Configurar ancho de columnas
                     ws['!cols'] = [
-                    {wch: 10}, // Fecha
+                        {wch: 10}, // Fecha
                         {wch: 15}, // Documento
-                        {wch: 20}, // Empresa
-                        {wch: 8},  // Cajas
+                        {wch: 20}, // Transportador
+                        {wch: 25}, // Origen
                         {wch: 25}, // Destino
-                        {wch: 20}, // Contacto
+                        {wch: 20}, // Cliente
+                        {wch: 8},  // Cajas
+                        {wch: 10}, // Domicilios
                         {wch: 15}, // Precio
                         {wch: 30}  // Detalles
-
                     ];
                     
                     // Agregar la hoja al libro
@@ -864,7 +878,7 @@
                     
                     // Generar el archivo Excel
                     const fecha = new Date().toISOString().slice(0, 10);
-                    XLSX.writeFile(wb, `fletes_james_${fecha}.xlsx`);
+                    XLSX.writeFile(wb, `fletes_${conductor}_${fecha}.xlsx`);
                 });
 
                 form.addEventListener('submit', function(e) {
@@ -881,7 +895,7 @@
                     const fechaISO = fechaColombia.toISOString().split('T')[0];
                     
                     const nuevoFlete = {
-                        fecha: document.getElementById('fecha').value,
+                        fecha: fechaInput,
                         documento: document.getElementById('documento').value.trim(),
                         transportador: document.getElementById('transportador').value.trim(),
                         origen: document.getElementById('origen').value.trim(),
@@ -893,11 +907,11 @@
                         observacion: document.getElementById('observacion').value.trim()
                     };
 
-                    if (!nuevoFlete.fecha || !nuevoFlete.documento || !nuevoFlete.transportador || !nuevoFlete.origen || !nuevoFlete.destino || !nuevoFlete.cliente) {
+                    if (!nuevoFlete.fecha || !nuevoFlete.documento || !nuevoFlete.transportador || 
+                        !nuevoFlete.origen || !nuevoFlete.destino || !nuevoFlete.cliente) {
                         mostrarNotificacion('Por favor complete todos los campos requeridos', 'error');
                         return;
                     }
-
 
                     if (isNaN(nuevoFlete.precio) || nuevoFlete.precio < 0) {
                         mostrarNotificacion('El precio no puede ser negativo', 'error');
@@ -926,139 +940,6 @@
                 renderizarTabla();
             }
         });
-
-        // Estilos CSS adicionales para los nuevos elementos
-        const estiloAdicional = document.createElement('style');
-        estiloAdicional.textContent = `
-            .edit-btn {
-                background: #ffc107;
-                color: #212529;
-                border: none;
-                padding: 0.6rem 1rem;
-                border-radius: 6px;
-                cursor: pointer;
-                transition: all 0.3s;
-                font-size: 0.9rem;
-                display: inline-flex;
-                align-items: center;
-                gap: 5px;
-                margin-right: 8px;
-            }
-            
-            .edit-btn:hover {
-                background: #e0a800;
-                transform: translateY(-2px);
-                box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
-            }
-            
-            .delete-btn {
-                background: #dc3545;
-                color: white;
-                border: none;
-                padding: 0.6rem 1rem;
-                border-radius: 6px;
-                cursor: pointer;
-                transition: all 0.3s;
-                font-size: 0.9rem;
-                display: inline-flex;
-                align-items: center;
-                gap: 5px;
-            }
-            
-            .delete-btn:hover {
-                background: #c82333;
-                transform: translateY(-2px);
-                box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
-            }
-            
-            .total-row {
-                background-color: #f8f9fa;
-                font-weight: bold;
-            }
-            
-            .total-label {
-                text-align: right;
-                padding-right: 20px;
-            }
-            
-            .total-value {
-                color: var(--primary);
-                font-size: 1.1rem;
-            }
-            
-            .notificacion {
-                position: fixed;
-                bottom: -100px;
-                left: 50%;
-                transform: translateX(-50%);
-                padding: 1rem 2rem;
-                background: white;
-                color: var(--dark);
-                border-radius: 50px;
-                box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                z-index: 1000;
-                opacity: 0;
-                transition: all 0.3s ease;
-            }
-            
-            .notificacion.mostrar {
-                bottom: 30px;
-                opacity: 1;
-            }
-            
-            .notificacion.success {
-                background: #4BB543;
-                color: white;
-            }
-            
-            .notificacion.error {
-                background: #FF3333;
-                color: white;
-            }
-            
-            .notificacion i {
-                font-size: 1.2rem;
-            }
-
-            /* Estilos para los botones de SweetAlert */
-            .swal-confirm-btn {
-                background: linear-gradient(135deg, #f72585, #b5179e) !important;
-                border: none !important;
-                padding: 0.8rem 1.5rem !important;
-                font-size: 1rem !important;
-                border-radius: 8px !important;
-                transition: all 0.3s !important;
-                font-weight: 600 !important;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-            }
-
-            .swal-confirm-btn:hover {
-                transform: translateY(-2px) !important;
-                box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
-                background: linear-gradient(135deg, #b5179e, #f72585) !important;
-            }
-
-            .swal-cancel-btn {
-                background: linear-gradient(135deg, #4361ee, #3f37c9) !important;
-                border: none !important;
-                padding: 0.8rem 1.5rem !important;
-                font-size: 1rem !important;
-                border-radius: 8px !important;
-                transition: all 0.3s !important;
-                font-weight: 600 !important;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-            }
-
-            .swal-cancel-btn:hover {
-                transform: translateY(-2px) !important;
-                box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
-                background: linear-gradient(135deg, #3f37c9, #4361ee) !important;
-            }
-        `;
-        document.head.appendChild(estiloAdicional);
     </script>
 </body>
 </html>
