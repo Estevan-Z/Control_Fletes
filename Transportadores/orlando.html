@@ -14,7 +14,7 @@
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* Estilos adicionales para las retenciones */
+        /* Estilos para las retenciones */
         .retenciones-container {
             background: #fff;
             padding: 20px;
@@ -65,7 +65,7 @@
             border-top: 1px solid #ddd;
         }
 
-        /* Estilos para el formulario con nuevos campos */
+        /* Estilos para el formulario */
         .form-columns {
             display: flex;
             flex-wrap: wrap;
@@ -91,6 +91,31 @@
             align-items: center;
             gap: 10px;
             font-size: 1.1rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(67, 97, 238, 0.4);
+            background: linear-gradient(135deg, #3f37c9, #4361ee);
         }
 
         /* Estilos para los botones de acción */
@@ -146,48 +171,112 @@
             background: linear-gradient(135deg, #1b5e20, #2e7d32);
         }
 
+        /* Estilo para el botón de vaciar tabla */
+        .clear-btn {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #b5179e, #f72585);
+        }
+
+        /* Ajuste para los botones de acción */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
         /* Estilos para la vista de impresión */
         @media print {
+            body, html {
+                width: 210mm;   
+                height: 297mm;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
             body * {
                 visibility: hidden;
             }
+            
             .print-section, .print-section * {
                 visibility: visible;
             }
+            
             .print-section {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
-                padding: 20px;
+                height: 100%;
+                margin: 0;
+                padding: 10mm;
+                box-sizing: border-box;
+                page-break-after: avoid;
+                page-break-before: avoid;
             }
+            
             .no-print {
-                display: none;
+                display: none !important;
             }
+            
             table {
                 width: 100%;
                 border-collapse: collapse;
+                page-break-inside: avoid;
             }
+            
             th, td {
                 border: 1px solid #ddd;
-                padding: 8px;
+                padding: 6px;
                 text-align: left;
+                font-size: 12pt;
             }
+            
             th {
                 background-color: #f2f2f2;
             }
+            
+            #print-retenciones {
+                page-break-inside: avoid;
+                margin-top: 10mm;
+            }
         }
 
-        /* Estilos para la sección de impresión */
         #print-section {
             background: white;
-            padding: 20px;
+            padding: 10mm;
             box-sizing: border-box;
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            box-shadow: none;
             display: none;
+        }
+
+        .avoid-page-break {
+            page-break-inside: avoid;
+        }
+
+        .force-page-break {
+            page-break-after: always;
         }
 
         #print-fletes-table {
@@ -212,6 +301,7 @@
             page-break-inside: avoid;
         }
 
+        /* Estilos responsivos */
         @media (max-width: 768px) {
             .retenciones-grid {
                 grid-template-columns: 1fr;
@@ -225,6 +315,16 @@
             .action-buttons {
                 flex-direction: column;
             }
+        }
+
+        /* Estilos para la impresión */
+        @page :first {
+            margin-top: 0;
+        }
+        
+        @page {
+            size: auto;  /* auto es el valor inicial */
+            margin: 0mm; /* elimina los márgenes por defecto */
         }
     </style>
 </head>
@@ -675,6 +775,7 @@
                             
                             document.getElementById('fecha').value = flete.fecha;
                             document.getElementById('documento').value = flete.documento;
+                            document.getElementById('peso').value = flete.peso || '';
                             document.getElementById('destino').value = flete.destino;
                             document.getElementById('cliente').value = flete.cliente;
                             document.getElementById('precio').value = flete.precio;
@@ -848,6 +949,7 @@
                     const nuevoFlete = {
                         fecha: fechaISO, // Guardamos en formato ISO pero ajustado a Colombia
                         documento: document.getElementById('documento').value.trim(),
+                        peso: parseFloat(document.getElementById('peso').value) || 0,
                         destino: document.getElementById('destino').value.trim(),
                         cliente: document.getElementById('cliente').value.trim(),
                         precio: parseFloat(document.getElementById('precio').value) || 0,
