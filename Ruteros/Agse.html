@@ -594,6 +594,7 @@
                             <th><i class="fas fa-user"></i> Cliente</th>
                             <th><i class="fas fa-dollar-sign"></i> Precio Flete</th>
                             <th><i class="fas fa-clipboard-check"></i> Observaciones</th>
+                            <th><i class="fas fa-piggy-bank"></i> Base $200.000</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -604,7 +605,8 @@
                         <tr class="total-row">
                             <td colspan="5" class="total-label">TOTAL:</td>
                             <td class="total-value">$0</td>
-                            <td></td>
+                            <td class="total-label">BASE RESTANTE:</td>
+                            <td class="base-value">$200,000</td>
                             <td></td>
                         </tr>
                     </tfoot>    
@@ -613,7 +615,8 @@
 
             <!-- Sección para impresión (oculta inicialmente) -->
             <div id="print-section" class="print-section">
-                <h2 style="text-align: center;">Corte de Fletes Agse</h2>
+                <h2 style="text-align: center;">Corte de Fletes Agricultura y Servicios</h2>
+                <p style="text-align: center; margin-bottom: 20px;">Fecha: <span id="print-date"></span></p>
                 
                 <table id="print-fletes-table">
                     <thead>
@@ -625,6 +628,7 @@
                             <th>Cliente</th>
                             <th>Precio</th>
                             <th>Observaciones</th>
+                            <th>Base</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -632,9 +636,10 @@
                     </tbody>
                     <tfoot>
                         <tr class="total-row">
-                            <td colspan="5" style="text-align: right; font-weight: bold;">TOTAL:</td>
+                            <td colspan="5" style="text-align: right; font-weight: bold;">TOTAL FLETES:</td>
                             <td style="font-weight: bold;" id="print-total-value">$0</td>
-                            <td></td>
+                            <td style="text-align: right; font-weight: bold;">BASE RESTANTE:</td>
+                            <td style="font-weight: bold;" id="print-base-value">$200,000</td>
                         </tr>
                     </tfoot>    
                 </table>
@@ -651,12 +656,14 @@
         document.addEventListener('DOMContentLoaded', function() {
     // Datos y elementos del DOM
     let fletes = JSON.parse(localStorage.getItem('fletes_agse')) || [];
+    const BASE_INICIAL = 200000; // Base inicial de dinero
     const form = document.getElementById('flete-form');
     const tablaBody = document.querySelector('#fletes-table tbody');
     const tfoot = document.querySelector('#fletes-table tfoot');
     const searchInput = document.getElementById('search-input');
     let fleteEditando = null;
     let searchTerm = '';
+    let ordenActual = 'fecha-asc'; // Orden por defecto: fecha ascendente
 
     // Función para ajustar fecha a zona horaria de Colombia (UTC-5)
     function ajustarFechaColombia(fecha) {
@@ -709,21 +716,62 @@
         return fecha.toISOString().split('T')[0];
     }
 
+    // Función para ordenar los fletes
+    function ordenarFletes(fletesArray) {
+        const [campo, direccion] = ordenActual.split('-');
+        
+        return [...fletesArray].sort((a, b) => {
+            // Orden por fecha
+            if (campo === 'fecha') {
+                const fechaA = new Date(a.fecha);
+                const fechaB = new Date(b.fecha);
+                return direccion === 'asc' ? fechaA - fechaB : fechaB - fechaA;
+            }
+            // Orden por documento
+            else if (campo === 'documento') {
+                return direccion === 'asc' 
+                    ? a.documento.localeCompare(b.documento)
+                    : b.documento.localeCompare(a.documento);
+            }
+            return 0;
+        });
+    }
+
+    // Función para calcular totales y base actual
+    function calcularTotales(fletesArray) {
+        let totalFletes = 0;
+        let baseCalculada = BASE_INICIAL;
+        
+        fletesArray.forEach(flete => {
+            if (flete.precio) {
+                totalFletes += parseFloat(flete.precio);
+                baseCalculada -= parseFloat(flete.precio);
+            }
+        });
+        
+        return {
+            totalFletes: totalFletes,
+            baseActual: baseCalculada > 0 ? baseCalculada : 0 // No mostrar valores negativos
+        };
+    }
+
     // Función para renderizar la tabla
     function renderizarTabla() {
-        const fletesFiltrados = searchTerm 
+        let fletesFiltrados = searchTerm 
             ? fletes.filter(f => f.documento.toLowerCase().includes(searchTerm.toLowerCase()))
-            : fletes;
+            : [...fletes];
+        
+        // Ordenar los fletes antes de renderizar
+        fletesFiltrados = ordenarFletes(fletesFiltrados);
         
         tablaBody.innerHTML = '';
         
         if (fletesFiltrados.length === 0) {
-            // Ocultar el total cuando no hay fletes
             tfoot.classList.add('hidden');
             
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td colspan="8" class="no-results">
+                <td colspan="9" class="no-results">
                     <i class="fas fa-${searchTerm ? 'search' : 'inbox'}"></i>
                     <p>${searchTerm ? 'No se encontraron resultados' : 'No hay fletes registrados'}</p>
                 </td>
@@ -732,12 +780,17 @@
             return;
         }
         
-        // Mostrar el total cuando hay fletes
         tfoot.classList.remove('hidden');
         
-        let total = 0;
+        const { totalFletes, baseActual } = calcularTotales(fletes);
+        
+        // Calcular base acumulativa para cada fila
+        let baseAcumulativa = BASE_INICIAL;
         
         fletesFiltrados.forEach((flete, index) => {
+            const precioFlete = parseFloat(flete.precio) || 0;
+            baseAcumulativa -= precioFlete;
+            
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${index + 1}</td>
@@ -745,42 +798,38 @@
                 <td>${flete.documento}</td>
                 <td>${flete.transportador || 'Carlos Andres Carvajal'}</td>
                 <td>${flete.cliente}</td>
-                <td>${flete.precio ? formatearMoneda(flete.precio) : 'Sin costo'}</td>
+                <td>${precioFlete ? formatearMoneda(precioFlete) : 'Sin costo'}</td>
                 <td>${flete.observacion || '-'}</td>
+                <td>${formatearMoneda(baseAcumulativa > 0 ? baseAcumulativa : 0)}</td>
                 <td>
-                    <button class="edit-btn" data-index="${fletes.indexOf(flete)}">
+                    <button class="edit-btn" data-id="${flete.id}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="delete-btn" data-index="${fletes.indexOf(flete)}">
+                    <button class="delete-btn" data-id="${flete.id}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
             `;
             tablaBody.appendChild(tr);
-            
-            if (flete.precio) {
-                total += parseFloat(flete.precio);
-            }
         });
         
-        // Actualizar total
-        document.querySelector('.total-value').textContent = formatearMoneda(total);
-        document.getElementById('print-total-value').textContent = formatearMoneda(total);
-        
-        // Agregar event listeners a los botones
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', editarFlete);
-        });
-        
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', eliminarFlete);
-        });
+        // Actualizar totales en el footer
+        document.querySelector('.total-value').textContent = formatearMoneda(totalFletes);
+        document.getElementById('print-total-value').textContent = formatearMoneda(totalFletes);
+        document.querySelector('.base-value').textContent = formatearMoneda(baseActual);
+    }
+
+    // Función para generar un ID único
+    function generarId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
     }
 
     // Función para editar flete
     function editarFlete() {
-        const index = parseInt(this.getAttribute('data-index'));
-        const flete = fletes[index];
+        const id = this.getAttribute('data-id');
+        const flete = fletes.find(f => f.id === id);
+        
+        if (!flete) return;
         
         // Mostrar la fecha correctamente en el input
         const fechaInput = document.getElementById('fecha');
@@ -793,7 +842,7 @@
         document.getElementById('precio').value = flete.precio || 0;
         document.getElementById('observacion').value = flete.observacion || '';
         
-        fleteEditando = index;
+        fleteEditando = id;
         document.querySelector('.submit-btn').innerHTML = '<i class="fas fa-save"></i> Actualizar Flete';
         
         // Scroll al formulario
@@ -802,8 +851,10 @@
 
     // Función para eliminar flete
     function eliminarFlete() {
-        const index = parseInt(this.getAttribute('data-index'));
-        const flete = fletes[index];
+        const id = this.getAttribute('data-id');
+        const flete = fletes.find(f => f.id === id);
+        
+        if (!flete) return;
         
         Swal.fire({
             title: '¿Eliminar flete?',
@@ -818,7 +869,7 @@
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                fletes.splice(index, 1);
+                fletes = fletes.filter(f => f.id !== id);
                 localStorage.setItem('fletes_agse', JSON.stringify(fletes));
                 renderizarTabla();
                 mostrarNotificacion('Flete eliminado correctamente', 'success');
@@ -831,6 +882,7 @@
         e.preventDefault();
         
         const nuevoFlete = {
+            id: fleteEditando || generarId(),
             fecha: guardarFecha(document.getElementById('fecha').value),
             documento: document.getElementById('documento').value.trim(),
             cliente: document.getElementById('cliente').value.trim(),
@@ -847,8 +899,11 @@
         
         // Guardar o actualizar
         if (fleteEditando !== null) {
-            fletes[fleteEditando] = nuevoFlete;
-            mostrarNotificacion('Flete actualizado correctamente', 'success');
+            const index = fletes.findIndex(f => f.id === fleteEditando);
+            if (index !== -1) {
+                fletes[index] = nuevoFlete;
+                mostrarNotificacion('Flete actualizado correctamente', 'success');
+            }
             fleteEditando = null;
         } else {
             fletes.push(nuevoFlete);
@@ -884,20 +939,54 @@
         }
     });
 
+    // Eventos para ordenar
+    document.querySelectorAll('[data-orden]').forEach(boton => {
+        boton.addEventListener('click', function() {
+            ordenActual = this.getAttribute('data-orden');
+            renderizarTabla();
+            
+            // Actualizar indicador visual de orden
+            document.querySelectorAll('[data-orden]').forEach(b => {
+                b.querySelector('i').className = 'fas fa-sort';
+            });
+            
+            const icono = this.querySelector('i');
+            if (ordenActual.includes('asc')) {
+                icono.className = 'fas fa-sort-up';
+            } else {
+                icono.className = 'fas fa-sort-down';
+            }
+        });
+    });
+
     // Evento para imprimir
     document.getElementById('print-btn').addEventListener('click', function() {
+        const ahora = new Date();
+                    document.getElementById('print-date').textContent = ahora.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
         const printSection = document.getElementById('print-section');
         const printBody = document.querySelector('#print-fletes-table tbody');
         const printTfoot = document.querySelector('#print-fletes-table tfoot');
         
         printBody.innerHTML = '';
         
-        if (fletes.length === 0) {
+        const { totalFletes, baseActual } = calcularTotales(fletes);
+        const fletesOrdenados = ordenarFletes(fletes);
+        
+        if (fletesOrdenados.length === 0) {
             printTfoot.classList.add('hidden');
         } else {
             printTfoot.classList.remove('hidden');
             
-            fletes.forEach((flete, index) => {
+            let baseAcumulativa = BASE_INICIAL;
+            
+            fletesOrdenados.forEach((flete, index) => {
+                const precioFlete = parseFloat(flete.precio) || 0;
+                baseAcumulativa -= precioFlete;
+                
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${index + 1}</td>
@@ -905,12 +994,17 @@
                     <td>${flete.documento}</td>
                     <td>${flete.transportador || 'Carlos Andres Carvajal'}</td>
                     <td>${flete.cliente}</td>
-                    <td>${flete.precio ? formatearMoneda(flete.precio) : 'Sin costo'}</td>
+                    <td>${precioFlete ? formatearMoneda(precioFlete) : 'Sin costo'}</td>
                     <td>${flete.observacion || '-'}</td>
+                    <td>${formatearMoneda(baseAcumulativa > 0 ? baseAcumulativa : 0)}</td>
                 `;
                 printBody.appendChild(tr);
             });
         }
+        
+        // Actualizar totales en el print
+        document.getElementById('print-total-value').textContent = formatearMoneda(totalFletes);
+        document.getElementById('print-base-value').textContent = formatearMoneda(baseActual);
         
         printSection.style.display = 'block';
         window.print();
@@ -919,25 +1013,36 @@
 
     // Evento para exportar a Excel
     document.getElementById('excel-btn').addEventListener('click', function() {
-        const datos = fletes.map((flete, index) => ({
-            'Item': index + 1,
-            'Fecha': formatearFecha(flete.fecha),
-            'Documento': flete.documento,
-            'Transportador': flete.transportador || 'Carlos Andres Carvajal',
-            'Cliente': flete.cliente,
-            'Precio': flete.precio || 0,
-            'Observaciones': flete.observacion || '-'
-        }));
+        const { totalFletes, baseActual } = calcularTotales(fletes);
+        const fletesOrdenados = ordenarFletes(fletes);
         
-        // Agregar total
-        const total = fletes.reduce((sum, f) => sum + (parseFloat(f.precio) || 0), 0);
+        let baseAcumulativa = BASE_INICIAL;
+        
+        const datos = fletesOrdenados.map((flete, index) => {
+            const precioFlete = parseFloat(flete.precio) || 0;
+            baseAcumulativa -= precioFlete;
+            
+            return {
+                'Item': index + 1,
+                'Fecha': formatearFecha(flete.fecha),
+                'Documento': flete.documento,
+                'Transportador': flete.transportador || 'Carlos Andres Carvajal',
+                'Cliente': flete.cliente,
+                'Precio Flete': precioFlete,
+                'Base Restante': baseAcumulativa > 0 ? baseAcumulativa : 0,
+                'Observaciones': flete.observacion || '-'
+            };
+        });
+        
+        // Agregar totales
         datos.push({
             'Item': '',
             'Fecha': '',
             'Documento': '',
             'Transportador': '',
-            'Cliente': 'TOTAL:',
-            'Precio': total,
+            'Cliente': 'TOTALES:',
+            'Precio Flete': totalFletes,
+            'Base Restante': baseActual,
             'Observaciones': ''
         });
         
@@ -974,7 +1079,25 @@
         });
     });
 
+    // Asignar event listeners a los botones de orden
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('edit-btn') || e.target.closest('.edit-btn')) {
+            editarFlete.call(e.target.classList.contains('edit-btn') ? e.target : e.target.closest('.edit-btn'));
+        }
+        
+        if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
+            eliminarFlete.call(e.target.classList.contains('delete-btn') ? e.target : e.target.closest('.delete-btn'));
+        }
+    });
+
     // Inicializar tabla
+    // Asegurar que cada flete tenga un ID único
+    fletes = fletes.map(f => {
+        if (!f.id) f.id = generarId();
+        return f;
+    });
+    localStorage.setItem('fletes_agse', JSON.stringify(fletes));
+    
     renderizarTabla();
 });
     </script>
