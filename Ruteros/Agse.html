@@ -495,7 +495,7 @@
 <body>
     <div class="container">
         <header>
-            <h1><img class="Logo" src="../img/agse_logo.png" alt=""> Agricultura y Servicios</h1>
+            <h1><img class="Logo" src="../img/agse_logo2.png" alt=""> Agricultura y Servicios</h1>
             <p>Registro de Ruteros</p>
             <a href="../index.html" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Volver
@@ -621,14 +621,13 @@
                 <table id="print-fletes-table">
                     <thead>
                         <tr>
-                            <th>Item</th>
                             <th>Fecha</th>
                             <th>Documento</th>
                             <th>Transportador</th>
                             <th>Cliente</th>
                             <th>Precio</th>
                             <th>Observaciones</th>
-                            <th>Base</th>
+                            <th>Base $200.000</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -636,9 +635,9 @@
                     </tbody>
                     <tfoot>
                         <tr class="total-row">
-                            <td colspan="5" style="text-align: right; font-weight: bold;">TOTAL FLETES:</td>
+                            <td colspan="4" style="text-align: right; font-weight: bold;">TOTAL FLETES:</td>
                             <td style="font-weight: bold;" id="print-total-value">$0</td>
-                            <td style="text-align: right; font-weight: bold;">BASE RESTANTE:</td>
+                            <td style="text-align: center; font-weight: bold;">BASE RESTANTE:</td>
                             <td style="font-weight: bold;" id="print-base-value">$200,000</td>
                         </tr>
                     </tfoot>    
@@ -989,14 +988,12 @@
                 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${index + 1}</td>
                     <td>${formatearFecha(flete.fecha)}</td>
                     <td>${flete.documento}</td>
                     <td>${flete.transportador || 'Carlos Andres Carvajal'}</td>
                     <td>${flete.cliente}</td>
                     <td>${precioFlete ? formatearMoneda(precioFlete) : 'Sin costo'}</td>
                     <td>${flete.observacion || '-'}</td>
-                    <td>${formatearMoneda(baseAcumulativa > 0 ? baseAcumulativa : 0)}</td>
                 `;
                 printBody.appendChild(tr);
             });
