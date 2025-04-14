@@ -108,6 +108,7 @@
                                 <th>Organizador</th>
                                 <th>Descripción</th>
                                 <th>Acciones</th>
+                                <th>WhatsApp</th>
                             </tr>
                         </thead>
                         <tbody id="citasBody"></tbody>
@@ -244,7 +245,7 @@
                 
                 if (citasFiltradas.length === 0) {
                     const tr = document.createElement('tr');
-                    tr.innerHTML = '<td colspan="7" class="no-results">No se encontraron citas</td>';
+                    tr.innerHTML = '<td colspan="8" class="no-results">No se encontraron citas</td>';
                     citasBody.appendChild(tr);
                     return;
                 }
@@ -262,6 +263,11 @@
                             <button class="btn-editar" data-id="${cita.id}" title="Editar"><i class="fas fa-edit"></i></button>
                             <button class="btn-eliminar" data-id="${cita.id}" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
                         </td>
+                        <td class="whatsapp-actions">
+                            <button class="btn-whatsapp" data-cita='${JSON.stringify(cita)}' title="Enviar por WhatsApp">
+                                <i class="fab fa-whatsapp"></i> Enviar
+                            </button>
+                        </td>
                     `;
                     
                     citasBody.appendChild(tr);
@@ -274,6 +280,11 @@
                 
                 document.querySelectorAll('.btn-eliminar').forEach(btn => {
                     btn.addEventListener('click', eliminarCita);
+                });
+                
+                // Agregar event listeners para WhatsApp
+                document.querySelectorAll('.btn-whatsapp').forEach(btn => {
+                    btn.addEventListener('click', enviarWhatsApp);
                 });
             }
             
@@ -294,6 +305,39 @@
                 horas12 = horas12 % 12;
                 horas12 = horas12 ? horas12 : 12; // Convertir 0 a 12
                 return `${horas12.toString().padStart(2, '0')}:${minutos} ${ampm}`;
+            }
+            
+            // Función para enviar mensaje por WhatsApp
+            function enviarWhatsApp(e) {
+                const cita = JSON.parse(e.target.closest('button').getAttribute('data-cita'));
+                
+                // Números de teléfono especificados
+                const numeros = [
+                    '3106653266',
+                    '3134557656',
+                ];
+                
+                // Formatear la fecha y hora
+                const fechaFormateada = formatearFechaCorrecta(cita.fecha);
+                const horaInicioFormateada = formato12Horas(cita.horaInicio);
+                const horaFinFormateada = formato12Horas(cita.horaFin);
+                
+                // Crear mensaje
+                const mensaje = `Nueva cita agendada:\n\n` +
+                               `📅 Fecha: ${fechaFormateada}\n` +
+                               `⏰ Hora: ${horaInicioFormateada} - ${horaFinFormateada}\n` +
+                               `🏢 Empresa: ${cita.empresa}\n` +
+                               `👤 Organizador: ${cita.organizador}\n` +
+                               `📝 Descripción: ${cita.descripcion || 'N/A'}`;
+                
+                // Codificar el mensaje para URL
+                const mensajeCodificado = encodeURIComponent(mensaje);
+                
+                // Enviar a cada número
+                numeros.forEach(numero => {
+                    const url = `https://wa.me/57${numero}?text=${mensajeCodificado}`;
+                    window.open(url, '_blank');
+                });
             }
             
             // Editar cita
@@ -771,6 +815,32 @@ textarea {
 
 .btn-editar:hover, .btn-eliminar:hover {
     opacity: 0.8;
+}
+
+/* Estilos para WhatsApp */
+.btn-whatsapp {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #25D366;
+    color: white;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-whatsapp:hover {
+    opacity: 0.9;
+}
+
+.btn-whatsapp i {
+    font-size: 1.1rem;
+}
+
+.whatsapp-actions {
+    text-align: center;
 }
 
 /* Responsive */
