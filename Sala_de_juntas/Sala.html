@@ -12,373 +12,421 @@
             <h1><i class="fas fa-calendar-alt"></i> Agendación de Citas</h1>
         </header>
         
-        <main>
-            <section class="calendar-section">
-                <h2><i class="fas fa-calendar"></i> Calendario de Citas</h2>
-                <div class="calendar-controls">
-                    <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
-                    <h3 id="currentMonthYear">Mes y Año</h3>
-                    <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
-                </div>
-                <div id="calendar"></div>
-            </section>
+        <div class="main-content">
+            <div class="top-section">
+                <section class="calendar-section">
+                    <h2><i class="fas fa-calendar"></i> Calendario</h2>
+                    <div class="calendar-controls">
+                        <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+                        <h3 id="currentMonthYear">Mes y Año</h3>
+                        <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div id="calendar"></div>
+                </section>
+                
+                <section class="form-section">
+                    <h2><i class="fas fa-plus-circle"></i> Nueva Cita</h2>
+                    <form id="citaForm">
+                        <div class="form-group">
+                            <label for="fecha"><i class="fas fa-calendar-day"></i> Fecha:</label>
+                            <input type="date" id="fecha" name="fecha" required>
+                        </div>
+                        
+                        <div class="form-group dual-input">
+                            <div>
+                                <label for="horaInicio"><i class="fas fa-clock"></i> Hora Inicio:</label>
+                                <input type="time" id="horaInicio" name="horaInicio" required>
+                            </div>
+                            <div>
+                                <label for="horaFin"><i class="fas fa-clock"></i> Hora Fin:</label>
+                                <input type="time" id="horaFin" name="horaFin" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="empresa"><i class="fas fa-building"></i> Empresa:</label>
+                            <select id="empresa" name="empresa" required>
+                                <option value="">Seleccione una empresa</option>
+                                <option value="Proecologicos">Proecologicos</option>
+                                <option value="Fmc">Fmc</option>
+                                <option value="Agricultura y Servicios">Agricultura y Servicios</option>
+                                <option value="Rba">Rba</option>
+                                <option value="Agrointerandina">Agrointerandina</option>
+                                <option value="Avgust">Avgust</option>
+                                <option value="Otra">Otra</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" id="otraEmpresaGroup" style="display: none;">
+                            <label for="otraEmpresa">Especifique la empresa:</label>
+                            <input type="text" id="otraEmpresa" name="otraEmpresa">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="organizador"><i class="fas fa-user-tie"></i> Organizador:</label>
+                            <input type="text" id="organizador" name="organizador" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="descripcion"><i class="fas fa-info-circle"></i> Descripción:</label>
+                            <textarea id="descripcion" name="descripcion" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar Cita</button>
+                            <button type="reset" class="btn btn-secondary"><i class="fas fa-undo"></i> Limpiar</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
             
-            <section class="form-section">
-                <h2>Nueva Cita</h2>
-                <form id="citaForm">
-                    <div class="form-group">
-                        <label for="fecha"><i class="fas fa-calendar-day"></i> Fecha:</label>
-                        <input type="date" id="fecha" name="fecha" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="hora"><i class="fas fa-clock"></i> Hora:</label>
-                        <input type="time" id="hora" name="hora" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="empresa"><i class="fas fa-building"></i> Empresa:</label>
-                        <select id="empresa" name="empresa" required>
-                            <option value="">Seleccione una empresa</option>
-                            <option value="Empresa A">Empresa A</option>
-                            <option value="Empresa B">Empresa B</option>
-                            <option value="Empresa C">Empresa C</option>
-                            <option value="Otra">Otra</option>
+            <section class="table-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-list"></i> Citas Agendadas</h2>
+                    <div class="filtros">
+                        <input type="text" id="buscar" placeholder="Buscar citas...">
+                        <select id="filtroEmpresa">
+                            <option value="">Todas las empresas</option>
+                            <option value="Proecologicos">Proecologicos</option>
+                            <option value="Fmc">Fmc</option>
+                            <option value="Agricultura y Servicios">Agricultura y Servicios</option>
+                            <option value="Rba">Rba</option>
+                            <option value="Agrointerandina">Agrointerandina</option>
+                            <option value="Avgust">Avgust</option>
+                            <option value="Otra">Otras</option>
                         </select>
                     </div>
-                    
-                    <div class="form-group" id="otraEmpresaGroup" style="display: none;">
-                        <label for="otraEmpresa">Especifique la empresa:</label>
-                        <input type="text" id="otraEmpresa" name="otraEmpresa">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="organizador"><i class="fas fa-user-tie"></i> Organizador:</label>
-                        <input type="text" id="organizador" name="organizador" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="descripcion"><i class="fas fa-info-circle"></i> Descripción:</label>
-                        <textarea id="descripcion" name="descripcion" rows="3"></textarea>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar Cita</button>
-                        <button type="reset" class="btn btn-secondary"><i class="fas fa-undo"></i> Limpiar</button>
-                    </div>
-                </form>
-            </section>
-            
-            <section class="list-section">
-                <h2>Citas Agendadas</h2>
-                <div class="filtros">
-                    <input type="text" id="buscar" placeholder="Buscar citas...">
-                    <select id="filtroEmpresa">
-                        <option value="">Todas las empresas</option>
-                        <option value="Empresa A">Empresa A</option>
-                        <option value="Empresa B">Empresa B</option>
-                        <option value="Empresa C">Empresa C</option>
-                        <option value="Otra">Otras</option>
-                    </select>
                 </div>
-                <div id="listaCitas"></div>
+                <div class="table-container">
+                    <table id="tablaCitas">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora Inicio</th>
+                                <th>Hora Fin</th>
+                                <th>Empresa</th>
+                                <th>Organizador</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="citasBody"></tbody>
+                    </table>
+                </div>
             </section>
-        </main>
+        </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    // Elementos del DOM
-    const citaForm = document.getElementById('citaForm');
-    const listaCitas = document.getElementById('listaCitas');
-    const buscarInput = document.getElementById('buscar');
-    const filtroEmpresa = document.getElementById('filtroEmpresa');
-    const empresaSelect = document.getElementById('empresa');
-    const otraEmpresaGroup = document.getElementById('otraEmpresaGroup');
-    const calendarEl = document.getElementById('calendar');
-    const currentMonthYearEl = document.getElementById('currentMonthYear');
-    const prevMonthBtn = document.getElementById('prevMonth');
-    const nextMonthBtn = document.getElementById('nextMonth');
-    
-    // Array para almacenar las citas
-    let citas = JSON.parse(localStorage.getItem('citas')) || [];
-    
-    // Variables para el calendario
-    let currentDate = new Date();
-    let currentMonth = currentDate.getMonth();
-    let currentYear = currentDate.getFullYear();
-    
-    // Mostrar/ocultar campo "Otra empresa"
-    empresaSelect.addEventListener('change', function() {
-        if (this.value === 'Otra') {
-            otraEmpresaGroup.style.display = 'block';
-            document.getElementById('otraEmpresa').required = true;
-        } else {
-            otraEmpresaGroup.style.display = 'none';
-            document.getElementById('otraEmpresa').required = false;
-        }
-    });
-    
-    // Guardar nueva cita
-    citaForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Obtener valores del formulario
-        const fecha = document.getElementById('fecha').value;
-        const hora = document.getElementById('hora').value;
-        let empresa = empresaSelect.value;
-        const organizador = document.getElementById('organizador').value;
-        const descripcion = document.getElementById('descripcion').value;
-        
-        // Si seleccionó "Otra", usar el valor del campo de texto
-        if (empresa === 'Otra') {
-            empresa = document.getElementById('otraEmpresa').value;
-        }
-        
-        // Validar que no exista una cita en la misma fecha y hora
-        const citaExistente = citas.find(c => c.fecha === fecha && c.hora === hora);
-        if (citaExistente) {
-            alert('Ya existe una cita agendada para esta fecha y hora.');
-            return;
-        }
-        
-        // Crear objeto cita
-        const nuevaCita = {
-            id: Date.now(),
-            fecha,
-            hora,
-            empresa,
-            organizador,
-            descripcion,
-            fechaCreacion: new Date().toISOString()
-        };
-        
-        // Agregar al array
-        citas.push(nuevaCita);
-        
-        // Guardar en localStorage
-        guardarCitas();
-        
-        // Actualizar lista y calendario
-        mostrarCitas();
-        generarCalendario();
-        
-        // Limpiar formulario
-        citaForm.reset();
-        otraEmpresaGroup.style.display = 'none';
-        
-        // Mostrar mensaje de éxito
-        alert('Cita agendada correctamente!');
-    });
-    
-    // Mostrar citas en la lista
-    function mostrarCitas(filtro = '', empresaFiltro = '') {
-        listaCitas.innerHTML = '';
-        
-        // Filtrar citas
-        let citasFiltradas = citas.filter(cita => {
-            const coincideTexto = 
-                cita.empresa.toLowerCase().includes(filtro.toLowerCase()) ||
-                cita.organizador.toLowerCase().includes(filtro.toLowerCase()) ||
-                cita.descripcion.toLowerCase().includes(filtro.toLowerCase());
+            // Elementos del DOM
+            const citaForm = document.getElementById('citaForm');
+            const citasBody = document.getElementById('citasBody');
+            const buscarInput = document.getElementById('buscar');
+            const filtroEmpresa = document.getElementById('filtroEmpresa');
+            const empresaSelect = document.getElementById('empresa');
+            const otraEmpresaGroup = document.getElementById('otraEmpresaGroup');
+            const calendarEl = document.getElementById('calendar');
+            const currentMonthYearEl = document.getElementById('currentMonthYear');
+            const prevMonthBtn = document.getElementById('prevMonth');
+            const nextMonthBtn = document.getElementById('nextMonth');
             
-            const coincideEmpresa = empresaFiltro === '' || cita.empresa === empresaFiltro;
+            // Array para almacenar las citas
+            let citas = JSON.parse(localStorage.getItem('citas')) || [];
             
-            return coincideTexto && coincideEmpresa;
-        });
-        
-        // Ordenar por fecha y hora (más recientes primero)
-        citasFiltradas.sort((a, b) => {
-            const fechaA = new Date(`${a.fecha}T${a.hora}`);
-            const fechaB = new Date(`${b.fecha}T${b.hora}`);
-            return fechaA - fechaB;
-        });
-        
-        if (citasFiltradas.length === 0) {
-            listaCitas.innerHTML = '<p>No se encontraron citas.</p>';
-            return;
-        }
-        
-        citasFiltradas.forEach(cita => {
-            const citaElement = document.createElement('div');
-            citaElement.className = 'cita';
-            citaElement.innerHTML = `
-                <h3>${formatearFecha(cita.fecha)} - ${formatearHora(cita.hora)}</h3>
-                <p><strong>Empresa:</strong> ${cita.empresa}</p>
-                <p><strong>Organizador:</strong> ${cita.organizador}</p>
-                ${cita.descripcion ? `<p><strong>Descripción:</strong> ${cita.descripcion}</p>` : ''}
-                <div class="acciones">
-                    <button class="btn-editar" data-id="${cita.id}"><i class="fas fa-edit"></i> Editar</button>
-                    <button class="btn-eliminar" data-id="${cita.id}"><i class="fas fa-trash-alt"></i> Eliminar</button>
-                </div>
-            `;
+            // Variables para el calendario
+            let currentDate = new Date();
+            let currentMonth = currentDate.getMonth();
+            let currentYear = currentDate.getFullYear();
             
-            listaCitas.appendChild(citaElement);
-        });
-        
-        // Agregar event listeners a los botones
-        document.querySelectorAll('.btn-editar').forEach(btn => {
-            btn.addEventListener('click', editarCita);
-        });
-        
-        document.querySelectorAll('.btn-eliminar').forEach(btn => {
-            btn.addEventListener('click', eliminarCita);
-        });
-    }
-    
-    // Formatear fecha para mostrar
-    function formatearFecha(fechaStr) {
-        const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const fecha = new Date(fechaStr);
-        return fecha.toLocaleDateString('es-ES', opciones);
-    }
-    
-    // Formatear hora para mostrar
-    function formatearHora(horaStr) {
-        const [hora, minutos] = horaStr.split(':');
-        return `${hora}:${minutos}`;
-    }
-    
-    // Guardar citas en localStorage
-    function guardarCitas() {
-        localStorage.setItem('citas', JSON.stringify(citas));
-    }
-    
-    // Editar cita
-    function editarCita(e) {
-        const id = parseInt(e.target.getAttribute('data-id'));
-        const cita = citas.find(c => c.id === id);
-        
-        if (!cita) return;
-        
-        // Llenar formulario con los datos de la cita
-        document.getElementById('fecha').value = cita.fecha;
-        document.getElementById('hora').value = cita.hora;
-        document.getElementById('organizador').value = cita.organizador;
-        document.getElementById('descripcion').value = cita.descripcion || '';
-        
-        // Manejar el campo de empresa
-        const empresasPredefinidas = ['Empresa A', 'Empresa B', 'Empresa C'];
-        if (empresasPredefinidas.includes(cita.empresa)) {
-            empresaSelect.value = cita.empresa;
-            otraEmpresaGroup.style.display = 'none';
-        } else {
-            empresaSelect.value = 'Otra';
-            otraEmpresaGroup.style.display = 'block';
-            document.getElementById('otraEmpresa').value = cita.empresa;
-        }
-        
-        // Eliminar la cita original
-        citas = citas.filter(c => c.id !== id);
-        guardarCitas();
-        
-        // Actualizar calendario
-        generarCalendario();
-        
-        // Hacer scroll al formulario
-        document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
-    }
-    
-    // Eliminar cita
-    function eliminarCita(e) {
-        if (!confirm('¿Estás seguro de que deseas eliminar esta cita?')) return;
-        
-        const id = parseInt(e.target.getAttribute('data-id'));
-        citas = citas.filter(c => c.id !== id);
-        guardarCitas();
-        mostrarCitas();
-        generarCalendario();
-    }
-    
-    // Filtros
-    buscarInput.addEventListener('input', function() {
-        mostrarCitas(this.value, filtroEmpresa.value);
-    });
-    
-    filtroEmpresa.addEventListener('change', function() {
-        mostrarCitas(buscarInput.value, this.value);
-    });
-    
-    // Generar el calendario
-    function generarCalendario() {
-        // Obtener primer día del mes y último día del mes
-        const firstDay = new Date(currentYear, currentMonth, 1);
-        const lastDay = new Date(currentYear, currentMonth + 1, 0);
-        
-        // Actualizar el título del mes y año
-        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                          "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-        currentMonthYearEl.textContent = `${monthNames[currentMonth]} ${currentYear}`;
-        
-        // Crear encabezados de días de la semana
-        const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
-        let calendarHTML = '<div class="calendar-header">';
-        
-        dayNames.forEach(day => {
-            calendarHTML += `<div class="calendar-day-name">${day}</div>`;
-        });
-        
-        calendarHTML += '</div><div class="calendar-days">';
-        
-        // Agregar celdas vacías para días del mes anterior
-        for (let i = 0; i < firstDay.getDay(); i++) {
-            calendarHTML += '<div class="calendar-day empty"></div>';
-        }
-        
-        // Agregar días del mes
-        for (let day = 1; day <= lastDay.getDate(); day++) {
-            const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const hasCita = citas.some(cita => cita.fecha === dateStr);
-            
-            // Resaltar días con citas
-            const dayClass = hasCita ? 'calendar-day has-appointment' : 'calendar-day';
-            
-            calendarHTML += `
-                <div class="${dayClass}" data-date="${dateStr}">
-                    ${day}
-                    ${hasCita ? '<div class="appointment-dot"></div>' : ''}
-                </div>
-            `;
-        }
-        
-        calendarHTML += '</div>';
-        calendarEl.innerHTML = calendarHTML;
-        
-        // Agregar event listeners a los días del calendario
-        document.querySelectorAll('.calendar-day:not(.empty)').forEach(dayEl => {
-            dayEl.addEventListener('click', function() {
-                const date = this.getAttribute('data-date');
-                document.getElementById('fecha').value = date;
-                
-                // Hacer scroll al formulario
-                document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+            // Mostrar/ocultar campo "Otra empresa"
+            empresaSelect.addEventListener('change', function() {
+                if (this.value === 'Otra') {
+                    otraEmpresaGroup.style.display = 'block';
+                    document.getElementById('otraEmpresa').required = true;
+                } else {
+                    otraEmpresaGroup.style.display = 'none';
+                    document.getElementById('otraEmpresa').required = false;
+                }
             });
+            
+            // Guardar nueva cita
+            citaForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Obtener valores del formulario
+                const fecha = document.getElementById('fecha').value;
+                const horaInicio = document.getElementById('horaInicio').value;
+                const horaFin = document.getElementById('horaFin').value;
+                let empresa = empresaSelect.value;
+                const organizador = document.getElementById('organizador').value;
+                const descripcion = document.getElementById('descripcion').value;
+                
+                // Validar que hora fin sea mayor que hora inicio
+                if (horaFin <= horaInicio) {
+                    alert('La hora de fin debe ser posterior a la hora de inicio');
+                    return;
+                }
+                
+                // Si seleccionó "Otra", usar el valor del campo de texto
+                if (empresa === 'Otra') {
+                    empresa = document.getElementById('otraEmpresa').value;
+                    if (!empresa) {
+                        alert('Por favor especifique el nombre de la empresa');
+                        return;
+                    }
+                }
+                
+                // Validar que no exista una cita en el mismo horario
+                const citaExistente = citas.find(c => {
+                    return c.fecha === fecha && 
+                          ((horaInicio >= c.horaInicio && horaInicio < c.horaFin) ||
+                           (horaFin > c.horaInicio && horaFin <= c.horaFin) ||
+                           (horaInicio <= c.horaInicio && horaFin >= c.horaFin));
+                });
+                
+                if (citaExistente) {
+                    alert('Ya existe una cita agendada en este horario.');
+                    return;
+                }
+                
+                // Crear objeto cita
+                const nuevaCita = {
+                    id: Date.now(),
+                    fecha,
+                    horaInicio,
+                    horaFin,
+                    empresa,
+                    organizador,
+                    descripcion,
+                    fechaCreacion: new Date().toISOString()
+                };
+                
+                // Agregar al array
+                citas.push(nuevaCita);
+                
+                // Guardar en localStorage
+                localStorage.setItem('citas', JSON.stringify(citas));
+                
+                // Actualizar tabla y calendario
+                mostrarCitas();
+                generarCalendario();
+                
+                // Limpiar formulario
+                citaForm.reset();
+                otraEmpresaGroup.style.display = 'none';
+                
+                // Mostrar mensaje de éxito
+                alert('Cita agendada correctamente!');
+            });
+            
+            // Mostrar citas en la tabla
+            function mostrarCitas(filtro = '', empresaFiltro = '') {
+                citasBody.innerHTML = '';
+                
+                // Filtrar citas
+                let citasFiltradas = citas.filter(cita => {
+                    const coincideTexto = 
+                        cita.empresa.toLowerCase().includes(filtro.toLowerCase()) ||
+                        cita.organizador.toLowerCase().includes(filtro.toLowerCase()) ||
+                        (cita.descripcion && cita.descripcion.toLowerCase().includes(filtro.toLowerCase()));
+                    
+                    const coincideEmpresa = empresaFiltro === '' || cita.empresa === empresaFiltro;
+                    
+                    return coincideTexto && coincideEmpresa;
+                });
+                
+                // Ordenar por fecha y hora (más recientes primero)
+                citasFiltradas.sort((a, b) => {
+                    const fechaA = new Date(`${a.fecha}T${a.horaInicio}`);
+                    const fechaB = new Date(`${b.fecha}T${b.horaInicio}`);
+                    return fechaA - fechaB;
+                });
+                
+                if (citasFiltradas.length === 0) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = '<td colspan="7" class="no-results">No se encontraron citas</td>';
+                    citasBody.appendChild(tr);
+                    return;
+                }
+                
+                citasFiltradas.forEach(cita => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${formatearFechaCorrecta(cita.fecha)}</td>
+                        <td>${formato12Horas(cita.horaInicio)}</td>
+                        <td>${formato12Horas(cita.horaFin)}</td>
+                        <td>${cita.empresa}</td>
+                        <td>${cita.organizador}</td>
+                        <td>${cita.descripcion || '-'}</td>
+                        <td class="acciones">
+                            <button class="btn-editar" data-id="${cita.id}" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn-eliminar" data-id="${cita.id}" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    `;
+                    
+                    citasBody.appendChild(tr);
+                });
+                
+                // Agregar event listeners a los botones
+                document.querySelectorAll('.btn-editar').forEach(btn => {
+                    btn.addEventListener('click', editarCita);
+                });
+                
+                document.querySelectorAll('.btn-eliminar').forEach(btn => {
+                    btn.addEventListener('click', eliminarCita);
+                });
+            }
+            
+            // Formatear fecha correctamente (sin problemas de zona horaria)
+            function formatearFechaCorrecta(fechaStr) {
+                const partes = fechaStr.split('-');
+                if (partes.length === 3) {
+                    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+                }
+                return fechaStr;
+            }
+            
+            // Función para convertir formato 24h a 12h (AM/PM)
+            function formato12Horas(hora24) {
+                const [horas, minutos] = hora24.split(':');
+                let horas12 = parseInt(horas, 10);
+                const ampm = horas12 >= 12 ? 'PM' : 'AM';
+                horas12 = horas12 % 12;
+                horas12 = horas12 ? horas12 : 12; // Convertir 0 a 12
+                return `${horas12.toString().padStart(2, '0')}:${minutos} ${ampm}`;
+            }
+            
+            // Editar cita
+            function editarCita(e) {
+                const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+                const cita = citas.find(c => c.id === id);
+                
+                if (!cita) return;
+                
+                // Llenar formulario con los datos de la cita
+                document.getElementById('fecha').value = cita.fecha;
+                document.getElementById('horaInicio').value = cita.horaInicio;
+                document.getElementById('horaFin').value = cita.horaFin;
+                document.getElementById('organizador').value = cita.organizador;
+                document.getElementById('descripcion').value = cita.descripcion || '';
+                
+                // Manejar el campo de empresa
+                const empresasPredefinidas = ['Proecologicos', 'Fmc', 'Agricultura y Servicios', 'Rba', 'Agrointerandina', 'Avgust'];
+                if (empresasPredefinidas.includes(cita.empresa)) {
+                    empresaSelect.value = cita.empresa;
+                    otraEmpresaGroup.style.display = 'none';
+                } else {
+                    empresaSelect.value = 'Otra';
+                    otraEmpresaGroup.style.display = 'block';
+                    document.getElementById('otraEmpresa').value = cita.empresa;
+                }
+                
+                // Eliminar la cita original
+                citas = citas.filter(c => c.id !== id);
+                localStorage.setItem('citas', JSON.stringify(citas));
+                
+                // Actualizar calendario
+                generarCalendario();
+            }
+            
+            // Eliminar cita
+            function eliminarCita(e) {
+                if (!confirm('¿Estás seguro de que deseas eliminar esta cita?')) return;
+                
+                const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+                citas = citas.filter(c => c.id !== id);
+                localStorage.setItem('citas', JSON.stringify(citas));
+                mostrarCitas();
+                generarCalendario();
+            }
+            
+            // Filtros
+            buscarInput.addEventListener('input', function() {
+                mostrarCitas(this.value, filtroEmpresa.value);
+            });
+            
+            filtroEmpresa.addEventListener('change', function() {
+                mostrarCitas(buscarInput.value, this.value);
+            });
+            
+            // Generar el calendario
+            function generarCalendario() {
+                // Obtener primer día del mes y último día del mes
+                const firstDay = new Date(currentYear, currentMonth, 1);
+                const lastDay = new Date(currentYear, currentMonth + 1, 0);
+                
+                // Actualizar el título del mes y año
+                const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                                  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                currentMonthYearEl.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+                
+                // Crear encabezados de días de la semana
+                const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+                let calendarHTML = '<div class="calendar-header">';
+                
+                dayNames.forEach(day => {
+                    calendarHTML += `<div class="calendar-day-name">${day}</div>`;
+                });
+                
+                calendarHTML += '</div><div class="calendar-days">';
+                
+                // Agregar celdas vacías para días del mes anterior
+                for (let i = 0; i < firstDay.getDay(); i++) {
+                    calendarHTML += '<div class="calendar-day empty"></div>';
+                }
+                
+                // Agregar días del mes
+                for (let day = 1; day <= lastDay.getDate(); day++) {
+                    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const hasCita = citas.some(cita => cita.fecha === dateStr);
+                    
+                    // Resaltar días con citas
+                    const dayClass = hasCita ? 'calendar-day has-appointment' : 'calendar-day';
+                    
+                    calendarHTML += `
+                        <div class="${dayClass}" data-date="${dateStr}">
+                            ${day}
+                            ${hasCita ? '<div class="appointment-dot"></div>' : ''}
+                        </div>
+                    `;
+                }
+                
+                calendarHTML += '</div>';
+                calendarEl.innerHTML = calendarHTML;
+                
+                // Agregar event listeners a los días del calendario
+                document.querySelectorAll('.calendar-day:not(.empty)').forEach(dayEl => {
+                    dayEl.addEventListener('click', function() {
+                        const date = this.getAttribute('data-date');
+                        document.getElementById('fecha').value = date;
+                    });
+                });
+            }
+            
+            // Cambiar al mes anterior
+            prevMonthBtn.addEventListener('click', function() {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                generarCalendario();
+            });
+            
+            // Cambiar al mes siguiente
+            nextMonthBtn.addEventListener('click', function() {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                generarCalendario();
+            });
+            
+            // Mostrar citas y calendario al cargar la página
+            mostrarCitas();
+            generarCalendario();
         });
-    }
-    
-    // Cambiar al mes anterior
-    prevMonthBtn.addEventListener('click', function() {
-        currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-        generarCalendario();
-    });
-    
-    // Cambiar al mes siguiente
-    nextMonthBtn.addEventListener('click', function() {
-        currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
-        generarCalendario();
-    });
-    
-    // Mostrar citas y calendario al cargar la página
-    mostrarCitas();
-    generarCalendario();
-});
     </script>
     <style>
         /* Estilos generales */
@@ -419,7 +467,13 @@ header i {
     margin-right: 10px;
 }
 
-main {
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.top-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
@@ -437,11 +491,24 @@ h2 {
     color: #2c3e50;
     border-bottom: 2px solid #eee;
     padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+h2 i {
+    color: #3498db;
 }
 
 /* Formulario */
 .form-group {
     margin-bottom: 20px;
+}
+
+.form-group.dual-input {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
 }
 
 label {
@@ -523,75 +590,9 @@ textarea {
     background-color: #7f8c8d;
 }
 
-/* Lista de citas */
-.filtros {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.filtros input,
-.filtros select {
-    padding: 10px;
-    flex: 1;
-}
-
-#listaCitas {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.cita {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 6px;
-    border-left: 4px solid #3498db;
-    transition: transform 0.2s;
-}
-
-.cita:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-}
-
-.cita h3 {
-    color: #2c3e50;
-    margin-bottom: 10px;
-}
-
-.cita p {
-    margin-bottom: 5px;
-    color: #555;
-}
-
-.cita .acciones {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.cita .acciones button {
-    padding: 6px 12px;
-    font-size: 14px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.cita .acciones .btn-editar {
-    background-color: #f39c12;
-    color: white;
-}
-
-.cita .acciones .btn-eliminar {
-    background-color: #e74c3c;
-    color: white;
-}
-
 /* Estilos del calendario */
 .calendar-section {
-    grid-column: span 2;
+    height: fit-content;
 }
 
 .calendar-controls {
@@ -672,7 +673,7 @@ textarea {
 }
 
 .calendar-day.has-appointment {
-    background-color: #e8f5e9; /* Fondo verde claro para días con citas */
+    background-color: #e8f5e9;
     font-weight: bold;
 }
 
@@ -684,21 +685,112 @@ textarea {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: #2e7d32; /* Punto verde oscuro */
+    background-color: #2e7d32;
+}
+
+/* Tabla de citas */
+.table-section {
+    width: 100%;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.filtros {
+    display: flex;
+    gap: 15px;
+}
+
+.filtros input,
+.filtros select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+#tablaCitas {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#tablaCitas th {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+#tablaCitas td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+#tablaCitas tr:hover {
+    background-color: #f5f5f5;
+}
+
+#tablaCitas .no-results {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}
+
+.acciones {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-editar, .btn-eliminar {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    transition: opacity 0.2s;
+}
+
+.btn-editar {
+    background-color: #f39c12;
+}
+
+.btn-eliminar {
+    background-color: #e74c3c;
+}
+
+.btn-editar:hover, .btn-eliminar:hover {
+    opacity: 0.8;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    main {
+    .top-section {
         grid-template-columns: 1fr;
     }
     
-    .calendar-section {
-        grid-column: span 1;
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
     
     .filtros {
+        width: 100%;
         flex-direction: column;
+    }
+    
+    .form-group.dual-input {
+        grid-template-columns: 1fr;
     }
 }
     </style>
