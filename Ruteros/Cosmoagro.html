@@ -711,8 +711,9 @@
                     </tbody>
                     <tfoot>
                         <tr class="total-row">
-                            <td colspan="8" style="text-align: right; font-weight: bold;">TOTAL:</td>
-                            <td style="font-weight: bold;" id="print-total-value">$0</td>
+                            <td colspan="7" style="text-align: right; font-weight: bold;">TOTAL:</td>
+                            <td colspan="2" style="font-weight: bold;" id="print-total-value">$0</td>
+                            
                         </tr>
                     </tfoot>    
                 </table>
@@ -933,7 +934,6 @@
                     const totalRow = document.querySelector('.total-row');
                     totalRow.style.display = '';
                     totalRow.innerHTML = `
-                        <td></td>
                         <td colspan="9" class="total-label">TOTALES:</td>
                         <td class="total-value">${formatearPrecioCOP(totalFlete)}</td>
                         <td class="total-value">${formatearPrecioCOP(totalCargueDescargue)}</td>
