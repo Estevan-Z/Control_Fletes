@@ -3,101 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fletes - Sistema de Gestión</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-truck-moving"></i> Sistema de Gestión de Fletes</h1>
-            <p>Seleccione un transportador</p>
-        </header>
-        
-        <main>
-            <div class="buttons-container">
-                <a href="Transportadores/orlando.html" class="driver-btn">
-                    <div class="driver-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3>Orlando Buitrago</h3>
-                    <p>Transportador Zona Norte y Sur</p>
-                    <div class="hover-effect"></div>
-                </a>
-                
-                <a href="Transportadores/miguel.html" class="driver-btn">
-                    <div class="driver-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3>Miguel Luna</h3>
-                    <p>Transportador Zona Norte</p>
-                    <div class="hover-effect"></div>
-                </a>
-                
-                <a href="Transportadores/james.html" class="driver-btn">
-                    <div class="driver-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3>James Saavedra</h3>
-                    <p>Transportador Zona Norte</p>
-                    <div class="hover-effect"></div>
-                </a>
-                
+    <div class="login-container">
+        <h1>Iniciar Sesión</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Usuario:</label>
+                <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required>
             </div>
-        </main>
-        <header>
-            <h1><i class="fas fa-building"></i> Sistema de Gestión de Ruteros</h1>
-            <p>Seleccione una Empresa</p>
-        </header>
-        <main>
-            <dir class="buttons-container">
-                <a href="Ruteros/Avgust.html" class="driver-btn">
-                    <div class="">
-                        <img class="Logo" src="https://www.plmconnection.com/plmservices/AgroSearchEngine/Colombia/DEAQ1/logos/384x512/avgust.png" alt="">
-                    </div>
-                    <h3>Avgust</h3>
-                    <p>Empresa Agricola</p>
-                    <div class="hover-effect"></div>
-                </a>
-                <a href="Ruteros/Cosmoagro.html" class="driver-btn">
-                    <div>
-                        <img class="Logo" src="https://cosmoagro.com/wp-content/uploads/2025/01/LOGO-COSMOAGROSA1.svg" alt="">
-                    </div>
-                    <h3>Cosmoagro</h3>
-                    <p>Empresa Agricola</p>
-                    <div class="hover-effect"></div>
-                </a>
-                <a href="Ruteros/Agse.html" class="driver-btn">
-                    <div>
-                        <img class="Logo" src="https://image.pitchbook.com/roTvcZDWiKwaQ2iZVBQKu14BMWT1713965118781_200x200" alt="">
-                    </div>
-                    <h3>Agricultura y Servicos </h3>
-                    <p>Empresa Agricola</p> 
-                    <div class="hover-effect"></div>
-                </a>
-                <a href="Sala_de_juntas/Sala.html" class="driver-btn">
-                    <div>
-                        <img class="Logo" src="https://proecologicos.com.co/wp-content/uploads/2023/03/logo.png" alt="">
-                    </div>
-                    <h3>Sala de Juntas </h3>
-                    <p></p> 
-                    <div class="hover-effect"></div>
-                </a>
-            </dir>
-        </main>
-        
-        <footer>
-            <p><i class="far fa-copyright"></i> 2025 Sistema de Gestión de Fletes | Todos los derechos reservados</p>
-        </footer>
-        
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+            </div>
+            <button type="submit">Ingresar</button>
+        </form>
+        <div id="message" class="message"></div>
     </div>
     <style>
-        .Logo {
-            width: 100px;
-            height: auto;
-            
-        }
+        /* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+/* Contenedor de login */
+.login-container {
+    background: #ffffff;
+    width: 350px;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-container h1 {
+    margin-bottom: 30px;
+    color: #2c3e50;
+}
+
+/* Formulario */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* Mensajes */
+.message {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 5px;
+    display: none;
+}
+
+.message.error {
+    background-color: #fdecea;
+    color: #e74c3c;
+    display: block;
+}
+
+.message.success {
+    background-color: #e8f5e9;
+    color: #27ae60;
+    display: block;
+}
+
+/* Dashboard (index2.html) */
+.dashboard-container {
+    background: #ffffff;
+    width: 80%;
+    max-width: 600px;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.dashboard-container h1 {
+    color: #27ae60;
+    margin-bottom: 20px;
+}
+
+#logoutBtn {
+    background-color: #e74c3c;
+    margin-top: 30px;
+}
+
+#logoutBtn:hover {
+    background-color: #c0392b;
+}
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar la base de datos al cargar la página
+    initDatabase();
+    
+    // Manejar el envío del formulario de login
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            authenticateUser(username, password);
+        });
+    }
+    
+    // Manejar el botón de logout
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        });
+    }
+    
+    // Verificar si el usuario ya está logueado al cargar index2.html
+    if (window.location.pathname.includes('index2.html')) {
+        checkSession();
+    }
+});
+
+// Inicializar la base de datos con el usuario admin
+function initDatabase() {
+    if (!localStorage.getItem('users')) {
+        const users = [
+            {
+                username: 'Admin',
+                password: 'Admin123'
+            }
+        ];
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+}
+
+// Autenticar usuario
+function authenticateUser(username, password) {
+    const users = JSON.parse(localStorage.getItem('users'));
+    const user = users.find(u => u.username === username && u.password === password);
+    const messageElement = document.getElementById('message');
+    
+    if (user) {
+        // Login exitoso
+        showMessage('¡Login exitoso! Redirigiendo...', 'success');
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        
+        // Redirigir después de 1 segundo
+        setTimeout(() => {
+            window.location.href = 'index2.html';
+        }, 1000);
+    } else {
+        // Credenciales incorrectas
+        showMessage('Usuario o contraseña incorrectos', 'error');
+    }
+}
+
+// Verificar sesión activa
+function checkSession() {
+    if (!localStorage.getItem('currentUser')) {
+        window.location.href = 'index.html';
+    }
+}
+
+// Mostrar mensajes
+function showMessage(text, type) {
+    const messageElement = document.getElementById('message');
+    messageElement.textContent = text;
+    messageElement.className = `message ${type}`;
+}
+    </script>
 </body>
 </html>

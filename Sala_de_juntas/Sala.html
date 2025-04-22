@@ -18,7 +18,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-calendar-alt"></i> Agendación de Citas</h1>
-            <a href="../index.html" class="back-btn">
+            <a href="../index2.html" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Volver
             </a>
         </header>
@@ -207,9 +207,9 @@
                 // Validar que no exista una cita en el mismo horario
                 const citaExistente = citas.find(c => {
                     return c.fecha === fecha && 
-                          ((horaInicio >= c.horaInicio && horaInicio < c.horaFin) ||
-                           (horaFin > c.horaInicio && horaFin <= c.horaFin) ||
-                           (horaInicio <= c.horaInicio && horaFin >= c.horaFin));
+                        ((horaInicio >= c.horaInicio && horaInicio < c.horaFin) ||
+                        (horaFin > c.horaInicio && horaFin <= c.horaFin) ||
+                        (horaInicio <= c.horaInicio && horaFin >= c.horaFin));
                 });
                 
                 if (citaExistente) {

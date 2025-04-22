@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Compras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        :root {
+            --primary: hsl(228, 3%, 38%);
+            --secondary: #0a0a0a;
+            --accent: #4895ef;
+            --dark: #1b263b;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --gray: #adb5bd;
+            --light-gray: #e9ecef;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+            z-index: -1;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 i {
+            margin-right: 15px;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.8rem;
+            background: white;
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 50px;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+            font-weight: 500;
+        }
+
+        .back-btn:hover {
+            background: var(--dark);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateX(-5px);
+        }
+        
+        .main-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 30px;
+        }
+        
+        .form-column {
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .table-column {
+            flex: 2;
+        }
+        
+        .container {
+            max-width: 10000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .form-container {
+            padding: 30px;
+            height: 100%;
+        }
+        
+        .form-title {
+            font-size: 20px;
+            margin-bottom: 25px;
+            color: var(--dark);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-title:before {
+            content: "";
+            display: block;
+            width: 6px;
+            height: 24px;
+            background: linear-gradient(var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: var(--primary);
+            outline: none;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+        }
+        
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn-danger {
+            background-color: var(--warning);
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d91a6d;
+        }
+        
+        .btn-edit {
+            background-color: var(--accent);
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        
+        .btn-edit:hover {
+            background-color: #3a7bc8;
+        }
+        
+        .btn-print {
+            background-color: white;
+            color: var(--dark);
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .btn-print:hover {
+            background-color: #f8f9fa;
+        }
+        
+        /* Tabla sin bordes */
+        .table-container {
+            padding: 30px;
+            height: 100%;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.2rem 1.5rem;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        th i {
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(72, 149, 239, 0.03);
+        }
+        
+        .acciones {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .total-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            font-weight: 500;
+        }
+        
+        /* Estilos para impresión */
+        @media print {
+            @page {
+                size: auto;
+                margin: 5mm;
+            }
+            
+            body * {
+                visibility: hidden;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .table-column, 
+            .table-column * {
+                visibility: visible;
+            }
+            
+            .table-column {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            
+            thead {
+                background-color: var(--primary) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color: white !important;
+            }
+            
+            th, td {
+                color: var(--dark) !important;
+                border-bottom: 1px solid #f1f3f5 !important;
+            }
+            
+            .acciones {
+                display: none !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .form-column,
+            .table-column {
+                max-width: 100%;
+            }
+            
+            td, th {
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-shopping-cart"></i> Lista de compras</h1>
+            <a href="../index2.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </header>
+        <div class="main-container">
+            <!-- Columna izquierda - Formulario -->
+            <div class="form-column">
+                <div>
+                    <div class="form-container no-print">
+                        <h2 class="form-title">Agregar nuevo artículo</h2>
+                        <form id="compraForm">
+                            <div class="form-group">
+                                <label for="descripcion">Descripción</label>
+                                <input type="text" id="descripcion" placeholder="Ej: Leche descremada, Pan integral..." required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="cantidad">Cantidad</label>
+                                <input type="number" id="cantidad" min="1" placeholder="Ej: 2" required>
+                            </div>
+                            
+                            <input type="hidden" id="editId" value="">
+                            
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="fas fa-plus"></i>
+                                Agregar artículo
+                            </button>
+                            
+                            <button type="button" class="btn btn-edit" id="cancelEditBtn" style="display: none; margin-top: 10px; width: 100%;">
+                                <i class="fas fa-times"></i>
+                                Cancelar edición
+                            </button>
+                        </form>
+                        
+                        <button class="btn btn-print no-print" onclick="window.print()" style="margin-top: 30px; width: 100%;">
+                            <i class="fas fa-print"></i>
+                            Imprimir Lista
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Columna derecha - Tabla -->
+            <div class="table-column">
+                <div >
+                    <div class="table-container">
+                        <table id="tablaCompras">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-tag"></i> Descripción</th>
+                                    <th><i class="fas fa-hashtag"></i> Cantidad</th>
+                                    <th class="no-print"><i class="fas fa-cog"></i> Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Los items se agregarán aquí dinámicamente -->
+                            </tbody>
+                        </table>
+                        
+                        <div class="total-container no-print">
+                            <div class="total">Total artículos: <span id="totalItems">0</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('compraForm');
+            const tablaBody = document.querySelector('#tablaCompras tbody');
+            const totalItemsSpan = document.getElementById('totalItems');
+            const descripcionInput = document.getElementById('descripcion');
+            const cantidadInput = document.getElementById('cantidad');
+            const editIdInput = document.getElementById('editId');
+            const submitBtn = document.getElementById('submitBtn');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+            
+            let items = JSON.parse(localStorage.getItem('compras')) || [];
+            let editMode = false;
+            let currentEditId = null;
+            
+            // Cargar items al iniciar
+            renderizarItems();
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const descripcion = descripcionInput.value.trim();
+                const cantidad = cantidadInput.value;
+                
+                if (descripcion && cantidad) {
+                    if (editMode) {
+                        // Editar item existente
+                        const index = items.findIndex(item => item.id == currentEditId);
+                        if (index !== -1) {
+                            items[index] = {
+                                id: currentEditId,
+                                descripcion: descripcion,
+                                cantidad: cantidad
+                            };
+                        }
+                        salirModoEdicion();
+                    } else {
+                        // Agregar nuevo item
+                        const nuevoItem = {
+                            id: Date.now(),
+                            descripcion: descripcion,
+                            cantidad: cantidad
+                        };
+                        
+                        items.push(nuevoItem);
+                    }
+                    
+                    guardarEnLocalStorage();
+                    renderizarItems();
+                    
+                    // Limpiar el formulario
+                    form.reset();
+                    descripcionInput.focus();
+                }
+            });
+            
+            cancelEditBtn.addEventListener('click', salirModoEdicion);
+            
+            function entrarModoEdicion(id) {
+                const item = items.find(item => item.id == id);
+                if (item) {
+                    editMode = true;
+                    currentEditId = id;
+                    descripcionInput.value = item.descripcion;
+                    cantidadInput.value = item.cantidad;
+                    editIdInput.value = id;
+                    submitBtn.innerHTML = '<i class="fas fa-save"></i> Guardar cambios';
+                    cancelEditBtn.style.display = 'block';
+                    descripcionInput.focus();
+                }
+            }
+            
+            function salirModoEdicion() {
+                editMode = false;
+                currentEditId = null;
+                form.reset();
+                editIdInput.value = '';
+                submitBtn.innerHTML = '<i class="fas fa-plus"></i> Agregar artículo';
+                cancelEditBtn.style.display = 'none';
+            }
+            
+            function renderizarItems() {
+                tablaBody.innerHTML = '';
+                totalItems = 0;
+                
+                if (items.length === 0) {
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `
+                        <td colspan="3" style="text-align: center; padding: 40px 20px; color: var(--gray);">
+                            <i class="fas fa-shopping-basket" style="font-size: 48px; margin-bottom: 15px; color: var(--light-gray);"></i>
+                            <div style="font-size: 16px; margin-bottom: 5px;">Tu lista está vacía</div>
+                            <div style="font-size: 14px;">Agrega artículos usando el formulario</div>
+                        </td>
+                    `;
+                    tablaBody.appendChild(fila);
+                } else {
+                    items.forEach(item => {
+                        const fila = document.createElement('tr');
+                        
+                        fila.innerHTML = `
+                            <td style="font-weight: 500;">${item.descripcion}</td>
+                            <td>${item.cantidad}</td>
+                            <td class="no-print acciones">
+                                <button class="btn btn-edit" data-id="${item.id}" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger" data-id="${item.id}" title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        `;
+                        
+                        tablaBody.appendChild(fila);
+                        totalItems += parseInt(item.cantidad);
+                    });
+                }
+                
+                totalItemsSpan.textContent = totalItems;
+                
+                // Agregar eventos a los botones de eliminar
+                document.querySelectorAll('.btn-danger').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        eliminarItem(id);
+                    });
+                });
+                
+                // Agregar eventos a los botones de editar
+                document.querySelectorAll('.btn-edit').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        entrarModoEdicion(id);
+                    });
+                });
+            }
+            
+            function eliminarItem(id) {
+                if (confirm('¿Estás seguro de que quieres eliminar este artículo?')) {
+                    items = items.filter(item => item.id !== id);
+                    guardarEnLocalStorage();
+                    renderizarItems();
+                    
+                    // Si estábamos editando el item que se eliminó, salir del modo edición
+                    if (editMode && currentEditId === id) {
+                        salirModoEdicion();
+                    }
+                }
+            }
+            
+            function guardarEnLocalStorage() {
+                localStorage.setItem('compras', JSON.stringify(items));
+            }
+        });
+    </script>
+</body>
+</html>
