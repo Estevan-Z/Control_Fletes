@@ -933,15 +933,12 @@
                     const totalRow = document.querySelector('.total-row');
                     totalRow.style.display = '';
                     totalRow.innerHTML = `
-                        <td></td>
-                        <td colspan="9" class="total-label">TOTALES:</td>
+                        <td colspan="10" class="total-label">TOTALES:</td>
                         <td class="total-value">${formatearPrecioCOP(totalFlete)}</td>
                         <td class="total-value">${formatearPrecioCOP(totalCargueDescargue)}</td>
                         <td class="total-value">${formatearPrecioCOP(totalGeneral)}</td>
                         <td class="total-value">${formatearPrecioCOP(totalGeneralConIVA)}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        
                     `;
 
                     document.getElementById('print-total-value').textContent = formatearPrecioCOP(totalGeneralConIVA);
