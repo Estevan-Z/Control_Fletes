@@ -215,70 +215,64 @@
         }
 
         /* Estilos para la vista de impresión */
-        @media print {
-            body, html {
-                width: 210mm;   
-                height: 250mm;
-                margin: 0 !important;
-                padding: 0 !important;
-                font-size: 7pt;
-            }
-            
-            body * {
-                visibility: hidden;
-            }
-            
-            .print-section, .print-section * {
-                visibility: visible;
-                font-size: inherit;
-            }
-            
-            .print-section {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 10%;
-                margin: 0;
-                padding: 10mm;
-                box-sizing: border-box;
-                page-break-after: avoid;
-                page-break-before: avoid;
-            }
-            
-            .no-print {
-                display: none !important;
-            }
-            
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                page-break-inside: avoid;
-                font-size: 9pt;
-            }
-            
-            th, td {
-                border: 1px solid #ddd;
-                padding: 4px;
-                text-align: left;
-            }
-                    
-            th {
-                background-color: #f2f2f2;
-                font-size: 9pt;
-            }
-            
-            td {
-                word-wrap: break-word;
-                max-width: 50mm;
-            }
-            
-            h2 {
-                font-size: 12pt !important;
-                margin-bottom: 5mm !important;
-            }
-        }
-
+        /* Agrega esto en tu sección de estilos CSS */
+@media print {
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 10pt;
+    }
+    
+    .print-section {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    #print-fletes-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    
+    #print-fletes-table th {
+        background-color: #f2f2f2;
+        padding: 6px;
+        text-align: left;
+        border: 1px solid #ddd;
+        font-weight: bold;
+    }
+    
+    #print-fletes-table td {
+        padding: 5px;
+        border: 1px solid #ddd;
+        vertical-align: top;
+    }
+    
+    .page-break {
+        page-break-after: always;
+    }
+    
+    .header-print {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    .header-print h2 {
+        margin: 0;
+        font-size: 14pt;
+    }
+    
+    .header-print p {
+        margin: 5px 0;
+        font-size: 10pt;
+    }
+    
+    .footer-print {
+        text-align: right;
+        font-size: 9pt;
+        margin-top: 10px;
+    }
+}
         #print-section {
             background: white;
             padding: 10mm;
@@ -561,7 +555,17 @@
                             </div>
                             <div class="form-group">
                                 <label for="transportador"><i class="fas fa-user-tie"></i> Transportador:</label>
-                                <input type="text" id="transportador" required placeholder="Nombre del Transportador">
+                                <select id="transportador" required>
+                                    <option value="">Seleccione transportador</option>
+                                    <option value="Alberto Guzman">Alberto Guzman</option>
+                                    <option value="Alfredo Castillo">Alfredo Castillo</option>
+                                    <option value="Cristian Laguna">Cristian Laguna</option>
+                                    <option value="Domicilios">Domicilios</option>
+                                    <option value="Fabian Blanco">Fabian Blanco</option>
+                                    <option value="James Saavedra">James Saavedra</option>
+                                    <option value="Mauricio Rubio">Mauricio Rubio</option>
+                                    <option value="Proecologicos">Proecologicos</option>
+                                </select>
                             </div>
                         </div>
                         
@@ -572,15 +576,76 @@
                             </h3>
                             <div class="form-group">
                                 <label for="origen"><i class="fas fa-building"></i> Dirección Origen:</label>
-                                <input type="text" id="origen" required placeholder="Dirección completa con referencias">
+                                <select id="origen" required>
+                                    <option value="">Seleccione origen</option>
+                                    <option value="Ambalema">Ambalema</option>
+                                    <option value="Armero">Armero</option>
+                                    <option value="Espinal">Espinal</option>
+                                    <option value="Guayabal">Guayabal</option>
+                                    <option value="Ibague">Ibague</option>
+                                    <option value="La Sierra">La Sierra</option>
+                                    <option value="Lerida">Lerida</option>
+                                    <option value="Mariquita">Mariquita</option>
+                                    <option value="Purificacion">Purificacion</option>
+                                    <option value="Saldaña">Saldaña</option>
+                                    <option value="Venadillo">Venadillo</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="destino"><i class="fas fa-map-marker-alt"></i> Dirección Destino:</label>
-                                <input type="text" id="destino" required placeholder="Dirección completa con referencias">
+                                <select id="destino" required>
+                                    <option value="">Seleccione destino</option>
+                                    <option value="Ambalema">Ambalema</option>
+                                    <option value="Armero">Armero</option>
+                                    <option value="Espinal">Espinal</option>
+                                    <option value="Guayabal">Guayabal</option>
+                                    <option value="Ibague">Ibague</option>
+                                    <option value="La Sierra">La Sierra</option>
+                                    <option value="Lerida">Lerida</option>
+                                    <option value="Mariquita">Mariquita</option>
+                                    <option value="Purificacion">Purificacion</option>
+                                    <option value="Saldaña">Saldaña</option>
+                                    <option value="Venadillo">Venadillo</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="cliente"><i class="fas fa-user-tie"></i> Cliente:</label>
-                                <input type="text" id="cliente" required placeholder="Persona que recibe">
+                                <select id="cliente" required>
+                                    <option value="">Seleccione cliente</option>
+                                    <option value="Agrogab">Agrogab</option>
+                                    <option value="Agroindustrial Molino Sonora">Agroindustrial Molino Sonora</option>
+                                    <option value="Agroinversiones Albania">Agroinversiones Albania</option>
+                                    <option value="Agromilenio">Agromilenio</option>
+                                    <option value="Agropecuarias Doima">Agropecuarias Doima</option>
+                                    <option value="Avgust">Avgust</option>
+                                    <option value="C.i La Esperanza">C.i La Esperanza</option>
+                                    <option value="Campo Activo">Campo Activo</option>
+                                    <option value="Centro Pecuaria">Centro Pecuaria</option>
+                                    <option value="Cooperativa Serviarroz">Cooperativa Serviarroz</option>
+                                    <option value="Cosmoagro">Cosmoagro</option>
+                                    <option value="Diana Agricola">Diana Agricola</option>
+                                    <option value="El Escobal">El Escobal</option>
+                                    <option value="Emprenorte Sa">Emprenorte Sa</option>
+                                    <option value="Estacion Agricola">Estacion Agricola</option>
+                                    <option value="Inv. Agrofertil del Tolima">Inv. Agrofertil del Tolima</option>
+                                    <option value="Inv. Molino Pacande">Inv. Molino Pacande</option>
+                                    <option value="Inv. Agropecuarias Doima">Inv. Agropecuarias Doima</option>
+                                    <option value="Laserna">Laserna</option>
+                                    <option value="Magda Rocio Ruiz Molano">Magda Rocio Ruiz Molano</option>
+                                    <option value="Marquez y Asociados">Marquez y Asociados</option>
+                                    <option value="Meniagro">Meniagro</option>
+                                    <option value="Oconos">Ocobos</option>
+                                    <option value="Orf">Orf</option>
+                                    <option value="Procesadora Morango">Procesadora Morango</option>
+                                    <option value="Proecologicos">Proecologicos</option>
+                                    <option value="Proliagro">Proliagro</option>
+                                    <option value="Salvador Arenas">Salvador Arenas</option>
+                                    <option value="Samba Produce">Samba Produce</option>
+                                    <option value="Sucampo">Sucampo</option>
+                                    <option value="Union de Arroceros">Union de Arroceros</option>
+                                    <option value="Variagro Insumos">Variagro Insumos</option>
+                                    <option value="William Luzardo Robayo Garcia">William Luzardo Robayo Garcia</option>
+                                </select>
                             </div>
                         </div>
                         <!-- Grupo 3: Destino -->
