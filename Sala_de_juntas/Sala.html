@@ -351,8 +351,8 @@
                 const cita = JSON.parse(e.target.closest('button').getAttribute('data-cita'));
                 
                 // Números de teléfono especificados
-                const numeros = [
-                    '3157846759',
+                const numeros = [   
+                    '3106653266',
                 ];
                 
                 // Formatear la fecha y hora
@@ -361,12 +361,11 @@
                 const horaFinFormateada = formato12Horas(cita.horaFin);
                 
                 // Crear mensaje
-                const mensaje = `¡Buen día a todos!\n\n` +
-                        `Para informar que la sala de juntas estará ocupada:\n` +
+                const mensaje = `📢 ¡Buen día a todos!\n\n` +
+                        `Por medio del presente, les informamos que la sala de juntas estará reservada para uso exclusivo de la empresa ${cita.empresa} en el siguiente horario:\n` +
                         `📅 Fecha: ${fechaFormateada}\n` +
-                        `⏰ Horario: ${horaInicioFormateada} - ${horaFinFormateada}\n` +
-                        `🏢 Empresa: ${cita.empresa}\n\n` +
-                        `Gracias por su comprensión.`;
+                        `⏰ Horario: ${horaInicioFormateada} - ${horaFinFormateada}\n\n` +
+                        `Agradecemos su comprensión y les invitamos a tener en cuenta esta información al momento de programar reuniones o actividades que requieran este espacio.`;
             
                 
                 // Codificar el mensaje para URL
