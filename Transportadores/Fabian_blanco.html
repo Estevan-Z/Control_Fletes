@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>James Saveedra - Fletes</title>
+    <title>Andres Fabian Blanco Torres - Fletes</title>
     
     <!-- Hojas de estilo externas -->
     <link rel="stylesheet" href="../styles.css">
@@ -341,7 +341,7 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-user-tie"></i> Cristian Javier Laguna Delgado</h1>
+            <h1><i class="fas fa-user-tie"></i> Andres Fabian Blanco Torres</h1>
             <p>Registro de fletes y transportes</p>
             <a href="../index2.html" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Volver
@@ -486,18 +486,7 @@
                         <div class="retencion-label">Retención  (1%):</div>
                         <div class="retencion-value" id="retencion1">$0</div>
                     </div>
-                    <div class="retencion-item">
-                        <div class="retencion-label">Retención ICA (0.0045%):</div>
-                        <div class="retencion-value" id="retencionICA">$0</div>
-                    </div>
-                    <div class="retencion-item">
-                        <div class="retencion-label">Bomberil (6% sobre ICA):</div>
-                        <div class="retencion-value" id="retencionBomberil">$0</div>
-                    </div>
-                    <div class="retencion-item">
-                        <div class="retencion-label">Total Retenciones:</div>
-                        <div class="retencion-value" id="totalRetenciones">$0</div>
-                    </div>
+                    
                 </div>
                 <div class="total-pagar">
                     <span>Total a Pagar:</span>
@@ -507,8 +496,8 @@
 
             <!-- Sección para impresión (oculta inicialmente) -->
             <div id="print-section" class="print-section">
-                <h2 style="text-align: center;">Cuenta de cobro - Cristian Javier Laguna Delgado</h2>
-                <h2 style="text-align: center;">C.C 1.110.514.945</h2>
+                <h2 style="text-align: center;">Cuenta de cobro - Andres Fabian Blanco Torres</h2>
+                <h2 style="text-align: center;">C.C 93.180.624</h2>
                 <p style="text-align: center; margin-bottom: 20px;">Fecha: <span id="print-date"></span></p>
                 
                 <table id="print-fletes-table">
@@ -544,18 +533,6 @@
                         <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
                             <div style="font-weight: 500; color: #555; margin-bottom: 5px;">Retención (1%):</div>
                             <div style="font-weight: 600; color: #333;" id="print-retencion1">$0</div>
-                        </div>
-                        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-weight: 500; color: #555; margin-bottom: 5px;">Retención ICA (0.0045%):</div>
-                            <div style="font-weight: 600; color: #333;" id="print-retencionICA">$0</div>
-                        </div>
-                        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-weight: 500; color: #555; margin-bottom: 5px;">Bomberil (6% sobre ICA):</div>
-                            <div style="font-weight: 600; color: #333;" id="print-retencionBomberil">$0</div>
-                        </div>
-                        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-weight: 500; color: #555; margin-bottom: 5px;">Total Retenciones:</div>
-                            <div style="font-weight: 600; color: #333;" id="print-totalRetenciones">$0</div>
                         </div>
                         <div style="font-size: 1rem; font-weight: 600; color: #2a9d8f; padding-top: 10px; text-align: right;">
                             <span>Total a Pagar:</span>
@@ -631,24 +608,15 @@
                     if (total <= limiteRetenciones) {
                         return {
                             retencion1: 0,
-                            retencionICA: 0,
-                            retencionBomberil: 0,
-                            totalRetenciones: 0,
                             totalPagar: total
                         };
                     }
 
                     const retencion1 = total * 0.01;
-                    const retencionICA = total * 0.0045; // 0.0045%
-                    const retencionBomberil = retencionICA * 0.06; // 6% sobre ICA
-                    const totalRetenciones = retencion1 + retencionICA + retencionBomberil;
-                    const totalPagar = total - totalRetenciones;
+                    const totalPagar = total - retencion1;
 
                     return {
                         retencion1,
-                        retencionICA,
-                        retencionBomberil,
-                        totalRetenciones,
                         totalPagar
                     };
                 }
@@ -658,16 +626,10 @@
                     const retenciones = calcularRetenciones(total);
                     
                     document.getElementById('retencion1').textContent = formatearMoneda(retenciones.retencion1);
-                    document.getElementById('retencionICA').textContent = formatearMoneda(retenciones.retencionICA);
-                    document.getElementById('retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
-                    document.getElementById('totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
                     document.getElementById('totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
 
                     // Actualizar también los valores para impresión
                     document.getElementById('print-retencion1').textContent = formatearMoneda(retenciones.retencion1);
-                    document.getElementById('print-retencionICA').textContent = formatearMoneda(retenciones.retencionICA);
-                    document.getElementById('print-retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
-                    document.getElementById('print-totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
                     document.getElementById('print-totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
                 }
 
