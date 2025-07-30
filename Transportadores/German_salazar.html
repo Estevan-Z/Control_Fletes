@@ -16,7 +16,7 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- Estilos CSS -->
+     <!-- Estilos CSS -->
     <style>
         /* Estilos para las retenciones */
         .retenciones-container {
@@ -207,15 +207,9 @@
             flex-wrap: wrap;
         }
 
-        /* Estilos para la vista de impresión */
+        /* Estilos mejorados para la vista de impresión */
         @media print {
-            body, html {
-                width: 210mm;   
-                height: 297mm;
-                margin: 0 !important;
-                padding: 0 !important;
-                font-size: 10pt;
-            }
+            
             
             body * {
                 visibility: hidden;
@@ -229,109 +223,182 @@
             .print-section {
                 position: absolute;
                 left: 0;
-                top: 0;
+                top: -50px;
                 width: 100%;
                 height: 100%;
                 margin: 0;
-                padding: 10mm;
-                box-sizing: border-box;
-                page-break-after: avoid;
-                page-break-before: avoid;
+                padding: 15mm;
             }
             
             .no-print {
                 display: none !important;
             }
             
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                page-break-inside: avoid;
+            /* Encabezado profesional */
+            .print-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10mm;
+                border-bottom: 2px solid #4361ee;
+                padding-bottom: 5mm;
+            }
+            
+            .print-title {
+                font-size: 14pt;
+                font-weight: 700;
+                color: #4361ee;
+                margin: 0;
+            }
+            
+            .print-subtitle {
+                font-size: 11pt;
+                color: #666;
+                margin: 5px 0 0 0;
+            }
+            
+            .print-meta {
+                text-align: right;
                 font-size: 9pt;
             }
             
-            th, td {
+            .print-date {
+                font-weight: 60;
+                color: #333;
+            }
+            
+            /* Tabla profesional */
+            #print-fletes-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 5mm 0 10mm 0;
+                font-size: 9pt;
+                page-break-inside: avoid;
+            }
+            
+            #print-fletes-table th {
+                background-color: #f5f7fa;
+                color: #4361ee;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 8pt;
+                letter-spacing: 0.5px;
+                padding: 8px 5px;
                 border: 1px solid #ddd;
-                padding: 4px; /* Reducir padding */
                 text-align: left;
             }
-                    
-            th {
-                background-color: #f2f2f2;
-                font-size: 9pt; /* Tamaño consistente para headers */
-            }/* Asegurar que los textos largos no hagan muy anchas las celdas */
-            td {
-                word-wrap: break-word;
-                max-width: 50mm;
+            
+            #print-fletes-table td {
+                padding: 6px 5px;
+                border: 1px solid #eee;
+                vertical-align: top;
             }
-            h2 {
-                font-size: 12pt !important; /* Título más pequeño */
-                margin-bottom: 5mm !important;
+            
+            #print-fletes-table tr:nth-child(even) {
+                background-color: #f9f9f9;
             }
-        }
-
-        #print-section {
-            background: white;
-            padding: 10mm;
-            box-sizing: border-box;
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0 auto;
-            box-shadow: none;
-            display: none;
-        }
-
-        .avoid-page-break {
-            page-break-inside: avoid;
-        }
-
-        .force-page-break {
-            page-break-after: always;
-        }
-
-        #print-fletes-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        #print-fletes-table th, #print-fletes-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        #print-fletes-table th {
-            background-color: #f2f2f2;
-            font-weight: 600;
-        }
-
-        #print-retenciones {
-            margin-top: 30px;
-            page-break-inside: avoid;
-        }
-
-        /* Estilos responsivos */
-        @media (max-width: 768px) {
+            
+            /* Totales */
+            .print-total-row td {
+                background-color: #f5f7fa;
+                font-weight: 600;
+                border-top: 2px solid #4361ee;
+                border-bottom: 2px solid #4361ee;
+            }
+            
+            /* Sección de retenciones */
+            #print-retenciones {
+                margin-top: 10mm;
+                padding: 8mm;
+                background-color: #f5f7fa;
+                border-radius: 4px;
+                border-left: 4px solid #4361ee;
+                page-break-inside: avoid;
+            }
+            
+            .retenciones-title {
+                font-size: 11pt;
+                font-weight: 600;
+                color: #4361ee;
+                margin-bottom: 5mm;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
             .retenciones-grid {
-                grid-template-columns: 1fr;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 10mm;
+                margin-bottom: 5mm;
             }
-            .form-columns {
-                flex-direction: column;
+            
+            .retencion-item {
+                padding: 3mm;
+                background: white;
+                border-radius: 3px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             }
-            .field-group {
-                min-width: 100%;
+            
+            .retencion-label {
+                font-size: 8pt;
+                color: #666;
+                margin-bottom: 2mm;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
             }
-            .action-buttons {
-                flex-direction: column;
+            
+            .retencion-value {
+                font-size: 10pt;
+                font-weight: 600;
+                color: #333;
+            }
+            
+            .total-pagar {
+                text-align: right;
+                font-size: 11pt;
+                font-weight: 700;
+                color: #2a9d8f;
+                margin-top: 5mm;
+                padding-top: 3mm;
+                border-top: 1px dashed #ddd;
+            }
+            
+            /* Firmas */
+            .signature-section {
+                margin-top: 15mm;
+                display: flex;
+                justify-content: space-between;
+                page-break-inside: avoid;
+            }
+            
+            .signature-line {
+                width: 60mm;
+                border-top: 1px solid #333;
+                margin-top: 20mm;
+                text-align: center;
+                font-size: 9pt;
+                padding-top: 2mm;
+            }
+            
+            /* Notas */
+            .print-notes {
+                margin-top: 10mm;
+                font-size: 8pt;
+                color: #666;
+                border-top: 1px dashed #ddd;
+                padding-top: 3mm;
+            }
+            
+            /* Evitar saltos de página en elementos importantes */
+            .avoid-break {
+                page-break-inside: avoid;
+            }
+            
+            /* Forzar salto de página después de ciertos elementos */
+            .page-break-after {
+                page-break-after: always;
             }
         }
-
-        /* Estilos para la impresión */
-        @page :first {
-            margin-top: 0;
-        }
-        
         @page {
             size: auto;  /* auto es el valor inicial */
             margin: 0mm; /* elimina los márgenes por defecto */
@@ -500,14 +567,18 @@
 
             <!-- Sección para impresión (oculta inicialmente) -->
             <div id="print-section" class="print-section">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <h2 style="margin-bottom: 5px;">Cuenta de Cobro - German Salazar Sanchez</h2>
-                    <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 10px;">
-                        <p style="margin: 0;"><strong>C.C 6.024.765</strong></p>
-                        <p style="margin: 0;">Fecha: <span id="print-date"></span></p>
-                    </div>
+                <div class="print-header avoid-break">
+                <div>
+                    <h1 class="print-title">INFORME DE FLETES</h1>
+                    <p class="print-subtitle">German Salazar Sanchez - Transportista</p>
+                    <p class="print-subtitle">C.C 6.024.765</p>
                 </div>
-                
+                <div class="print-meta">
+                    <p>Generado el: <span class="print-date" id="print-date"></span></p>
+                    <p>Documento no fiscal</p>
+                    <p>Referencia: FL-001<span id="print-reference"></span></p>
+                </div>
+            </div>
                 <table id="print-fletes-table">
                     <thead>
                         <tr>
@@ -522,30 +593,30 @@
                     <tbody>
                         <!-- Los datos se cargarán dinámicamente con JavaScript -->
                     </tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td colspan="4" style="text-align: right; font-weight: bold;">TOTAL:</td>
-                            <td style="font-weight: bold;" id="print-total-value">$0</td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
+                    
                 </table>
 
-                <div id="print-retenciones">
-                    <h3 style="text-align: center; color: #e63946; border-bottom: 2px solid #e63946; padding-bottom: 10px;">
-                        Cálculo de Retenciones
-                    </h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
-                        <div style="padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-weight: 500; color: #555; margin-bottom: 5px;">Retención (1%):</div>
-                            <div style="font-weight: 600; color: #333;" id="print-retencion1">$0</div>
-                        </div>
-                        <div style="font-size: 1rem; font-weight: 600; color: #2a9d8f; padding-top: 10px; text-align: right;">
-                            <span>Total a Pagar:</span>
-                            <span id="print-totalPagar">$0</span>
-                        </div>
+                <div id="print-retenciones" class="avoid-break">
+                <h3 class="retenciones-title">
+                    CÁLCULO DE RETENCIONES TRIBUTARIAS
+                </h3>
+                <div class="retenciones-grid">
+                    <div class="retencion-item">
+                        <span>TOTAL DE FLETES:</span>
+                        <span id="print-total-value">$0</span>
+                    </div>
+                    <div class="retencion-item">
+                        <div>RETENCIÓN (1%)</div>
+                        <span id="print-retencion1">$0</span>
+                    </div>
+                    <div class="retencion-item">
+                        <span>TOTAL A PAGAR:</span>
+                        <span id="print-totalPagar">$0</span>
                     </div>
                 </div>
+                <div class="total-pagar">
+                </div>
+            </div>
             </div>
         </main>
         <footer>
