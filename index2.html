@@ -4,280 +4,580 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fletes - Sistema de Gestión</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --dark-gray: #334155;
+            --medium-gray: #64748b;
+            --light-gray: #e2e8f0;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 1rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Styles */
+        .section-header {
+            margin-bottom: 2.5rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-header h1 i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .section-header p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 3rem;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .card-content {
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-logo {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            margin: 0 auto 1.5rem;
+            display: block;
+            object-fit: contain;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        /* Select Styles */
+        .select-wrapper {
+            position: relative;
+            margin: 1rem 0;
+            width: 100%;
+        }
+
+        .select-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            color: var(--medium-gray);
+            pointer-events: none;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius-md);
+            background-color: var(--card-bg);
+            color: var(--dark);
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            border: none;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Footer Styles */
+        .footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--light-gray);
+            text-align: center;
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        .footer i {
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .card-content {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cards-grid {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-
-        <header>
+        <!-- Sección Ruteros -->
+        <div class="section-header">
             <h1><i class="fas fa-building"></i> Sistema de Gestión de Ruteros</h1>
-            <p>Seleccione una Empresa</p>
-        </header>
-        <main>
-            <dir class="buttons-container">
-                <a class="driver-btn">
-                    <div class="">
-                        <img class="Logo" src="https://www.plmconnection.com/plmservices/AgroSearchEngine/Colombia/DEAQ1/logos/384x512/avgust.png" alt="">
-                    </div>
-                    <div class="select-container">
-                        <select id="avgust-month">
-                            <option value="">Seleccione un mes</option>
-                            <option value="1">Enero</option>
-                            <option value="2">Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
-                        </select>
-                    </div>
-                    <button class="enter-btn" onclick="window.location.href='Ruteros/Avgust.html'">Ingresar</button>
-                    <div class="hover-effect"></div>
-                </a>
-                <a class="driver-btn">
-                    <div class="">
-                        <img class="Logo" src="https://www.plmconnection.com/plmservices/AgroSearchEngine/Colombia/DEAQ1/logos/384x512/avgust.png" alt="">
-                    </div>
-                    <div class="select-container">
-                        <select id="avgust-month">
-                            <option value="">Seleccione un mes</option>
-                            <option value="1">Enero</option>
-                            <option value="2">Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
-                        </select>
-                    </div>
-                    <button class="enter-btn" onclick="window.location.href='Ruteros2/Avgust_2.html'">Ingresar</button>
-                    <div class="hover-effect"></div>
-                </a>
-                <a class="driver-btn">
-                    <div>
-                        <img class="Logo" src="https://cosmoagro.com/wp-content/uploads/2025/01/LOGO-COSMOAGROSA1.svg" alt="">
-                    </div>
-                    <div class="select-container">
-                        <select id="avgust-month">
-                            <option value="">Seleccione un mes</option>
-                            <option value="1">Enero</option>
-                            <option value="2">Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
-                        </select>
-                    </div>
-                    <button class="enter-btn" onclick="window.location.href='Ruteros/Cosmoagro.html'">Ingresar</button>
-                    <div class="hover-effect"></div>
-                </a>
-                <a class="driver-btn">
-                    <div>
-                        <img class="Logo" src="https://cosmoagro.com/wp-content/uploads/2025/01/LOGO-COSMOAGROSA1.svg" alt="">
-                    </div>
-                    <div class="select-container">
-                        <select id="avgust-month">
-                            <option value="">Seleccione un mes</option>
-                            <option value="1">Enero</option>
-                            <option value="2">Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
-                        </select>
-                    </div>
-                    <button class="enter-btn" onclick="window.location.href='Ruteros2/Cosmoagro_2.html'">Ingresar</button>
-                    <div class="hover-effect"></div>
-                </a>
-                <a href="Ruteros/Agse.html" class="driver-btn">
-                    <div>
-                        <img class="Logo" src="https://image.pitchbook.com/roTvcZDWiKwaQ2iZVBQKu14BMWT1713965118781_200x200" alt="">
-                    </div>
-                    <h3>Agricultura y Servicos </h3>
-                    <p>Empresa Agricola</p> 
-                    <div class="hover-effect"></div>
-                </a>
-                
-                
-                
-            </dir>
-        </main>
-        <header>
-            <h1><i class="fas fa-truck-moving"></i> Sistema de Gestión de Cuetas de cobro</h1>
-            <p>Seleccione un transportador</p>
-        </header>
+            <p>Seleccione una empresa para acceder a sus ruteros</p>
+        </div>
         
-        <main>
-            <div class="buttons-container">
-                <a href="Transportadores/orlando.html" class="driver-btn">
-                    <div class="driver-icon">
-                        <i class="fas fa-shipping-fast"></i>
+        <div class="cards-grid">
+            <!-- Card Avgust 1 -->
+            <div class="card">
+                <div class="card-content">
+                    <img src="https://www.plmconnection.com/plmservices/AgroSearchEngine/Colombia/DEAQ1/logos/384x512/avgust.png" alt="Avgust" class="card-logo">
+                    
+                    <div class="select-wrapper">
+                        <select class="form-select" id="avgust-month-1">
+                            <option value="">Seleccione un mes</option>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
                     </div>
-                    <h3>Orlando Buitrago Salazar</h3>
-                    <p>Transportador Zona Norte y Sur</p>
-                    <div class="hover-effect"></div>
-                </a>
-                
-                <a href="Transportadores/German_salazar.html" class="driver-btn">
-                    <div class="driver-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3>German Salazar Sanchez</h3>
-                    <p>Transportador Zona Norte</p>
-                    <div class="hover-effect"></div>
-                </a>
-                
-                <a href="Transportadores/Fabian_blanco.html" class="driver-btn">
-                    <div class="driver-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3>Andres Fabian Blanco Torres </h3>
-                    <p>Transportador Zona Norte</p>
-                    <div class="hover-effect"></div>
-                </a>
-                <a href="Transportadores/Cuetna_cobro.html" class="driver-btn">
-                    <div class="driver-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3>Otras cuanta de Cobro</h3>
-                    <p>Transportador </p>
-                    <div class="hover-effect"></div>
-                </a>
-                
-                
+                    
+                    <button class="btn btn-primary" onclick="window.location.href='Ruteros/Avgust.html'">
+                        <i class="fas fa-sign-in-alt"></i> Ingresar
+                    </button>
+                </div>
             </div>
-        </main>
-        
-        <header>
-            <h1><i class="fas fa-building"></i> Otros Servicios</h1>
-            <p>Seleccione una Empresa</p>
-        </header>
-        <main>
-            <dir class="buttons-container">
-                <a href="Sala_de_juntas/Sala.html" class="driver-btn">
-                    <div>
-                        <img class="Logo" src="https://proecologicos.com.co/wp-content/uploads/2023/03/logo.png" alt="">
+            
+            <!-- Card Avgust 2 -->
+            <div class="card">
+                <div class="card-content">
+                    <img src="https://www.plmconnection.com/plmservices/AgroSearchEngine/Colombia/DEAQ1/logos/384x512/avgust.png" alt="Avgust" class="card-logo">
+                    
+                    <div class="select-wrapper">
+                        <select class="form-select" id="avgust-month-2">
+                            <option value="">Seleccione un mes</option>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
                     </div>
-                    <h3>Sala de Juntas </h3>
-                    <p></p> 
-                    <div class="hover-effect"></div>
-                </a>
-                <a href="Compras/Compras.html" class="driver-btn">
-                    <div>
-                        <img class="Logo" src="https://proecologicos.com.co/wp-content/uploads/2023/03/logo.png" alt="">
+                    
+                    <button class="btn btn-primary" onclick="window.location.href='Ruteros2/Avgust_2.html'">
+                        <i class="fas fa-sign-in-alt"></i> Ingresar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Card Cosmoagro 1 -->
+            <div class="card">
+                <div class="card-content">
+                    <img src="https://cosmoagro.com/wp-content/uploads/2025/01/LOGO-COSMOAGROSA1.svg" alt="Cosmoagro" class="card-logo">
+                    
+                    <div class="select-wrapper">
+                        <select class="form-select" id="cosmoagro-month-1">
+                            <option value="">Seleccione un mes</option>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
                     </div>
-                    <h3>Lista de Compras </h3>
-                    <p></p> 
-                    <div class="hover-effect"></div>
-                </a>
-                
-            </dir>
-        </main>
+                    
+                    <button class="btn btn-primary" onclick="window.location.href='Ruteros/Cosmoagro.html'">
+                        <i class="fas fa-sign-in-alt"></i> Ingresar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Card Cosmoagro 2 -->
+            <div class="card">
+                <div class="card-content">
+                    <img src="https://cosmoagro.com/wp-content/uploads/2025/01/LOGO-COSMOAGROSA1.svg" alt="Cosmoagro" class="card-logo">
+                    
+                    <div class="select-wrapper">
+                        <select class="form-select" id="cosmoagro-month-2">
+                            <option value="">Seleccione un mes</option>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="window.location.href='Ruteros2/Cosmoagro_2.html'">
+                        <i class="fas fa-sign-in-alt"></i> Ingresar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Card Agricultura y Servicios -->
+            <a href="Ruteros/Agse.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-tractor"></i>
+                    </div>
+                    <h3 class="card-title">Agricultura y Servicios</h3>
+                    <p class="card-description">Acceda a los ruteros de esta empresa agrícola</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i> Acceder
+                    </button>
+                </div>
+            </a>
+        </div>
         
-        <footer>
+        <!-- Sección Transportadores -->
+        <div class="section-header">
+            <h1><i class="fas fa-truck-moving"></i> Gestión de Cuentas de Cobro</h1>
+            <p>Seleccione un transportador para gestionar sus cuentas</p>
+        </div>
+        
+        <div class="cards-grid">
+            <!-- Transportador 1 -->
+            <a href="Transportadores/orlando.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="card-title">Orlando Buitrago Salazar</h3>
+                    <p class="card-description">Transportador Zona Norte y Sur</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-file-invoice-dollar"></i> Cuentas
+                    </button>
+                </div>
+            </a>
+            
+            <!-- Transportador 2 -->
+            <a href="Transportadores/German_salazar.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="card-title">German Salazar Sanchez</h3>
+                    <p class="card-description">Transportador Zona Norte</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-file-invoice-dollar"></i> Cuentas
+                    </button>
+                </div>
+            </a>
+            
+            <!-- Transportador 3 -->
+            <a href="Transportadores/Fabian_blanco.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="card-title">Andres Fabian Blanco Torres</h3>
+                    <p class="card-description">Transportador Zona Norte</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-file-invoice-dollar"></i> Cuentas
+                    </button>
+                </div>
+            </a>
+            
+            <!-- Otras cuentas -->
+            <a href="Transportadores/Cuetna_cobro.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <h3 class="card-title">Otras Cuentas de Cobro</h3>
+                    <p class="card-description">Gestión de cuentas adicionales</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-search"></i> Consultar
+                    </button>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Sección Otros Servicios -->
+        <div class="section-header">
+            <h1><i class="fas fa-cogs"></i> Otros Servicios</h1>
+            <p>Acceda a herramientas adicionales del sistema</p>
+        </div>
+        
+        <div class="cards-grid">
+            <!-- Sala de Juntas -->
+            <a href="Sala_de_juntas/Sala.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="card-title">Sala de Juntas</h3>
+                    <p class="card-description">Agendamiento y gestión de reuniones</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-calendar-check"></i> Agendar
+                    </button>
+                </div>
+            </a>
+            
+            <!-- Lista de Compras -->
+            <a href="Compras/Compras.html" class="card">
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3 class="card-title">Lista de Compras</h3>
+                    <p class="card-description">Gestión de órdenes de compra</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-list-alt"></i> Ver Listas
+                    </button>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
             <p><i class="far fa-copyright"></i> 2025 Sistema de Gestión de Fletes | Todos los derechos reservados</p>
         </footer>
-        
     </div>
-    <style>
-        .Logo {
-            width: 130px;
-            height: auto;
-            
-        }
-        .driver-btn {
-            position: relative;
-        }
-        .enter-btn {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 16px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
 
-.enter-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(135deg, #45a049, #3e8e41);
-}
-
-.enter-btn:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-        .select-container {
-            margin: 10px 0;
-        }
-        select {
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid #4CAF50;
-            border-radius: 5px;
-            background-color: #fff;
-            color: #333;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        select:focus {
-            border-color: #45a049;
-            outline: none;
-            box-shadow: 0 0 5px rgba(69, 160, 73, 0.5);
-        }
-
-    </style>
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Selecciona todos los select con id que empieza por 'avgust-month'
-        document.querySelectorAll('select[id^="avgust-month"]').forEach((select, index) => {
-            // Crea una clave única por cada select
-            const storageKey = "selectedMonth" + index;
-
-            // Cargar valor guardado (si existe)
-            const savedValue = localStorage.getItem(storageKey);
-            if (savedValue) {
-                select.value = savedValue;
-            }
-
-            // Guardar cuando se seleccione un valor
-            select.addEventListener("change", function () {
-                localStorage.setItem(storageKey, this.value);
+        document.addEventListener("DOMContentLoaded", function () {
+            // Guardar selección de meses en localStorage
+            document.querySelectorAll('.form-select').forEach((select, index) => {
+                const storageKey = `selectedMonth_${select.id}`;
+                
+                // Cargar valor guardado
+                const savedValue = localStorage.getItem(storageKey);
+                if (savedValue) {
+                    select.value = savedValue;
+                }
+                
+                // Guardar cambios
+                select.addEventListener("change", function() {
+                    localStorage.setItem(storageKey, this.value);
+                });
+            });
+            
+            // Efecto de clic en las cards
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Evitar efecto si se hace clic en un botón o select
+                    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT') {
+                        return;
+                    }
+                    
+                    // Si la card es un enlace, no hacer nada adicional
+                    if (this.tagName === 'A') {
+                        return;
+                    }
+                    
+                    // Efecto visual
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
             });
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
