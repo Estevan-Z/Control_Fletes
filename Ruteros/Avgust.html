@@ -215,72 +215,446 @@
         }
 
         /* Estilos para la vista de impresión */
-        /* Agrega esto en tu sección de estilos CSS */
-@media print {
-    body {
-        font-family: Arial, sans-serif;
-        font-size: 10pt;
-    }
-    
-    .print-section {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-    
-    #print-fletes-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
-    
-    #print-fletes-table th {
-        background-color: #f2f2f2;
-        padding: 6px;
-        text-align: left;
-        border: 1px solid #ddd;
-        font-weight: bold;
-    }
-    
-    #print-fletes-table td {
-        padding: 5px;
-        border: 1px solid #ddd;
-        vertical-align: top;
-    }
-    
-    .page-break {
-        page-break-after: always;
-    }
-    
-    .header-print {
-        text-align: center;
-        margin-bottom: 15px;
-    }
-    
-    .header-print h2 {
-        margin: 0;
-        font-size: 14pt;
-    }
-    
-    .header-print p {
-        margin: 5px 0;
-        font-size: 10pt;
-    }
-    
-    .footer-print {
-        text-align: right;
-        font-size: 9pt;
-        margin-top: 10px;
-    }
-}
+        @media print {
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 10pt;
+            }
+            
+            .print-section {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            
+            #print-fletes-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+            
+            #print-fletes-table th {
+                background-color: #f2f2f2;
+                padding: 6px;
+                text-align: left;
+                border: 1px solid #ddd;
+                font-weight: bold;
+            }
+            
+            #print-fletes-table td {
+                padding: 5px;
+                border: 1px solid #ddd;
+                vertical-align: top;
+            }
+            
+            .page-break {
+                page-break-after: always;
+            }
+            
+            .header-print {
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            
+            .header-print h2 {
+                margin: 0;
+                font-size: 14pt;
+            }
+            
+            .header-print p {
+                margin: 5px 0;
+                font-size: 10pt;
+            }
+            
+            .footer-print {
+                text-align: right;
+                font-size: 9pt;
+                margin-top: 10px;
+            }
+        }
+
+        /* Estilos para la nueva sección de impresión profesional */
+        @media print {
+            body {
+                font-family: 'Arial', sans-serif;
+                font-size: 10pt;
+                line-height: 1.4;
+                color: #333;
+                margin: 0;
+                padding: 0;
+            }
+        
+            .print-section {
+                width: 100%;
+                max-width: 210mm;
+                margin: 0 auto;
+                padding: 15mm;
+                box-sizing: border-box;
+            }
+            
+            .print-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 1.5rem;
+                border-bottom: 2px solid #4361ee;
+                padding-bottom: 1rem;
+            }
+            
+            .print-logo {
+                width: 70px;
+                margin-right: 1.5rem;
+            }
+            
+            .print-logo-img {
+                width: 100%;
+                height: auto;
+            }
+            
+            .print-title {
+                flex: 1;
+            }
+            
+            .print-title h1 {
+                margin: 0;
+                color: #4361ee;
+                font-size: 1.6rem;
+                font-weight: 700;
+            }
+            
+            .print-meta {
+                margin-top: 0.5rem;
+                font-size: 0.9rem;
+                color: #666;
+            }
+            
+            .print-meta p {
+                margin: 0.2rem 0;
+            }
+            
+            .print-summary {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                page-break-inside: avoid;
+            }
+            
+            .summary-card {
+                flex: 1;
+                min-width: 120px;
+                background: #f8f9fa;
+                border-radius: 8px;
+                padding: 0.8rem;
+                border-left: 4px solid #4361ee;
+            }
+            
+            .summary-card.highlight {
+                background: #e9ecef;
+                border-left: 4px solid #2e7d32;
+            }
+            
+            .summary-card h3 {
+                margin: 0 0 0.5rem 0;
+                font-size: 0.9rem;
+                color: #4361ee;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .summary-card.highlight h3 {
+                color: #2e7d32;
+            }
+            
+            .summary-card p {
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #333;
+            }
+            
+            #print-fletes-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 1.5rem 0;
+                page-break-inside: avoid;
+            }
+            
+            #print-fletes-table th {
+                background-color: #4361ee;
+                color: white;
+                padding: 0.5rem;
+                text-align: left;
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+            
+            #print-fletes-table td {
+                padding: 0.5rem;
+                border-bottom: 1px solid #ddd;
+                vertical-align: top;
+                font-size: 0.9rem;
+            }
+            
+            #print-fletes-table tr:nth-child(even) {
+                background-color: #f8f9fa;
+            }
+            
+            #print-fletes-table tr:hover {
+                background-color: #e9ecef;
+            }
+            
+            .print-footer {
+                margin-top: 2rem;
+                padding-top: 1rem;
+                border-top: 2px solid #4361ee;
+                font-size: 0.8rem;
+                color: #666;
+                page-break-inside: avoid;
+            }
+            
+            .footer-signatures {
+                display: flex;
+                justify-content: space-between;
+                margin: 2rem 0;
+            }
+            
+            .signature-line {
+                text-align: center;
+                width: 45%;
+            }
+            
+            .signature-line p:first-child {
+                margin-bottom: 0.5rem;
+            }
+            
+            .signature-line p:last-child {
+                font-size: 0.8rem;
+            }
+            
+            .footer-info {
+                text-align: center;
+                margin-top: 1rem;
+            }
+            
+            .footer-info p {
+                margin: 0.2rem 0;
+            }
+            
+            .page-number:after {
+                content: counter(page);
+            }
+            
+            @page {
+                size: A4;
+                margin: 15mm;
+                
+                @bottom-right {
+                    content: "Página " counter(page) " de " counter(pages);
+                    font-size: 0.8rem;
+                    color: #666;
+                }
+            }
+            
+            .status-pendiente {
+                color: #c62828;
+                font-weight: bold;
+            }
+            
+            .status-revisando {
+                color: #e65100;
+                font-weight: bold;
+            }
+            
+            .status-entregado {
+                color: #2e7d32;
+                font-weight: bold;
+            }
+        }
+
+        /* Estilos para vista previa en pantalla */
         #print-section {
+            display: none;
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 15mm;
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .print-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #4361ee;
+            padding-bottom: 1rem;
+        }
+
+        .print-logo {
+            width: 70px;
+            margin-right: 1.5rem;
+        }
+
+        .print-logo-img {
+            width: 100%;
+            height: auto;
+        }
+
+        .print-title {
+            flex: 1;
+        }
+
+        .print-title h1 {
+            margin: 0;
+            color: #4361ee;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .print-meta {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .print-meta p {
+            margin: 0.2rem 0;
+        }
+
+        .print-summary {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-card {
+            flex: 1;
+            min-width: 120px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 0.8rem;
+            border-left: 4px solid #4361ee;
+        }
+
+        .summary-card.highlight {
+            background: #e9ecef;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .summary-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.9rem;
+            color: #4361ee;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-card.highlight h3 {
+            color: #2e7d32;
+        }
+
+        .summary-card p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        #print-fletes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        #print-fletes-table th {
+            background-color: #4361ee;
+            color: white;
+            padding: 0.5rem;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        #print-fletes-table td {
+            padding: 0.5rem;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+            font-size: 0.9rem;
+        }
+
+        #print-fletes-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        #print-fletes-table tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .print-footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 2px solid #4361ee;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .footer-signatures {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+        }
+
+        .signature-line {
+            text-align: center;
+            width: 45%;
+        }
+
+        .signature-line p:first-child {
+            margin-bottom: 0.5rem;
+        }
+
+        .signature-line p:last-child {
+            font-size: 0.8rem;
+        }
+
+        .footer-info {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .footer-info p {
+            margin: 0.2rem 0;
+        }
+
+        .status-pendiente {
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        .status-revisando {
+            color: #e65100;
+            font-weight: bold;
+        }
+
+        .status-entregado {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        #print-section {
+            display: none;
             background: white;
             padding: 10mm;
             box-sizing: border-box;
             width: 210mm;
             margin: 0 auto;
             box-shadow: none;
-            display: none;
         }
 
         .avoid-page-break {
@@ -756,13 +1130,48 @@
                 </table>
             </div>
 
-            <!-- Sección para impresión (oculta inicialmente) -->
+            <!-- Sección para impresión profesional -->
             <div id="print-section" class="print-section">
-                <h2 style="text-align: center;">Corte de Fletes Avgust</h2>
+                <div class="print-header">
+                    <div class="print-logo">
+                        <img src="https://www.plmconnection.com/plmservices/AgroSearchEngine/Colombia/DEAQ1/logos/384x512/avgust.png" alt="Logo Avgust" class="print-logo-img">
+                    </div>
+                    <div class="print-title">
+                        <h1>Reporte de Ruteros</h1>
+                        <div class="print-meta">
+                            <p><strong>Fecha de generación:</strong> <span id="print-generation-date"></span></p>
+                            <p><strong>Transportador:</strong> <span id="print-transportador"></span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="print-summary">
+                    <div class="summary-card">
+                        <h3><i class="fas fa-calendar-alt"></i> Periodo</h3>
+                        <p id="print-periodo"></p>
+                    </div>
+                    <div class="summary-card">
+                        <h3><i class="fas fa-truck"></i> Total Fletes</h3>
+                        <p id="print-total-fletes">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3><i class="fas fa-boxes"></i> Total Cajas</h3>
+                        <p id="print-total-cajas">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3><i class="fas fa-home"></i> Total Domicilios</h3>
+                        <p id="print-total-domicilios">0</p>
+                    </div>
+                    <div class="summary-card highlight">
+                        <h3><i class="fas fa-dollar-sign"></i> Valor Total</h3>
+                        <p id="print-total-value">$0</p>
+                    </div>
+                </div>
                 
                 <table id="print-fletes-table">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Fecha</th>
                             <th>Documento</th>
                             <th>Origen</th>
@@ -770,20 +1179,32 @@
                             <th>Cliente</th>
                             <th>Cajas</th>
                             <th>Domicilios</th>
-                            <th>Precio</th>
-                            <th>Detalles</th>
+                            <th>Valor Flete</th>
+                            <th>Estado</th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- Los datos se cargarán dinámicamente con JavaScript -->
                     </tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td colspan="7" style="text-align: right; font-weight: bold;">TOTAL:</td>
-                            <td colspan="2" style="font-weight: bold;" id="print-total-value">$0</td>
-                        </tr>
-                    </tfoot>    
                 </table>
+                
+                <div class="print-footer">
+                    <div class="footer-signatures">
+                        <div class="signature-line">
+                            <p>_________________________</p>
+                            <p>Responsable de Transporte</p>
+                        </div>
+                        <div class="signature-line">
+                            <p>_________________________</p>
+                            <p>Recepción Cliente</p>
+                        </div>
+                    </div>
+                    <div class="footer-info">
+                        <p><strong>Avgust Colombia</strong></p>
+                        <p>Sistema de Gestión de Ruteros - Versión 1.0</p>
+                        <p>Página <span class="page-number"></span></p>
+                    </div>
+                </div>
             </div>
         </main>
         
@@ -975,21 +1396,6 @@
                             </td>
                         `;
                         tablaBody.appendChild(tr);
-
-                        // Agregar también a la tabla de impresión (sin acciones)
-                        const printTr = document.createElement('tr');
-                        printTr.innerHTML = `
-                            <td>${formatearFecha(flete.fecha)}</td>
-                            <td>${flete.documento}</td>
-                            <td>${flete.origen}</td>
-                            <td>${flete.destino}</td>
-                            <td>${flete.cliente}</td>
-                            <td>${flete.cajas}</td>
-                            <td>${flete.domicilios}</td>
-                            <td>${formatearPrecioCOP(totalConIVA)}</td>
-                            <td>${flete.observacion || '-'}</td>
-                        `;
-                        printTablaBody.appendChild(printTr);
                     });
 
                     // Calcular totales
@@ -1008,8 +1414,6 @@
                         <td class="total-value">${formatearPrecioCOP(totalGeneralConIVA)}</td>
                         
                     `;
-
-                    document.getElementById('print-total-value').textContent = formatearPrecioCOP(totalGeneralConIVA);
 
                     document.querySelectorAll('.delete-btn').forEach(btn => {
                         btn.addEventListener('click', function() {
@@ -1128,26 +1532,75 @@
                 }
 
                 function imprimirReporte() {
-                    // Mostrar la sección de impresión
                     const printSection = document.getElementById('print-section');
-                    printSection.style.display = 'block';
+                    const printTablaBody = document.querySelector('#print-fletes-table tbody');
+                    const fletesFiltrados = filtrarFletes();
                     
-                    // Ajustar dinámicamente el tamaño si es necesario
-                    const contentHeight = printSection.scrollHeight;
-                    const pageHeight = 297; // mm
+                    // Limpiar tabla de impresión
+                    printTablaBody.innerHTML = '';
                     
-                    if (contentHeight > pageHeight * 3.78) { // Convertir mm a px (aproximadamente)
-                        // Reducir el padding si el contenido es muy grande
-                        printSection.style.padding = '5mm';
+                    // Actualizar metadatos
+                    document.getElementById('print-generation-date').textContent = new Date().toLocaleDateString('es-CO');
+                    document.getElementById('print-transportador').textContent = document.querySelector('header h1').textContent.replace('Avgust', '').trim() || 'Todos';
+                    document.getElementById('print-total-fletes').textContent = fletesFiltrados.length;
+                    
+                    // Calcular totales
+                    let totalCajas = 0;
+                    let totalDomicilios = 0;
+                    let totalValor = 0;
+                    
+                    // Determinar el período cubierto
+                    let fechas = fletesFiltrados.map(f => new Date(f.fecha));
+                    let fechaMin = new Date(Math.min(...fechas));
+                    let fechaMax = new Date(Math.max(...fechas));
+                    
+                    let periodoTexto = 'Único día';
+                    if (fechaMin.toDateString() !== fechaMax.toDateString()) {
+                        periodoTexto = `Del ${fechaMin.toLocaleDateString('es-CO')} al ${fechaMax.toLocaleDateString('es-CO')}`;
+                    } else {
+                        periodoTexto = fechaMin.toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                     }
+                    document.getElementById('print-periodo').textContent = periodoTexto;
+                    
+                    // Llenar tabla
+                    fletesFiltrados.forEach((flete, index) => {
+                        const cargueDescargue = flete.cajas * 1000;
+                        const valorTotal = (parseFloat(flete.precio) || 0) + cargueDescargue;
+                        const totalConIVA = valorTotal * 1.12;
+                        
+                        totalCajas += flete.cajas;
+                        totalDomicilios += flete.domicilios || 1;
+                        totalValor += totalConIVA;
+                        
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${formatearFecha(flete.fecha)}</td>
+                            <td>${flete.documento}</td>
+                            <td>${flete.origen}</td>
+                            <td>${flete.destino}</td>
+                            <td>${flete.cliente}</td>
+                            <td>${flete.cajas}</td>
+                            <td>${flete.domicilios || 1}</td>
+                            <td>${formatearPrecioCOP(totalConIVA)}</td>
+                            <td class="status-${flete.estado || 'pendiente'}">${(flete.estado || 'pendiente').charAt(0).toUpperCase() + (flete.estado || 'pendiente').slice(1)}</td>
+                        `;
+                        printTablaBody.appendChild(tr);
+                    });
+                    
+                    // Actualizar totales
+                    document.getElementById('print-total-cajas').textContent = totalCajas;
+                    document.getElementById('print-total-domicilios').textContent = totalDomicilios;
+                    document.getElementById('print-total-value').textContent = formatearPrecioCOP(totalValor);
+                    
+                    // Mostrar la sección de impresión
+                    printSection.style.display = 'block';
                     
                     // Imprimir después de un pequeño retraso para permitir el renderizado
                     setTimeout(() => {
                         window.print();
                         // Ocultar nuevamente la sección de impresión
                         printSection.style.display = 'none';
-                        // Restaurar el padding original
-                        printSection.style.padding = '10mm';
                     }, 100);
                 }
 
