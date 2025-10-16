@@ -205,8 +205,6 @@
 
         /* Estilos mejorados para la vista de impresión */
         @media print {
-            
-            
             body * {
                 visibility: hidden;
             }
@@ -399,6 +397,135 @@
             size: auto;  /* auto es el valor inicial */
             margin: 0mm; /* elimina los márgenes por defecto */
         }
+
+        /* Estilos para botones de edición/eliminación */
+        .edit-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 8px;
+        }
+        
+        .edit-btn:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+        }
+        
+        .total-row {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .total-label {
+            text-align: right;
+            padding-right: 20px;
+        }
+        
+        .total-value {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        .notificacion {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            background: white;
+            color: var(--dark);
+            border-radius: 50px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notificacion.mostrar {
+            bottom: 30px;
+            opacity: 1;
+        }
+        
+        .notificacion.success {
+            background: #4BB543;
+            color: white;
+        }
+        
+        .notificacion.error {
+            background: #FF3333;
+            color: white;
+        }
+        
+        .notificacion i {
+            font-size: 1.2rem;
+        }
+
+        /* Estilos para los botones de SweetAlert */
+        .swal-confirm-btn {
+            background: linear-gradient(135deg, #f72585, #b5179e) !important;
+            border: none !important;
+            padding: 0.8rem 1.5rem !important;
+            font-size: 1rem !important;
+            border-radius: 8px !important;
+            transition: all 0.3s !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        }
+
+        .swal-confirm-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
+            background: linear-gradient(135deg, #b5179e, #f72585) !important;
+        }
+
+        .swal-cancel-btn {
+            background: linear-gradient(135deg, #4361ee, #3f37c9) !important;
+            border: none !important;
+            padding: 0.8rem 1.5rem !important;
+            font-size: 1rem !important;
+            border-radius: 8px !important;
+            transition: all 0.3s !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        }
+
+        .swal-cancel-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
+            background: linear-gradient(135deg, #3f37c9, #4361ee) !important;
+        }
     </style>
 </head>
 <body>
@@ -559,7 +686,7 @@
             </div>
 
             <!-- Sección para impresión (oculta inicialmente) -->
-            <div id="print-section" class="print-section">
+            <div id="print-section" class="print-section" style="display: none;">
                 <div class="print-header avoid-break">
                     <div>
                         <h1 class="print-title">INFORME DE FLETES</h1>
@@ -619,6 +746,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </main>
         <footer>
             <p><i class="far fa-copyright"></i> 2025 Sistema de Gestión de Fletes | Todos los derechos reservados</p>
@@ -626,7 +754,7 @@
     </div>
     
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             if (document.querySelector('.form-container')) {
                 const pathParts = window.location.pathname.split('/');
                 const conductor = pathParts[pathParts.length - 1].replace('.html', '');
@@ -635,24 +763,14 @@
                 const tablaBody = document.querySelector('#fletes-table tbody');
                 let fleteEditando = null;
 
-                // Función para obtener la fecha en zona horaria de Colombia (UTC-5)
-                function obtenerFechaColombia(fechaStr) {
-                    const fecha = new Date(fechaStr);
-                    // Ajustar a zona horaria de Colombia (UTC-5)
-                    const offset = fecha.getTimezoneOffset() + 300; // 300 minutos = 5 horas (UTC-5)
-                    const fechaColombia = new Date(fecha.getTime() + offset * 60000);
-                    return fechaColombia;
-                }
-
                 // Función para formatear fecha en formato colombiano (dd/mm/aaaa)
                 function formatearFecha(fechaStr) {
                     if (!fechaStr) return '';
-                    const fecha = obtenerFechaColombia(fechaStr);
+                    const fecha = new Date(fechaStr);
                     return fecha.toLocaleDateString('es-CO', {
                         day: '2-digit',
                         month: '2-digit',
-                        year: 'numeric',
-                        timeZone: 'America/Bogota'
+                        year: 'numeric'
                     });
                 }
 
@@ -667,8 +785,8 @@
                 }
 
                 function formatearPeso(peso) {
-                if (!peso || peso === 0) return '-';
-                return `${peso} kg`;
+                    if (!peso || peso === 0) return '-';
+                    return `${peso} kg`;
                 }
 
                 function formatearPrecioCOP(precio) {
@@ -724,7 +842,6 @@
                     document.getElementById('print-retencion1').textContent = formatearMoneda(retenciones.retencion1);
                     document.getElementById('print-retencionICA').textContent = formatearMoneda(retenciones.retencionICA);
                     document.getElementById('print-retencionBomberil').textContent = formatearMoneda(retenciones.retencionBomberil);
-                    document.getElementById('print-totalRetenciones').textContent = formatearMoneda(retenciones.totalRetenciones);
                     document.getElementById('print-totalPagar').textContent = formatearMoneda(retenciones.totalPagar);
                 }
 
@@ -736,7 +853,7 @@
                     if (fletes.length === 0) {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray);">
+                            <td colspan="8" style="text-align: center; padding: 2rem; color: var(--gray);">
                                 <i class="fas fa-inbox"></i>
                                 <p>No hay fletes registrados aún</p>
                             </td>
@@ -745,7 +862,7 @@
                         
                         const printTr = document.createElement('tr');
                         printTr.innerHTML = `
-                            <td colspan="6" style="text-align: center; padding: 2rem; color: #555;">
+                            <td colspan="7" style="text-align: center; padding: 2rem; color: #555;">
                                 No hay fletes registrados aún
                             </td>
                         `;
@@ -758,39 +875,39 @@
                     }
                     
                     fletes.forEach((flete, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${formatearFecha(flete.fecha)}</td>
-                    <td>${flete.documento}</td>
-                    <td>${formatearPeso(flete.peso)}</td>
-                    <td>${flete.destino}</td>
-                    <td>${flete.cliente}</td>
-                    <td data-price="${flete.precio}">${formatearPrecioCOP(flete.precio)}</td>
-                    <td>${flete.observacion || '-'}</td>
-                    <td>
-                        <button class="edit-btn" data-index="${index}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="delete-btn" data-index="${index}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                `;
-                tablaBody.appendChild(tr);
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${formatearFecha(flete.fecha)}</td>
+                            <td>${flete.documento}</td>
+                            <td>${formatearPeso(flete.peso)}</td>
+                            <td>${flete.destino}</td>
+                            <td>${flete.cliente}</td>
+                            <td data-price="${flete.precio}">${formatearPrecioCOP(flete.precio)}</td>
+                            <td>${flete.observacion || '-'}</td>
+                            <td>
+                                <button class="edit-btn" data-index="${index}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="delete-btn" data-index="${index}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        `;
+                        tablaBody.appendChild(tr);
 
-                // Agregar también a la tabla de impresión (sin acciones)
-                const printTr = document.createElement('tr');
-                printTr.innerHTML = `
-                    <td>${formatearFecha(flete.fecha)}</td>
-                    <td>${flete.documento}</td>
-                    <td>${formatearPeso(flete.peso)}</td>
-                    <td>${flete.destino}</td>
-                    <td>${flete.cliente}</td>
-                    <td>${formatearPrecioCOP(flete.precio)}</td>
-                    <td>${flete.observacion || '-'}</td>
-                `;
-                printTablaBody.appendChild(printTr);
-            });
+                        // Agregar también a la tabla de impresión (sin acciones)
+                        const printTr = document.createElement('tr');
+                        printTr.innerHTML = `
+                            <td>${formatearFecha(flete.fecha)}</td>
+                            <td>${flete.documento}</td>
+                            <td>${formatearPeso(flete.peso)}</td>
+                            <td>${flete.destino}</td>
+                            <td>${flete.cliente}</td>
+                            <td>${formatearPrecioCOP(flete.precio)}</td>
+                            <td>${flete.observacion || '-'}</td>
+                        `;
+                        printTablaBody.appendChild(printTr);
+                    });
 
                     const total = calcularTotal();
                     const totalRow = document.querySelector('.total-row');
@@ -801,6 +918,7 @@
                     // Actualizar retenciones
                     actualizarRetenciones(total);
 
+                    // Agregar event listeners para los botones de eliminar
                     document.querySelectorAll('.delete-btn').forEach(btn => {
                         btn.addEventListener('click', function() {
                             const index = parseInt(this.getAttribute('data-index'));
@@ -815,17 +933,7 @@
                                 cancelButtonColor: '#3085d6',
                                 confirmButtonText: 'Sí, eliminar',
                                 cancelButtonText: 'Cancelar',
-                                background: '#ffffff',
-                                backdrop: `
-                                    rgba(0,0,0,0.5)
-                                    url("/images/trash.gif")
-                                    left top
-                                    no-repeat
-                                `,
-                                customClass: {
-                                    confirmButton: 'swal-confirm-btn',
-                                    cancelButton: 'swal-cancel-btn'
-                                }
+                                background: '#ffffff'
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     fletes.splice(index, 1);
@@ -843,28 +951,35 @@
                         });
                     });
 
+                    // Agregar event listeners para los botones de editar
                     document.querySelectorAll('.edit-btn').forEach(btn => {
                         btn.addEventListener('click', function() {
                             const index = parseInt(this.getAttribute('data-index'));
-                            fleteEditando = index;
-                            const flete = fletes[index];
-                            
-                            document.getElementById('fecha').value = flete.fecha;
-                            document.getElementById('documento').value = flete.documento;
-                            document.getElementById('peso').value = flete.peso || '';
-                            document.getElementById('destino').value = flete.destino;
-                            document.getElementById('cliente').value = flete.cliente;
-                            document.getElementById('precio').value = flete.precio;
-                            document.getElementById('observacion').value = flete.observacion || '';
-                            
-                            document.querySelector('button[type="submit"]').innerHTML = `
-                                <i class="fas fa-save"></i> Actualizar Flete
-                            `;
-                            
-                            document.querySelector('.form-container').scrollIntoView({
-                                behavior: 'smooth'
-                            });
+                            editarFlete(index);
                         });
+                    });
+                }
+
+                // Función separada para editar flete
+                function editarFlete(index) {
+                    fleteEditando = index;
+                    const flete = fletes[index];
+                    
+                    // Usar la fecha original sin conversión de zona horaria
+                    document.getElementById('fecha').value = flete.fecha;
+                    document.getElementById('documento').value = flete.documento;
+                    document.getElementById('peso').value = flete.peso || '';
+                    document.getElementById('destino').value = flete.destino;
+                    document.getElementById('cliente').value = flete.cliente;
+                    document.getElementById('precio').value = flete.precio;
+                    document.getElementById('observacion').value = flete.observacion || '';
+                    
+                    document.querySelector('button[type="submit"]').innerHTML = `
+                        <i class="fas fa-save"></i> Actualizar Flete
+                    `;
+                    
+                    document.querySelector('.form-container').scrollIntoView({
+                        behavior: 'smooth'
                     });
                 }
 
@@ -889,11 +1004,7 @@
                         cancelButtonColor: '#3085d6',
                         confirmButtonText: 'Sí, vaciar tabla',
                         cancelButtonText: 'Cancelar',
-                        background: '#ffffff',
-                        customClass: {
-                            confirmButton: 'swal-confirm-btn',
-                            cancelButton: 'swal-cancel-btn'
-                        }
+                        background: '#ffffff'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             fletes = [];
@@ -940,22 +1051,11 @@
                     const printSection = document.getElementById('print-section');
                     printSection.style.display = 'block';
                     
-                    // Ajustar dinámicamente el tamaño si es necesario
-                    const contentHeight = printSection.scrollHeight;
-                    const pageHeight = 297; // mm
-                    
-                    if (contentHeight > pageHeight * 3.78) { // Convertir mm a px (aproximadamente)
-                        // Reducir el padding si el contenido es muy grande
-                        printSection.style.padding = '5mm';
-                    }
-                    
                     // Imprimir después de un pequeño retraso para permitir el renderizado
                     setTimeout(() => {
                         window.print();
                         // Ocultar nuevamente la sección de impresión
                         printSection.style.display = 'none';
-                        // Restaurar el padding original
-                        printSection.style.padding = '10mm';
                     }, 100);
                 }
 
@@ -974,7 +1074,7 @@
                         'Peso (kg)': flete.peso || 0,
                         'Destino': flete.destino,
                         'Cliente': flete.cliente,
-                        'Precio (COP)': flete.precio, // Usamos el valor numérico directo
+                        'Precio (COP)': flete.precio,
                         'Observación': flete.observacion || '-'
                     }));
                     
@@ -986,7 +1086,7 @@
                         'Peso (kg)': '',
                         'Destino': '',
                         'Cliente': 'TOTAL:',
-                        'Precio (COP)': total, // Valor numérico directo
+                        'Precio (COP)': total,
                         'Observación': ''
                     });
                     
@@ -1015,18 +1115,15 @@
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
-                    // Obtener la fecha en zona horaria de Colombia
+                    // Obtener la fecha directamente sin conversión de zona horaria
                     const fechaInput = document.getElementById('fecha').value;
                     if (!fechaInput) {
                         mostrarNotificacion('Por favor ingrese una fecha', 'error');
                         return;
                     }
                     
-                    const fechaColombia = obtenerFechaColombia(fechaInput + 'T00:00:00-05:00');
-                    const fechaISO = fechaColombia.toISOString().split('T')[0];
-                    
                     const nuevoFlete = {
-                        fecha: fechaISO, // Guardamos en formato ISO pero ajustado a Colombia
+                        fecha: fechaInput, // Usar la fecha directamente como está en el input
                         documento: document.getElementById('documento').value.trim(),
                         peso: parseFloat(document.getElementById('peso').value) || 0,
                         destino: document.getElementById('destino').value.trim(),
@@ -1067,139 +1164,6 @@
                 renderizarTabla();
             }
         });
-
-        // Estilos CSS adicionales para los nuevos elementos
-        const estiloAdicional = document.createElement('style');
-        estiloAdicional.textContent = `
-            .edit-btn {
-                background: #ffc107;
-                color: #212529;
-                border: none;
-                padding: 0.6rem 1rem;
-                border-radius: 6px;
-                cursor: pointer;
-                transition: all 0.3s;
-                font-size: 0.9rem;
-                display: inline-flex;
-                align-items: center;
-                gap: 5px;
-                margin-right: 8px;
-            }
-            
-            .edit-btn:hover {
-                background: #e0a800;
-                transform: translateY(-2px);
-                box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
-            }
-            
-            .delete-btn {
-                background: #dc3545;
-                color: white;
-                border: none;
-                padding: 0.6rem 1rem;
-                border-radius: 6px;
-                cursor: pointer;
-                transition: all 0.3s;
-                font-size: 0.9rem;
-                display: inline-flex;
-                align-items: center;
-                gap: 5px;
-            }
-            
-            .delete-btn:hover {
-                background: #c82333;
-                transform: translateY(-2px);
-                box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
-            }
-            
-            .total-row {
-                background-color: #f8f9fa;
-                font-weight: bold;
-            }
-            
-            .total-label {
-                text-align: right;
-                padding-right: 20px;
-            }
-            
-            .total-value {
-                color: var(--primary);
-                font-size: 1.1rem;
-            }
-            
-            .notificacion {
-                position: fixed;
-                bottom: -100px;
-                left: 50%;
-                transform: translateX(-50%);
-                padding: 1rem 2rem;
-                background: white;
-                color: var(--dark);
-                border-radius: 50px;
-                box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                z-index: 1000;
-                opacity: 0;
-                transition: all 0.3s ease;
-            }
-            
-            .notificacion.mostrar {
-                bottom: 30px;
-                opacity: 1;
-            }
-            
-            .notificacion.success {
-                background: #4BB543;
-                color: white;
-            }
-            
-            .notificacion.error {
-                background: #FF3333;
-                color: white;
-            }
-            
-            .notificacion i {
-                font-size: 1.2rem;
-            }
-
-            /* Estilos para los botones de SweetAlert */
-            .swal-confirm-btn {
-                background: linear-gradient(135deg, #f72585, #b5179e) !important;
-                border: none !important;
-                padding: 0.8rem 1.5rem !important;
-                font-size: 1rem !important;
-                border-radius: 8px !important;
-                transition: all 0.3s !important;
-                font-weight: 600 !important;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-            }
-
-            .swal-confirm-btn:hover {
-                transform: translateY(-2px) !important;
-                box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
-                background: linear-gradient(135deg, #b5179e, #f72585) !important;
-            }
-
-            .swal-cancel-btn {
-                background: linear-gradient(135deg, #4361ee, #3f37c9) !important;
-                border: none !important;
-                padding: 0.8rem 1.5rem !important;
-                font-size: 1rem !important;
-                border-radius: 8px !important;
-                transition: all 0.3s !important;
-                font-weight: 600 !important;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-            }
-
-            .swal-cancel-btn:hover {
-                transform: translateY(-2px) !important;
-                box-shadow: 0 7px 20px rgba(0,0,0,0.15) !important;
-                background: linear-gradient(135deg, #3f37c9, #4361ee) !important;
-            }
-        `;
-        document.head.appendChild(estiloAdicional);
     </script>
 </body>
 </html>
