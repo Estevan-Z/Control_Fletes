@@ -21,9 +21,9 @@
         /* Estilos para el formulario */
         #fletes-table {
             width: 100%;
-            min-width: 1300px; /* Aumentamos el ancho mínimo para las nuevas columnas */
+            min-width: 1300px;
             border-collapse: collapse;
-            white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+            white-space: nowrap;
         }
 
         .form-columns {
@@ -403,6 +403,16 @@
             font-size: 1.1rem;
         }
         
+        .retencion-value {
+            color: #d9534f;
+            font-size: 1rem;
+        }
+        
+        .total-pagar-value {
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+        
         .notificacion {
             position: fixed;
             bottom: -100px;
@@ -537,14 +547,13 @@
                             <div class="form-group">
                                 <label for="transportador"><i class="fas fa-user-tie"></i> Transportador:</label>
                                 <select id="transportador" required>
-                                    <option value="">Seleccione Transportadorption
-                                        <option value="Andres Fabian Blanco">Andres Fabian Blanco</option>
-                                        <option value="Carlos Andres Carvajal">Carlos Andres Carvajal</option>
-                                        <option value="Dairo Alberto Guzman Hernandez">Daro Alberto Guzman Hernandez</option>
-                                        <option value="Efrain Osorio Lopez">Efrain Osorio Lopez</option>
-                                        <option value="German Andres Arciniegas Romero">German Andres Arciniegas Romero</option>
-                                        <option value="Maria Elena Aparicio Alvarez">Maria Elena Aparicio Alvarez</option>
-                                    
+                                    <option value="">Seleccione Transportador</option>
+                                    <option value="Andres Fabian Blanco">Andres Fabian Blanco</option>
+                                    <option value="Carlos Andres Carvajal">Carlos Andres Carvajal</option>
+                                    <option value="Dairo Alberto Guzman Hernandez">Dairo Alberto Guzman Hernandez</option>
+                                    <option value="Efrain Osorio Lopez">Efrain Osorio Lopez</option>
+                                    <option value="German Andres Arciniegas Romero">German Andres Arciniegas Romero</option>
+                                    <option value="Maria Elena Aparicio Alvarez">Maria Elena Aparicio Alvarez</option>
                                 </select>
                             </div>
                             
@@ -612,10 +621,17 @@
                     </tbody>
                     <tfoot>
                         <tr class="total-row">
-                            <td colspan="5" class="total-label">TOTAL:</td>
+                            <td colspan="5" class="total-label">TOTAL FLETES:</td>
                             <td class="total-value">$0</td>
                             <td class="total-label">BASE RESTANTE:</td>
                             <td class="base-value">$200,000</td>
+                            <td></td>
+                        </tr>
+                        <tr class="total-row retencion-row" style="display: none;">
+                            <td colspan="5" class="total-label">RETENCIÓN 4%:</td>
+                            <td class="retencion-value">$0</td>
+                            <td class="total-label">TOTAL A PAGAR:</td>
+                            <td class="total-pagar-value">$0</td>
                             <td></td>
                         </tr>
                     </tfoot>    
@@ -649,6 +665,12 @@
                             <td style="text-align: center; font-weight: bold;">BASE RESTANTE:</td>
                             <td style="font-weight: bold;" id="print-base-value">$200,000</td>
                         </tr>
+                        <tr class="total-row retencion-row" style="display: none;">
+                            <td colspan="4" style="text-align: right; font-weight: bold;">RETENCIÓN 4%:</td>
+                            <td style="font-weight: bold;" id="print-retencion-value">$0</td>
+                            <td style="text-align: center; font-weight: bold;">TOTAL A PAGAR:</td>
+                            <td style="font-weight: bold;" id="print-total-pagar-value">$0</td>
+                        </tr>
                     </tfoot>    
                 </table>
             </div>
@@ -662,450 +684,506 @@
     <!-- Script JavaScript Simplificado -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    // Datos y elementos del DOM
-    let fletes = JSON.parse(localStorage.getItem('fletes_agse')) || [];
-    const BASE_INICIAL = 200000; // Base inicial de dinero
-    const form = document.getElementById('flete-form');
-    const tablaBody = document.querySelector('#fletes-table tbody');
-    const tfoot = document.querySelector('#fletes-table tfoot');
-    const searchInput = document.getElementById('search-input');
-    let fleteEditando = null;
-    let searchTerm = '';
-    let ordenActual = 'fecha-asc'; // Orden por defecto: fecha ascendente
+            // Datos y elementos del DOM
+            let fletes = JSON.parse(localStorage.getItem('fletes_agse')) || [];
+            const BASE_INICIAL = 200000; // Base inicial de dinero
+            const UMBRAL_RETENCION = 100000; // Umbral para aplicar retención
+            const PORCENTAJE_RETENCION = 0.04; // 4% de retención
+            const form = document.getElementById('flete-form');
+            const tablaBody = document.querySelector('#fletes-table tbody');
+            const tfoot = document.querySelector('#fletes-table tfoot');
+            const searchInput = document.getElementById('search-input');
+            let fleteEditando = null;
+            let searchTerm = '';
+            let ordenActual = 'fecha-asc'; // Orden por defecto: fecha ascendente
 
-    // Función para ajustar fecha a zona horaria de Colombia (UTC-5)
-    function ajustarFechaColombia(fecha) {
-        const fechaObj = new Date(fecha);
-        // Ajustar para Colombia (UTC-5)
-        const offsetColombia = -5 * 60; // Colombia está en UTC-5 (en minutos)
-        fechaObj.setMinutes(fechaObj.getMinutes() + fechaObj.getTimezoneOffset() - offsetColombia);
-        return fechaObj;
-    }
-
-    // Funciones auxiliares
-    function mostrarNotificacion(mensaje, tipo) {
-        const notificacion = document.createElement('div');
-        notificacion.className = `notificacion ${tipo}`;
-        notificacion.innerHTML = `
-            <i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-            ${mensaje}
-        `;
-        document.body.appendChild(notificacion);
-        setTimeout(() => notificacion.classList.add('mostrar'), 10);
-        setTimeout(() => {
-            notificacion.classList.remove('mostrar');
-            setTimeout(() => document.body.removeChild(notificacion), 300);
-        }, 3000);
-    }
-
-    function formatearMoneda(valor) {
-        return new Intl.NumberFormat('es-CO', {
-            style: 'currency',
-            currency: 'COP',
-            minimumFractionDigits: 0
-        }).format(valor);
-    }
-
-    function formatearFecha(fechaStr) {
-        if (!fechaStr) return '';
-        const fecha = ajustarFechaColombia(fechaStr);
-        return fecha.toLocaleDateString('es-CO', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        });
-    }
-
-    // Función para guardar la fecha correctamente
-    function guardarFecha(fechaInput) {
-        const fecha = new Date(fechaInput);
-        // Ajustar para guardar correctamente considerando UTC-5
-        fecha.setMinutes(fecha.getMinutes() - fecha.getTimezoneOffset() - (-5 * 60));
-        return fecha.toISOString().split('T')[0];
-    }
-
-    // Función para ordenar los fletes
-    function ordenarFletes(fletesArray) {
-        const [campo, direccion] = ordenActual.split('-');
-        
-        return [...fletesArray].sort((a, b) => {
-            // Orden por fecha
-            if (campo === 'fecha') {
-                const fechaA = new Date(a.fecha);
-                const fechaB = new Date(b.fecha);
-                return direccion === 'asc' ? fechaA - fechaB : fechaB - fechaA;
+            // Función para ajustar fecha a zona horaria de Colombia (UTC-5)
+            function ajustarFechaColombia(fecha) {
+                const fechaObj = new Date(fecha);
+                // Ajustar para Colombia (UTC-5)
+                const offsetColombia = -5 * 60; // Colombia está en UTC-5 (en minutos)
+                fechaObj.setMinutes(fechaObj.getMinutes() + fechaObj.getTimezoneOffset() - offsetColombia);
+                return fechaObj;
             }
-            // Orden por documento
-            else if (campo === 'documento') {
-                return direccion === 'asc' 
-                    ? a.documento.localeCompare(b.documento)
-                    : b.documento.localeCompare(a.documento);
-            }
-            return 0;
-        });
-    }
 
-    // Función para calcular totales y base actual
-    function calcularTotales(fletesArray) {
-        let totalFletes = 0;
-        let baseCalculada = BASE_INICIAL;
-        
-        fletesArray.forEach(flete => {
-            if (flete.precio) {
-                totalFletes += parseFloat(flete.precio);
-                baseCalculada -= parseFloat(flete.precio);
-            }
-        });
-        
-        return {
-            totalFletes: totalFletes,
-            baseActual: baseCalculada > 0 ? baseCalculada : 0 // No mostrar valores negativos
-        };
-    }
-
-    // Función para renderizar la tabla
-    function renderizarTabla() {
-        let fletesFiltrados = searchTerm 
-            ? fletes.filter(f => f.documento.toLowerCase().includes(searchTerm.toLowerCase()))
-            : [...fletes];
-        
-        // Ordenar los fletes antes de renderizar
-        fletesFiltrados = ordenarFletes(fletesFiltrados);
-        
-        tablaBody.innerHTML = '';
-        
-        if (fletesFiltrados.length === 0) {
-            tfoot.classList.add('hidden');
-            
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td colspan="9" class="no-results">
-                    <i class="fas fa-${searchTerm ? 'search' : 'inbox'}"></i>
-                    <p>${searchTerm ? 'No se encontraron resultados' : 'No hay fletes registrados'}</p>
-                </td>
-            `;
-            tablaBody.appendChild(tr);
-            return;
-        }
-        
-        tfoot.classList.remove('hidden');
-        
-        const { totalFletes, baseActual } = calcularTotales(fletes);
-        
-        // Calcular base acumulativa para cada fila
-        let baseAcumulativa = BASE_INICIAL;
-        
-        fletesFiltrados.forEach((flete, index) => {
-            const precioFlete = parseFloat(flete.precio) || 0;
-            baseAcumulativa -= precioFlete;
-            
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${formatearFecha(flete.fecha)}</td>
-                <td>${flete.documento}</td>
-                <td>${flete.transportador || 'Carlos Andres Carvajal'}</td>
-                <td>${flete.cliente}</td>
-                <td>${precioFlete ? formatearMoneda(precioFlete) : 'Sin costo'}</td>
-                <td>${flete.observacion || '-'}</td>
-                <td>${formatearMoneda(baseAcumulativa > 0 ? baseAcumulativa : 0)}</td>
-                <td>
-                    <button class="edit-btn" data-id="${flete.id}">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="delete-btn" data-id="${flete.id}">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </td>
-            `;
-            tablaBody.appendChild(tr);
-        });
-        
-        // Actualizar totales en el footer
-        document.querySelector('.total-value').textContent = formatearMoneda(totalFletes);
-        document.getElementById('print-total-value').textContent = formatearMoneda(totalFletes);
-        document.querySelector('.base-value').textContent = formatearMoneda(baseActual);
-    }
-
-    // Función para generar un ID único
-    function generarId() {
-        return Date.now().toString(36) + Math.random().toString(36).substr(2);
-    }
-
-    // Función para editar flete
-    function editarFlete() {
-        const id = this.getAttribute('data-id');
-        const flete = fletes.find(f => f.id === id);
-        
-        if (!flete) return;
-        
-        // Mostrar la fecha correctamente en el input
-        const fechaInput = document.getElementById('fecha');
-        const fecha = ajustarFechaColombia(flete.fecha);
-        fechaInput.value = fecha.toISOString().substring(0, 10);
-        
-        document.getElementById('documento').value = flete.documento;
-        document.getElementById('cliente').value = flete.cliente;
-        document.getElementById('transportador').value = flete.transportador || 'Carlos Andres Carvajal';
-        document.getElementById('precio').value = flete.precio || 0;
-        document.getElementById('observacion').value = flete.observacion || '';
-        
-        fleteEditando = id;
-        document.querySelector('.submit-btn').innerHTML = '<i class="fas fa-save"></i> Actualizar Flete';
-        
-        // Scroll al formulario
-        document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Función para eliminar flete
-    function eliminarFlete() {
-        const id = this.getAttribute('data-id');
-        const flete = fletes.find(f => f.id === id);
-        
-        if (!flete) return;
-        
-        Swal.fire({
-            title: '¿Eliminar flete?',
-            text: `¿Estás seguro de eliminar el flete del cliente ${flete.cliente}?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
-            customClass: {
-                confirmButton: 'swal-confirm-btn',
-                cancelButton: 'swal-cancel-btn'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fletes = fletes.filter(f => f.id !== id);
-                localStorage.setItem('fletes_agse', JSON.stringify(fletes));
-                renderizarTabla();
-                mostrarNotificacion('Flete eliminado correctamente', 'success');
-            }
-        });
-    }
-
-    // Evento submit del formulario
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const nuevoFlete = {
-            id: fleteEditando || generarId(),
-            fecha: guardarFecha(document.getElementById('fecha').value),
-            documento: document.getElementById('documento').value.trim(),
-            cliente: document.getElementById('cliente').value.trim(),
-            transportador: document.getElementById('transportador').value.trim() || 'Carlos Andres Carvajal',
-            precio: parseFloat(document.getElementById('precio').value) || 0,
-            observacion: document.getElementById('observacion').value.trim()
-        };
-        
-        // Validaciones
-        if (!nuevoFlete.fecha || !nuevoFlete.documento || !nuevoFlete.cliente) {
-            mostrarNotificacion('Por favor complete los campos requeridos', 'error');
-            return;
-        }
-        
-        // Guardar o actualizar
-        if (fleteEditando !== null) {
-            const index = fletes.findIndex(f => f.id === fleteEditando);
-            if (index !== -1) {
-                fletes[index] = nuevoFlete;
-                mostrarNotificacion('Flete actualizado correctamente', 'success');
-            }
-            fleteEditando = null;
-        } else {
-            fletes.push(nuevoFlete);
-            mostrarNotificacion('Flete registrado correctamente', 'success');
-        }
-        
-        // Guardar y actualizar
-        localStorage.setItem('fletes_agse', JSON.stringify(fletes));
-        form.reset();
-        document.getElementById('transportador').value = 'Carlos Andres Carvajal';
-        renderizarTabla();
-        
-        // Restaurar botón
-        document.querySelector('.submit-btn').innerHTML = '<i class="fas fa-save"></i> Registrar Flete';
-    });
-
-    // Eventos de búsqueda
-    document.getElementById('search-btn').addEventListener('click', function() {
-        searchTerm = searchInput.value.trim();
-        renderizarTabla();
-    });
-    
-    document.getElementById('clear-search-btn').addEventListener('click', function() {
-        searchInput.value = '';
-        searchTerm = '';
-        renderizarTabla();
-    });
-    
-    searchInput.addEventListener('keyup', function(e) {
-        if (e.key === 'Enter') {
-            searchTerm = this.value.trim();
-            renderizarTabla();
-        }
-    });
-
-    // Eventos para ordenar
-    document.querySelectorAll('[data-orden]').forEach(boton => {
-        boton.addEventListener('click', function() {
-            ordenActual = this.getAttribute('data-orden');
-            renderizarTabla();
-            
-            // Actualizar indicador visual de orden
-            document.querySelectorAll('[data-orden]').forEach(b => {
-                b.querySelector('i').className = 'fas fa-sort';
-            });
-            
-            const icono = this.querySelector('i');
-            if (ordenActual.includes('asc')) {
-                icono.className = 'fas fa-sort-up';
-            } else {
-                icono.className = 'fas fa-sort-down';
-            }
-        });
-    });
-
-    // Evento para imprimir
-    document.getElementById('print-btn').addEventListener('click', function() {
-        const ahora = new Date();
-                    document.getElementById('print-date').textContent = ahora.toLocaleDateString('es-CO', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                    });
-        const printSection = document.getElementById('print-section');
-        const printBody = document.querySelector('#print-fletes-table tbody');
-        const printTfoot = document.querySelector('#print-fletes-table tfoot');
-        
-        printBody.innerHTML = '';
-        
-        const { totalFletes, baseActual } = calcularTotales(fletes);
-        const fletesOrdenados = ordenarFletes(fletes);
-        
-        if (fletesOrdenados.length === 0) {
-            printTfoot.classList.add('hidden');
-        } else {
-            printTfoot.classList.remove('hidden');
-            
-            let baseAcumulativa = BASE_INICIAL;
-            
-            fletesOrdenados.forEach((flete, index) => {
-                const precioFlete = parseFloat(flete.precio) || 0;
-                baseAcumulativa -= precioFlete;
-                
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${formatearFecha(flete.fecha)}</td>
-                    <td>${flete.documento}</td>
-                    <td>${flete.transportador || 'Carlos Andres Carvajal'}</td>
-                    <td>${flete.cliente}</td>
-                    <td>${precioFlete ? formatearMoneda(precioFlete) : 'Sin costo'}</td>
-                    <td>${flete.observacion || '-'}</td>
+            // Funciones auxiliares
+            function mostrarNotificacion(mensaje, tipo) {
+                const notificacion = document.createElement('div');
+                notificacion.className = `notificacion ${tipo}`;
+                notificacion.innerHTML = `
+                    <i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${mensaje}
                 `;
-                printBody.appendChild(tr);
-            });
-        }
-        
-        // Actualizar totales en el print
-        document.getElementById('print-total-value').textContent = formatearMoneda(totalFletes);
-        document.getElementById('print-base-value').textContent = formatearMoneda(baseActual);
-        
-        printSection.style.display = 'block';
-        window.print();
-        printSection.style.display = 'none';
-    });
-
-    // Evento para exportar a Excel
-    document.getElementById('excel-btn').addEventListener('click', function() {
-        const { totalFletes, baseActual } = calcularTotales(fletes);
-        const fletesOrdenados = ordenarFletes(fletes);
-        
-        let baseAcumulativa = BASE_INICIAL;
-        
-        const datos = fletesOrdenados.map((flete, index) => {
-            const precioFlete = parseFloat(flete.precio) || 0;
-            baseAcumulativa -= precioFlete;
-            
-            return {
-                'Item': index + 1,
-                'Fecha': formatearFecha(flete.fecha),
-                'Documento': flete.documento,
-                'Transportador': flete.transportador || 'Carlos Andres Carvajal',
-                'Cliente': flete.cliente,
-                'Precio Flete': precioFlete,
-                'Base Restante': baseAcumulativa > 0 ? baseAcumulativa : 0,
-                'Observaciones': flete.observacion || '-'
-            };
-        });
-        
-        // Agregar totales
-        datos.push({
-            'Item': '',
-            'Fecha': '',
-            'Documento': '',
-            'Transportador': '',
-            'Cliente': 'TOTALES:',
-            'Precio Flete': totalFletes,
-            'Base Restante': baseActual,
-            'Observaciones': ''
-        });
-        
-        // Crear libro de Excel
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet(datos);
-        XLSX.utils.book_append_sheet(wb, ws, "Fletes");
-        
-        // Descargar
-        const fecha = new Date().toISOString().split('T')[0];
-        XLSX.writeFile(wb, `fletes_agse_${fecha}.xlsx`);
-    });
-
-    // Evento para vaciar tabla
-    document.getElementById('clear-btn').addEventListener('click', function() {
-        Swal.fire({
-            title: '¿Vaciar toda la tabla?',
-            text: 'Esta acción eliminará todos los fletes registrados',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, vaciar',
-            cancelButtonText: 'Cancelar',
-            customClass: {
-                confirmButton: 'swal-confirm-btn',
-                cancelButton: 'swal-cancel-btn'
+                document.body.appendChild(notificacion);
+                setTimeout(() => notificacion.classList.add('mostrar'), 10);
+                setTimeout(() => {
+                    notificacion.classList.remove('mostrar');
+                    setTimeout(() => document.body.removeChild(notificacion), 300);
+                }, 3000);
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fletes = [];
+
+            function formatearMoneda(valor) {
+                return new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0
+                }).format(valor);
+            }
+
+            function formatearFecha(fechaStr) {
+                if (!fechaStr) return '';
+                const fecha = ajustarFechaColombia(fechaStr);
+                return fecha.toLocaleDateString('es-CO', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                });
+            }
+
+            // Función para guardar la fecha correctamente
+            function guardarFecha(fechaInput) {
+                const fecha = new Date(fechaInput);
+                // Ajustar para guardar correctamente considerando UTC-5
+                fecha.setMinutes(fecha.getMinutes() - fecha.getTimezoneOffset() - (-5 * 60));
+                return fecha.toISOString().split('T')[0];
+            }
+
+            // Función para ordenar los fletes
+            function ordenarFletes(fletesArray) {
+                const [campo, direccion] = ordenActual.split('-');
+                
+                return [...fletesArray].sort((a, b) => {
+                    // Orden por fecha
+                    if (campo === 'fecha') {
+                        const fechaA = new Date(a.fecha);
+                        const fechaB = new Date(b.fecha);
+                        return direccion === 'asc' ? fechaA - fechaB : fechaB - fechaA;
+                    }
+                    // Orden por documento
+                    else if (campo === 'documento') {
+                        return direccion === 'asc' 
+                            ? a.documento.localeCompare(b.documento)
+                            : b.documento.localeCompare(a.documento);
+                    }
+                    return 0;
+                });
+            }
+
+            // Función para calcular totales y base actual
+            function calcularTotales(fletesArray) {
+                let totalFletes = 0;
+                let baseCalculada = BASE_INICIAL;
+                
+                fletesArray.forEach(flete => {
+                    if (flete.precio) {
+                        totalFletes += parseFloat(flete.precio);
+                        baseCalculada -= parseFloat(flete.precio);
+                    }
+                });
+                
+                // Calcular retención si el total de fletes es >= $100,000
+                let retencion = 0;
+                let totalAPagar = totalFletes;
+                
+                if (totalFletes >= UMBRAL_RETENCION) {
+                    retencion = totalFletes * PORCENTAJE_RETENCION;
+                    totalAPagar = totalFletes - retencion;
+                }
+                
+                return {
+                    totalFletes: totalFletes,
+                    baseActual: baseCalculada > 0 ? baseCalculada : 0, // No mostrar valores negativos
+                    retencion: retencion,
+                    totalAPagar: totalAPagar
+                };
+            }
+
+            // Función para renderizar la tabla
+            function renderizarTabla() {
+                let fletesFiltrados = searchTerm 
+                    ? fletes.filter(f => f.documento.toLowerCase().includes(searchTerm.toLowerCase()))
+                    : [...fletes];
+                
+                // Ordenar los fletes antes de renderizar
+                fletesFiltrados = ordenarFletes(fletesFiltrados);
+                
+                tablaBody.innerHTML = '';
+                
+                if (fletesFiltrados.length === 0) {
+                    tfoot.classList.add('hidden');
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td colspan="9" class="no-results">
+                            <i class="fas fa-${searchTerm ? 'search' : 'inbox'}"></i>
+                            <p>${searchTerm ? 'No se encontraron resultados' : 'No hay fletes registrados'}</p>
+                        </td>
+                    `;
+                    tablaBody.appendChild(tr);
+                    return;
+                }
+                
+                tfoot.classList.remove('hidden');
+                
+                const { totalFletes, baseActual, retencion, totalAPagar } = calcularTotales(fletes);
+                
+                // Calcular base acumulativa para cada fila
+                let baseAcumulativa = BASE_INICIAL;
+                
+                fletesFiltrados.forEach((flete, index) => {
+                    const precioFlete = parseFloat(flete.precio) || 0;
+                    baseAcumulativa -= precioFlete;
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${formatearFecha(flete.fecha)}</td>
+                        <td>${flete.documento}</td>
+                        <td>${flete.transportador || 'Carlos Andres Carvajal'}</td>
+                        <td>${flete.cliente}</td>
+                        <td>${precioFlete ? formatearMoneda(precioFlete) : 'Sin costo'}</td>
+                        <td>${flete.observacion || '-'}</td>
+                        <td>${formatearMoneda(baseAcumulativa > 0 ? baseAcumulativa : 0)}</td>
+                        <td>
+                            <button class="edit-btn" data-id="${flete.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-btn" data-id="${flete.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    `;
+                    tablaBody.appendChild(tr);
+                });
+                
+                // Actualizar totales en el footer
+                document.querySelector('.total-value').textContent = formatearMoneda(totalFletes);
+                document.getElementById('print-total-value').textContent = formatearMoneda(totalFletes);
+                document.querySelector('.base-value').textContent = formatearMoneda(baseActual);
+                document.getElementById('print-base-value').textContent = formatearMoneda(baseActual);
+                
+                // Mostrar u ocultar fila de retención según corresponda
+                const retencionRow = document.querySelector('.retencion-row');
+                const printRetencionRow = document.querySelector('#print-fletes-table .retencion-row');
+                
+                if (totalFletes >= UMBRAL_RETENCION) {
+                    retencionRow.style.display = '';
+                    printRetencionRow.style.display = '';
+                    
+                    document.querySelector('.retencion-value').textContent = formatearMoneda(retencion);
+                    document.querySelector('.total-pagar-value').textContent = formatearMoneda(totalAPagar);
+                    document.getElementById('print-retencion-value').textContent = formatearMoneda(retencion);
+                    document.getElementById('print-total-pagar-value').textContent = formatearMoneda(totalAPagar);
+                } else {
+                    retencionRow.style.display = 'none';
+                    printRetencionRow.style.display = 'none';
+                }
+            }
+
+            // Función para generar un ID único
+            function generarId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+
+            // Función para editar flete
+            function editarFlete() {
+                const id = this.getAttribute('data-id');
+                const flete = fletes.find(f => f.id === id);
+                
+                if (!flete) return;
+                
+                // Mostrar la fecha correctamente en el input
+                const fechaInput = document.getElementById('fecha');
+                const fecha = ajustarFechaColombia(flete.fecha);
+                fechaInput.value = fecha.toISOString().substring(0, 10);
+                
+                document.getElementById('documento').value = flete.documento;
+                document.getElementById('cliente').value = flete.cliente;
+                document.getElementById('transportador').value = flete.transportador || 'Carlos Andres Carvajal';
+                document.getElementById('precio').value = flete.precio || 0;
+                document.getElementById('observacion').value = flete.observacion || '';
+                
+                fleteEditando = id;
+                document.querySelector('.submit-btn').innerHTML = '<i class="fas fa-save"></i> Actualizar Flete';
+                
+                // Scroll al formulario
+                document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Función para eliminar flete
+            function eliminarFlete() {
+                const id = this.getAttribute('data-id');
+                const flete = fletes.find(f => f.id === id);
+                
+                if (!flete) return;
+                
+                Swal.fire({
+                    title: '¿Eliminar flete?',
+                    text: `¿Estás seguro de eliminar el flete del cliente ${flete.cliente}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar',
+                    customClass: {
+                        confirmButton: 'swal-confirm-btn',
+                        cancelButton: 'swal-cancel-btn'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fletes = fletes.filter(f => f.id !== id);
+                        localStorage.setItem('fletes_agse', JSON.stringify(fletes));
+                        renderizarTabla();
+                        mostrarNotificacion('Flete eliminado correctamente', 'success');
+                    }
+                });
+            }
+
+            // Evento submit del formulario
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const nuevoFlete = {
+                    id: fleteEditando || generarId(),
+                    fecha: guardarFecha(document.getElementById('fecha').value),
+                    documento: document.getElementById('documento').value.trim(),
+                    cliente: document.getElementById('cliente').value.trim(),
+                    transportador: document.getElementById('transportador').value.trim() || 'Carlos Andres Carvajal',
+                    precio: parseFloat(document.getElementById('precio').value) || 0,
+                    observacion: document.getElementById('observacion').value.trim()
+                };
+                
+                // Validaciones
+                if (!nuevoFlete.fecha || !nuevoFlete.documento || !nuevoFlete.cliente) {
+                    mostrarNotificacion('Por favor complete los campos requeridos', 'error');
+                    return;
+                }
+                
+                // Guardar o actualizar
+                if (fleteEditando !== null) {
+                    const index = fletes.findIndex(f => f.id === fleteEditando);
+                    if (index !== -1) {
+                        fletes[index] = nuevoFlete;
+                        mostrarNotificacion('Flete actualizado correctamente', 'success');
+                    }
+                    fleteEditando = null;
+                } else {
+                    fletes.push(nuevoFlete);
+                    mostrarNotificacion('Flete registrado correctamente', 'success');
+                }
+                
+                // Guardar y actualizar
                 localStorage.setItem('fletes_agse', JSON.stringify(fletes));
+                form.reset();
+                document.getElementById('transportador').value = 'Carlos Andres Carvajal';
                 renderizarTabla();
-                mostrarNotificacion('Tabla vaciada correctamente', 'success');
-            }
+                
+                // Restaurar botón
+                document.querySelector('.submit-btn').innerHTML = '<i class="fas fa-save"></i> Registrar Flete';
+            });
+
+            // Eventos de búsqueda
+            document.getElementById('search-btn').addEventListener('click', function() {
+                searchTerm = searchInput.value.trim();
+                renderizarTabla();
+            });
+            
+            document.getElementById('clear-search-btn').addEventListener('click', function() {
+                searchInput.value = '';
+                searchTerm = '';
+                renderizarTabla();
+            });
+            
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    searchTerm = this.value.trim();
+                    renderizarTabla();
+                }
+            });
+
+            // Eventos para ordenar
+            document.querySelectorAll('[data-orden]').forEach(boton => {
+                boton.addEventListener('click', function() {
+                    ordenActual = this.getAttribute('data-orden');
+                    renderizarTabla();
+                    
+                    // Actualizar indicador visual de orden
+                    document.querySelectorAll('[data-orden]').forEach(b => {
+                        b.querySelector('i').className = 'fas fa-sort';
+                    });
+                    
+                    const icono = this.querySelector('i');
+                    if (ordenActual.includes('asc')) {
+                        icono.className = 'fas fa-sort-up';
+                    } else {
+                        icono.className = 'fas fa-sort-down';
+                    }
+                });
+            });
+
+            // Evento para imprimir
+            document.getElementById('print-btn').addEventListener('click', function() {
+                const ahora = new Date();
+                document.getElementById('print-date').textContent = ahora.toLocaleDateString('es-CO', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                const printSection = document.getElementById('print-section');
+                const printBody = document.querySelector('#print-fletes-table tbody');
+                const printTfoot = document.querySelector('#print-fletes-table tfoot');
+                
+                printBody.innerHTML = '';
+                
+                const { totalFletes, baseActual, retencion, totalAPagar } = calcularTotales(fletes);
+                const fletesOrdenados = ordenarFletes(fletes);
+                
+                if (fletesOrdenados.length === 0) {
+                    printTfoot.classList.add('hidden');
+                } else {
+                    printTfoot.classList.remove('hidden');
+                    
+                    let baseAcumulativa = BASE_INICIAL;
+                    
+                    fletesOrdenados.forEach((flete, index) => {
+                        const precioFlete = parseFloat(flete.precio) || 0;
+                        baseAcumulativa -= precioFlete;
+                        
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${formatearFecha(flete.fecha)}</td>
+                            <td>${flete.documento}</td>
+                            <td>${flete.transportador || 'Carlos Andres Carvajal'}</td>
+                            <td>${flete.cliente}</td>
+                            <td>${precioFlete ? formatearMoneda(precioFlete) : 'Sin costo'}</td>
+                            <td>${flete.observacion || '-'}</td>
+                            <td>${formatearMoneda(baseAcumulativa > 0 ? baseAcumulativa : 0)}</td>
+                        `;
+                        printBody.appendChild(tr);
+                    });
+                }
+                
+                // Actualizar totales en el print
+                document.getElementById('print-total-value').textContent = formatearMoneda(totalFletes);
+                document.getElementById('print-base-value').textContent = formatearMoneda(baseActual);
+                
+                // Mostrar u ocultar fila de retención según corresponda
+                const printRetencionRow = document.querySelector('#print-fletes-table .retencion-row');
+                if (totalFletes >= UMBRAL_RETENCION) {
+                    printRetencionRow.style.display = '';
+                    document.getElementById('print-retencion-value').textContent = formatearMoneda(retencion);
+                    document.getElementById('print-total-pagar-value').textContent = formatearMoneda(totalAPagar);
+                } else {
+                    printRetencionRow.style.display = 'none';
+                }
+                
+                printSection.style.display = 'block';
+                window.print();
+                printSection.style.display = 'none';
+            });
+
+            // Evento para exportar a Excel
+            document.getElementById('excel-btn').addEventListener('click', function() {
+                const { totalFletes, baseActual, retencion, totalAPagar } = calcularTotales(fletes);
+                const fletesOrdenados = ordenarFletes(fletes);
+                
+                let baseAcumulativa = BASE_INICIAL;
+                
+                const datos = fletesOrdenados.map((flete, index) => {
+                    const precioFlete = parseFloat(flete.precio) || 0;
+                    baseAcumulativa -= precioFlete;
+                    
+                    return {
+                        'Item': index + 1,
+                        'Fecha': formatearFecha(flete.fecha),
+                        'Documento': flete.documento,
+                        'Transportador': flete.transportador || 'Carlos Andres Carvajal',
+                        'Cliente': flete.cliente,
+                        'Precio Flete': precioFlete,
+                        'Base Restante': baseAcumulativa > 0 ? baseAcumulativa : 0,
+                        'Observaciones': flete.observacion || '-'
+                    };
+                });
+                
+                // Agregar totales
+                datos.push({
+                    'Item': '',
+                    'Fecha': '',
+                    'Documento': '',
+                    'Transportador': '',
+                    'Cliente': 'TOTALES:',
+                    'Precio Flete': totalFletes,
+                    'Base Restante': baseActual,
+                    'Observaciones': ''
+                });
+                
+                // Si aplica retención, agregar fila con retención y total a pagar
+                if (totalFletes >= UMBRAL_RETENCION) {
+                    datos.push({
+                        'Item': '',
+                        'Fecha': '',
+                        'Documento': '',
+                        'Transportador': '',
+                        'Cliente': 'RETENCIÓN 4%:',
+                        'Precio Flete': retencion,
+                        'Base Restante': 'TOTAL A PAGAR:',
+                        'Observaciones': formatearMoneda(totalAPagar)
+                    });
+                }
+                
+                // Crear libro de Excel
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(datos);
+                XLSX.utils.book_append_sheet(wb, ws, "Fletes");
+                
+                // Descargar
+                const fecha = new Date().toISOString().split('T')[0];
+                XLSX.writeFile(wb, `fletes_agse_${fecha}.xlsx`);
+            });
+
+            // Evento para vaciar tabla
+            document.getElementById('clear-btn').addEventListener('click', function() {
+                Swal.fire({
+                    title: '¿Vaciar toda la tabla?',
+                    text: 'Esta acción eliminará todos los fletes registrados',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, vaciar',
+                    cancelButtonText: 'Cancelar',
+                    customClass: {
+                        confirmButton: 'swal-confirm-btn',
+                        cancelButton: 'swal-cancel-btn'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fletes = [];
+                        localStorage.setItem('fletes_agse', JSON.stringify(fletes));
+                        renderizarTabla();
+                        mostrarNotificacion('Tabla vaciada correctamente', 'success');
+                    }
+                });
+            });
+
+            // Asignar event listeners a los botones de orden
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('edit-btn') || e.target.closest('.edit-btn')) {
+                    editarFlete.call(e.target.classList.contains('edit-btn') ? e.target : e.target.closest('.edit-btn'));
+                }
+                
+                if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
+                    eliminarFlete.call(e.target.classList.contains('delete-btn') ? e.target : e.target.closest('.delete-btn'));
+                }
+            });
+
+            // Inicializar tabla
+            // Asegurar que cada flete tenga un ID único
+            fletes = fletes.map(f => {
+                if (!f.id) f.id = generarId();
+                return f;
+            });
+            localStorage.setItem('fletes_agse', JSON.stringify(fletes));
+            
+            renderizarTabla();
         });
-    });
-
-    // Asignar event listeners a los botones de orden
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('edit-btn') || e.target.closest('.edit-btn')) {
-            editarFlete.call(e.target.classList.contains('edit-btn') ? e.target : e.target.closest('.edit-btn'));
-        }
-        
-        if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
-            eliminarFlete.call(e.target.classList.contains('delete-btn') ? e.target : e.target.closest('.delete-btn'));
-        }
-    });
-
-    // Inicializar tabla
-    // Asegurar que cada flete tenga un ID único
-    fletes = fletes.map(f => {
-        if (!f.id) f.id = generarId();
-        return f;
-    });
-    localStorage.setItem('fletes_agse', JSON.stringify(fletes));
-    
-    renderizarTabla();
-});
     </script>
 </body>
 </html>
