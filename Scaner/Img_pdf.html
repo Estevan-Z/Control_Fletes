@@ -315,27 +315,6 @@
             flex-wrap: wrap;
         }
 
-        .info-section {
-            background-color: #eef2ff;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .info-title {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            color: #1e3c72;
-        }
-
-        .info-list {
-            padding-left: 20px;
-        }
-
-        .info-list li {
-            margin-bottom: 8px;
-        }
-
         footer {
             text-align: center;
             padding: 15px;
@@ -369,7 +348,7 @@
             }
         }
 
-        /* Estilos para el recorte */
+        /* Estilos para el recorte CORREGIDO */
         .crop-overlay {
             position: absolute;
             top: 0;
@@ -443,196 +422,33 @@
             margin: 10px 0;
         }
 
-        /* Estilos para modales */
-        .scanner-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .scanner-container {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            max-width: 90%;
-            max-height: 90%;
-            position: relative;
-            width: 500px;
-        }
-
-        .close-scanner {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-        }
-
-        .scanner-steps {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .scanner-step {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            font-weight: 600;
-            color: #6c757d;
-            border-bottom: 3px solid transparent;
-        }
-
-        .scanner-step.active {
-            color: #1e3c72;
-            border-bottom-color: #1e3c72;
-        }
-
-        .scanner-step.completed {
-            color: #28a745;
-            border-bottom-color: #28a745;
-        }
-
-        .step-content {
-            display: none;
-        }
-
-        .step-content.active {
-            display: block;
-        }
-
-        .printer-list {
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-
-        .printer-item {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .printer-item:hover {
-            background: #f8f9fa;
-        }
-
-        .printer-item.selected {
-            background: #1e3c72;
-            color: white;
-        }
-
-        .printer-name {
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .printer-details {
-            font-size: 0.9rem;
-            margin-top: 5px;
-            opacity: 0.8;
-        }
-
-        .printer-item.selected .printer-details {
-            opacity: 0.9;
-        }
-
-        .scanner-settings {
-            margin: 20px 0;
-        }
-
-        .setting-group {
-            margin: 15px 0;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .setting-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #1e3c72;
-        }
-
-        .setting-group select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            background: white;
-        }
-
-        .scanner-status {
-            text-align: center;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-            background: #e2e3e5;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #1e3c72;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .pdf-quality {
-            margin-top: 10px;
-            padding: 10px;
-            background: #e9ecef;
-            border-radius: 5px;
-        }
-
-        .quality-options {
+        /* Nuevos estilos para mejoras */
+        .crop-history-controls {
             display: flex;
             gap: 10px;
-            margin-top: 5px;
+            margin-top: 10px;
         }
 
-        .quality-option {
-            flex: 1;
-            padding: 8px;
-            text-align: center;
-            border: 2px solid #ddd;
+        .history-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 0.9rem;
         }
 
-        .quality-option.selected {
-            border-color: #1e3c72;
-            background: #1e3c72;
-            color: white;
+        .history-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
 
-        .step-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+        .image-info {
+            text-align: center;
+            margin: 10px 0;
+            color: #666;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -640,7 +456,7 @@
     <div class="container">
         <header>
             <h1>Mejorador de Documentos Escaneados</h1>
-            <p class="subtitle">Cámara nativa, escáner con impresoras de red y PDF de alta calidad</p>
+            <p class="subtitle">Sube, mejora y genera PDFs de alta calidad</p>
         </header>
         
         <div class="main-content">
@@ -666,7 +482,7 @@
             <div class="upload-section" id="uploadSection">
                 <div class="upload-icon">📄</div>
                 <h2 class="upload-text">Sube o captura tus documentos</h2>
-                <p>Múltiples formas de obtener tus imágenes - Máximo 10 imágenes</p>
+                <p>Múltiples formas de obtener tus imágenes - Sin límite de imágenes</p>
                 
                 <div class="upload-options">
                     <div class="upload-option" id="fileUploadOption">
@@ -677,19 +493,18 @@
                         <div class="upload-option-icon">📷</div>
                         <div class="upload-option-text">Cámara Nativa</div>
                     </div>
-                    <div class="upload-option" id="scannerOption">
-                        <div class="upload-option-icon">🖨️</div>
-                        <div class="upload-option-text">Escáner con Impresora</div>
-                    </div>
                 </div>
                 
                 <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
                 <input type="file" id="cameraInput" class="file-input" accept="image/*" capture="environment">
-                <button class="btn" id="selectBtn" style="display: none;">Seleccionar Imágenes</button>
             </div>
             
             <div class="preview-section" id="previewSection">
                 <h2 class="preview-title">Mejora tus Documentos</h2>
+                
+                <div class="image-info" id="imageInfo">
+                    <!-- Información de imágenes cargadas -->
+                </div>
                 
                 <div class="navigation-buttons">
                     <button class="btn" id="prevBtn">← Anterior</button>
@@ -723,12 +538,16 @@
                     <div class="crop-panel">
                         <h3 class="panel-title">Herramientas de Recorte</h3>
                         <div class="crop-instructions">
-                            💡 <strong>Instrucciones:</strong> Activa recorte, ajusta el área roja (se mantiene dentro de la imagen) y aplica
+                            💡 <strong>Instrucciones:</strong> Activa recorte, ajusta el área roja EXACTAMENTE donde quieres recortar y aplica
                         </div>
                         <div class="crop-controls">
                             <button class="btn" id="cropBtn">Activar Recorte</button>
                             <button class="btn btn-success" id="applyCropBtn">Aplicar Recorte</button>
                             <button class="btn btn-danger" id="cancelCropBtn">Cancelar Recorte</button>
+                        </div>
+                        <div class="crop-history-controls">
+                            <button class="history-btn" id="undoCropBtn" disabled>↶ Deshacer Recorte</button>
+                            <button class="history-btn" id="resetCropBtn">🔄 Restaurar Original</button>
                         </div>
                         <div class="rotation-controls">
                             <button class="btn btn-warning" id="rotateLeftBtn">↺ Girar Izquierda</button>
@@ -740,131 +559,15 @@
                 <div class="actions">
                     <button class="btn" id="addMoreBtn">Agregar Más Imágenes</button>
                     <button class="btn btn-info" id="takePhotoBtn">Usar Cámara</button>
-                    <button class="btn btn-secondary" id="scanMoreBtn">Escanear Más</button>
                     <button class="btn btn-success" id="generateBtn">Generar PDF Mejorado</button>
                     <button class="btn btn-danger" id="clearBtn">Limpiar Todo</button>
                 </div>
-            </div>
-            
-            <div class="info-section">
-                <h3 class="info-title">Características Mejoradas:</h3>
-                <ul class="info-list">
-                    <li><strong>Cámara Nativa:</strong> Usa la aplicación de cámara de tu teléfono</li>
-                    <li><strong>Selección de Impresoras:</strong> Escanea desde impresoras de red disponibles</li>
-                    <li><strong>Configuración Flexible:</strong> Elige platina, calidad, color y tamaño</li>
-                    <li><strong>Alta Calidad PDF:</strong> Imágenes nítidas sin pérdida de calidad</li>
-                </ul>
             </div>
         </div>
         
         <footer>
             <p>Mejorador de Documentos Escaneados &copy; 2023</p>
         </footer>
-    </div>
-
-    <!-- Modal para el escáner -->
-    <div class="scanner-modal" id="scannerModal">
-        <div class="scanner-container">
-            <button class="close-scanner" id="closeScanner">×</button>
-            <h3>Escáner con Impresora</h3>
-            
-            <div class="scanner-steps">
-                <div class="scanner-step active" id="step1">1. Seleccionar Impresora</div>
-                <div class="scanner-step" id="step2">2. Configurar Escaneo</div>
-                <div class="scanner-step" id="step3">3. Escanear</div>
-            </div>
-
-            <!-- Paso 1: Selección de Impresora -->
-            <div class="step-content active" id="step1Content">
-                <div class="scanner-instructions">
-                    <strong>💡 Paso 1:</strong> Selecciona una impresora de red para escanear
-                </div>
-
-                <div class="printer-list" id="printerList">
-                    <!-- Las impresoras se cargarán aquí -->
-                </div>
-
-                <div class="scanner-status" id="scannerStatus">
-                    🔍 Buscando impresoras en la red...
-                </div>
-
-                <div class="step-actions">
-                    <button class="btn btn-secondary" id="refreshPrintersBtn">🔄 Actualizar Lista</button>
-                    <button class="btn btn-success" id="nextStep1Btn" disabled>Siguiente →</button>
-                </div>
-            </div>
-
-            <!-- Paso 2: Configuración del Escaneo -->
-            <div class="step-content" id="step2Content">
-                <div class="scanner-instructions">
-                    <strong>💡 Paso 2:</strong> Configura los parámetros del escaneo
-                </div>
-
-                <div class="scanner-settings">
-                    <div class="setting-group">
-                        <label>📄 Fuente del Documento:</label>
-                        <select id="documentSource">
-                            <option value="flatbed">Platina de vidrio</option>
-                            <option value="adf">Alimentador automático (ADF)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="setting-group">
-                        <label>🎯 Calidad de Escaneo:</label>
-                        <select id="scanQuality">
-                            <option value="150">Borrador (150 DPI)</option>
-                            <option value="300" selected>Estándar (300 DPI)</option>
-                            <option value="600">Alta calidad (600 DPI)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="setting-group">
-                        <label>🎨 Formato de Color:</label>
-                        <select id="colorFormat">
-                            <option value="color">Color</option>
-                            <option value="grayscale" selected>Escala de grises</option>
-                            <option value="bw">Blanco y negro</option>
-                        </select>
-                    </div>
-                    
-                    <div class="setting-group">
-                        <label>📏 Tamaño del Documento:</label>
-                        <select id="documentSize">
-                            <option value="letter" selected>Carta (8.5" x 11")</option>
-                            <option value="legal">Legal (8.5" x 14")</option>
-                            <option value="a4">A4 (210mm x 297mm)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="scanner-status" id="step2Status">
-                    Impresora seleccionada: <span id="selectedPrinterName">-</span>
-                </div>
-
-                <div class="step-actions">
-                    <button class="btn btn-secondary" id="backStep2Btn">← Anterior</button>
-                    <button class="btn btn-success" id="nextStep2Btn">Siguiente →</button>
-                </div>
-            </div>
-
-            <!-- Paso 3: Escanear -->
-            <div class="step-content" id="step3Content">
-                <div class="scanner-instructions">
-                    <strong>💡 Paso 3:</strong> Inicia el proceso de escaneo
-                </div>
-
-                <div class="scanner-status" id="step3Status">
-                    <div id="scanConfigSummary">
-                        <!-- Resumen de configuración -->
-                    </div>
-                </div>
-
-                <div class="step-actions">
-                    <button class="btn btn-secondary" id="backStep3Btn">← Anterior</button>
-                    <button class="btn btn-success" id="startScanBtn">🚀 Iniciar Escaneo</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -874,10 +577,8 @@
         // Elementos DOM
         const fileInput = document.getElementById('fileInput');
         const cameraInput = document.getElementById('cameraInput');
-        const selectBtn = document.getElementById('selectBtn');
         const addMoreBtn = document.getElementById('addMoreBtn');
         const takePhotoBtn = document.getElementById('takePhotoBtn');
-        const scanMoreBtn = document.getElementById('scanMoreBtn');
         const generateBtn = document.getElementById('generateBtn');
         const clearBtn = document.getElementById('clearBtn');
         const prevBtn = document.getElementById('prevBtn');
@@ -889,6 +590,7 @@
         const previewSection = document.getElementById('previewSection');
         const comparisonContainer = document.getElementById('comparisonContainer');
         const imageCounter = document.getElementById('imageCounter');
+        const imageInfo = document.getElementById('imageInfo');
         const cropBtn = document.getElementById('cropBtn');
         const applyCropBtn = document.getElementById('applyCropBtn');
         const cancelCropBtn = document.getElementById('cancelCropBtn');
@@ -896,37 +598,9 @@
         const rotateRightBtn = document.getElementById('rotateRightBtn');
         const filterIntensity = document.getElementById('filterIntensity');
         const intensityValue = document.getElementById('intensityValue');
+        const undoCropBtn = document.getElementById('undoCropBtn');
+        const resetCropBtn = document.getElementById('resetCropBtn');
         
-        // Elementos de escáner
-        const scannerModal = document.getElementById('scannerModal');
-        const closeScanner = document.getElementById('closeScanner');
-        const scannerStatus = document.getElementById('scannerStatus');
-        const printerList = document.getElementById('printerList');
-        const refreshPrintersBtn = document.getElementById('refreshPrintersBtn');
-        
-        // Pasos del escáner
-        const step1 = document.getElementById('step1');
-        const step2 = document.getElementById('step2');
-        const step3 = document.getElementById('step3');
-        const step1Content = document.getElementById('step1Content');
-        const step2Content = document.getElementById('step2Content');
-        const step3Content = document.getElementById('step3Content');
-        const nextStep1Btn = document.getElementById('nextStep1Btn');
-        const nextStep2Btn = document.getElementById('nextStep2Btn');
-        const backStep2Btn = document.getElementById('backStep2Btn');
-        const backStep3Btn = document.getElementById('backStep3Btn');
-        const startScanBtn = document.getElementById('startScanBtn');
-        
-        // Configuración del escáner
-        const documentSource = document.getElementById('documentSource');
-        const scanQuality = document.getElementById('scanQuality');
-        const colorFormat = document.getElementById('colorFormat');
-        const documentSize = document.getElementById('documentSize');
-        const selectedPrinterName = document.getElementById('selectedPrinterName');
-        const step2Status = document.getElementById('step2Status');
-        const step3Status = document.getElementById('step3Status');
-        const scanConfigSummary = document.getElementById('scanConfigSummary');
-
         // Elementos de calidad PDF
         const qualityOptions = document.querySelectorAll('.quality-option');
 
@@ -941,12 +615,14 @@
         let dragHandle = null;
         let startX, startY, startWidth, startHeight, startLeft, startTop;
         let pdfQuality = 'high';
-        let selectedPrinter = null;
+        
+        // Variables para el recorte CORREGIDO
+        let cropStartX, cropStartY, cropEndX, cropEndY;
+        let isDrawingCrop = false;
 
         // Event listeners
         fileUploadOption.addEventListener('click', () => fileInput.click());
         cameraOption.addEventListener('click', () => cameraInput.click());
-        scannerOption.addEventListener('click', openScanner);
         fileInput.addEventListener('change', handleFileSelect);
         cameraInput.addEventListener('change', handleCameraCapture);
         generateBtn.addEventListener('click', generatePDF);
@@ -957,17 +633,8 @@
         filterIntensity.addEventListener('input', updateIntensityValue);
         filterIntensity.addEventListener('change', () => applyFilter(currentFilter));
         takePhotoBtn.addEventListener('click', () => cameraInput.click());
-        scanMoreBtn.addEventListener('click', openScanner);
+        addMoreBtn.addEventListener('click', () => fileInput.click());
         
-        // Event listeners de escáner
-        closeScanner.addEventListener('click', closeScannerModal);
-        refreshPrintersBtn.addEventListener('click', loadNetworkPrinters);
-        nextStep1Btn.addEventListener('click', goToStep2);
-        nextStep2Btn.addEventListener('click', goToStep3);
-        backStep2Btn.addEventListener('click', goToStep1);
-        backStep3Btn.addEventListener('click', goToStep2);
-        startScanBtn.addEventListener('click', startRealScanning);
-
         // Event listeners de calidad PDF
         qualityOptions.forEach(option => {
             option.addEventListener('click', function() {
@@ -1000,12 +667,14 @@
             });
         });
         
-        // Herramientas de recorte y rotación
+        // Herramientas de recorte y rotación CORREGIDAS
         cropBtn.addEventListener('click', activateCrop);
         applyCropBtn.addEventListener('click', applyCrop);
         cancelCropBtn.addEventListener('click', cancelCrop);
         rotateLeftBtn.addEventListener('click', () => rotateImage(-90));
         rotateRightBtn.addEventListener('click', () => rotateImage(90));
+        undoCropBtn.addEventListener('click', undoCrop);
+        resetCropBtn.addEventListener('click', resetCrop);
 
         function updateIntensityValue() {
             intensityValue.textContent = `${filterIntensity.value}/10`;
@@ -1028,7 +697,8 @@
                     rotation: 0,
                     crop: null,
                     originalData: e.target.result,
-                    source: 'camera'
+                    source: 'camera',
+                    cropHistory: []
                 };
                 
                 images.push(imageData);
@@ -1048,330 +718,15 @@
             cameraInput.value = '';
         }
 
-        // Funciones de escáner MEJORADAS
-        function openScanner() {
-            scannerModal.style.display = 'flex';
-            resetScannerSteps();
-            loadNetworkPrinters();
-        }
-
-        function closeScannerModal() {
-            scannerModal.style.display = 'none';
-            selectedPrinter = null;
-        }
-
-        function resetScannerSteps() {
-            // Resetear a paso 1
-            [step1, step2, step3].forEach(step => step.classList.remove('active', 'completed'));
-            [step1Content, step2Content, step3Content].forEach(content => content.classList.remove('active'));
-            
-            step1.classList.add('active');
-            step1Content.classList.add('active');
-            nextStep1Btn.disabled = true;
-        }
-
-        function goToStep2() {
-            if (!selectedPrinter) return;
-            
-            step1.classList.remove('active');
-            step1.classList.add('completed');
-            step2.classList.add('active');
-            
-            step1Content.classList.remove('active');
-            step2Content.classList.add('active');
-            
-            selectedPrinterName.textContent = selectedPrinter.name;
-            step2Status.innerHTML = `Impresora seleccionada: <strong>${selectedPrinter.name}</strong>`;
-        }
-
-        function goToStep3() {
-            step2.classList.remove('active');
-            step2.classList.add('completed');
-            step3.classList.add('active');
-            
-            step2Content.classList.remove('active');
-            step3Content.classList.add('active');
-            
-            // Mostrar resumen de configuración
-            const sourceText = documentSource.value === 'flatbed' ? 'Platina de vidrio' : 'Alimentador automático';
-            const qualityText = `${scanQuality.value} DPI`;
-            const colorText = colorFormat.value === 'color' ? 'Color' : 
-                            colorFormat.value === 'grayscale' ? 'Escala de grises' : 'Blanco y negro';
-            const sizeText = documentSize.options[documentSize.selectedIndex].text;
-            
-            scanConfigSummary.innerHTML = `
-                <strong>Resumen de configuración:</strong><br>
-                📄 Impresora: ${selectedPrinter.name}<br>
-                🔧 Fuente: ${sourceText}<br>
-                🎯 Calidad: ${qualityText}<br>
-                🎨 Color: ${colorText}<br>
-                📏 Tamaño: ${sizeText}
-            `;
-        }
-
-        function goToStep2() {
-            step3.classList.remove('active');
-            step2.classList.add('active');
-            step3.classList.remove('completed');
-            
-            step3Content.classList.remove('active');
-            step2Content.classList.add('active');
-        }
-
-        function goToStep1() {
-            step2.classList.remove('active');
-            step1.classList.add('active');
-            step2.classList.remove('completed');
-            
-            step2Content.classList.remove('active');
-            step1Content.classList.add('active');
-        }
-
-        // Cargar impresoras de red (simulación realista)
-        function loadNetworkPrinters() {
-            printerList.innerHTML = '';
-            scannerStatus.innerHTML = '<div class="loading"></div> Escaneando red en busca de impresoras...';
-            nextStep1Btn.disabled = true;
-            
-            // Simular búsqueda en red
-            setTimeout(() => {
-                const networkPrinters = [
-                    {
-                        id: '1',
-                        name: 'HP LaserJet Pro MFP M428fdw',
-                        ip: '192.168.1.100',
-                        status: 'En línea',
-                        location: 'Oficina Principal - Red',
-                        type: 'multifuncional',
-                        features: ['escaneo', 'impresión', 'copia']
-                    },
-                    {
-                        id: '2', 
-                        name: 'Canon imageCLASS MF644Cdw',
-                        ip: '192.168.1.101',
-                        status: 'En línea', 
-                        location: 'Sala de Reuniones - Red',
-                        type: 'multifuncional',
-                        features: ['escaneo', 'impresión', 'fax']
-                    },
-                    {
-                        id: '3',
-                        name: 'Epson WorkForce WF-2860',
-                        ip: '192.168.1.102',
-                        status: 'Conectada',
-                        location: 'Recepción - Red',
-                        type: 'multifuncional',
-                        features: ['escaneo', 'impresión']
-                    },
-                    {
-                        id: '4',
-                        name: 'Brother MFC-L8900CDW',
-                        ip: '192.168.1.103', 
-                        status: 'Ocupada',
-                        location: 'Departamento Contable - Red',
-                        type: 'multifuncional',
-                        features: ['escaneo', 'impresión', 'copia']
-                    },
-                    {
-                        id: '5',
-                        name: 'Xerox VersaLink C400',
-                        ip: '192.168.1.104',
-                        status: 'En línea',
-                        location: 'Almacén - Red',
-                        type: 'multifuncional',
-                        features: ['escaneo', 'impresión']
-                    }
-                ];
-                
-                if (networkPrinters.length === 0) {
-                    printerList.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">No se encontraron impresoras en la red</div>';
-                    scannerStatus.innerHTML = '❌ No se encontraron impresoras en la red';
-                } else {
-                    networkPrinters.forEach(printer => {
-                        const printerItem = document.createElement('div');
-                        printerItem.className = 'printer-item';
-                        printerItem.innerHTML = `
-                            <div class="printer-name">${printer.name}</div>
-                            <div class="printer-details">
-                                🌐 IP: ${printer.ip} | 
-                                Estado: <span style="color: ${printer.status === 'En línea' ? '#28a745' : '#dc3545'}">${printer.status}</span> | 
-                                Ubicación: ${printer.location}
-                            </div>
-                        `;
-                        
-                        printerItem.addEventListener('click', () => {
-                            document.querySelectorAll('.printer-item').forEach(item => {
-                                item.classList.remove('selected');
-                            });
-                            printerItem.classList.add('selected');
-                            selectedPrinter = printer;
-                            nextStep1Btn.disabled = false;
-                            scannerStatus.innerHTML = `✅ <strong>${printer.name}</strong> seleccionada<br>IP: ${printer.ip} | Estado: ${printer.status}`;
-                        });
-                        
-                        printerList.appendChild(printerItem);
-                    });
-                }
-                
-                scannerStatus.innerHTML = `🔍 Se encontraron ${networkPrinters.length} impresoras en la red<br>Selecciona una para continuar`;
-            }, 2500);
-        }
-
-        function startRealScanning() {
-            const source = documentSource.value;
-            const quality = scanQuality.value;
-            const color = colorFormat.value;
-            const size = documentSize.value;
-            
-            // Mostrar alerta con configuración
-            const sourceText = source === 'flatbed' ? 'Platina de vidrio' : 'Alimentador automático';
-            const colorText = color === 'color' ? 'Color' : color === 'grayscale' ? 'Escala de grises' : 'Blanco y negro';
-            const sizeText = documentSize.options[documentSize.selectedIndex].text;
-            
-            const configAlert = `⚙️ Configuración de escaneo:\n\n` +
-                              `🖨️ Impresora: ${selectedPrinter.name}\n` +
-                              `📄 Fuente: ${sourceText}\n` +
-                              `🎯 Calidad: ${quality} DPI\n` +
-                              `🎨 Color: ${colorText}\n` +
-                              `📏 Tamaño: ${sizeText}\n\n` +
-                              `¿Iniciar escaneo con esta configuración?`;
-            
-            if (confirm(configAlert)) {
-                step3Status.innerHTML = '<div class="loading"></div> Conectando con la impresora...';
-                
-                setTimeout(() => {
-                    step3Status.innerHTML = '<div class="loading"></div> Preparando escáner...';
-                    
-                    setTimeout(() => {
-                        step3Status.innerHTML = '<div class="loading"></div> Escaneando documento...';
-                        
-                        setTimeout(() => {
-                            // Simular escaneo real
-                            simulateRealScan(quality, color, size);
-                        }, 3000);
-                    }, 2000);
-                }, 1500);
-            }
-        }
-
-        function simulateRealScan(quality, color, size) {
-            // Crear imagen de escaneo simulada
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Configurar tamaño según calidad
-            let width, height;
-            switch(size) {
-                case 'letter':
-                    width = 2550;
-                    height = 3300;
-                    break;
-                case 'legal':
-                    width = 2550;
-                    height = 4200;
-                    break;
-                case 'a4':
-                    width = 2480;
-                    height = 3508;
-                    break;
-                default:
-                    width = 2550;
-                    height = 3300;
-            }
-            
-            const dpi = parseInt(quality);
-            const scale = dpi / 300;
-            canvas.width = width * scale;
-            canvas.height = height * scale;
-            
-            // Fondo de escáner
-            if (color === 'color') {
-                ctx.fillStyle = '#f0f0f0';
-            } else if (color === 'grayscale') {
-                ctx.fillStyle = '#f5f5f5';
-            } else {
-                ctx.fillStyle = '#ffffff';
-            }
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Contenido del documento escaneado
-            let textColor;
-            if (color === 'color') {
-                textColor = '#2c3e50';
-            } else if (color === 'grayscale') {
-                textColor = '#4a4a4a';
-            } else {
-                textColor = '#000000';
-            }
-            
-            ctx.fillStyle = textColor;
-            const fontSize = 48 * scale;
-            ctx.font = `bold ${fontSize}px 'Times New Roman'`;
-            
-            // Título
-            ctx.fillText('DOCUMENTO ESCANEADO', 100 * scale, 200 * scale);
-            
-            // Información del escaneo
-            ctx.font = `${24 * scale}px Arial`;
-            ctx.fillText(`Impresora: ${selectedPrinter.name}`, 100 * scale, 300 * scale);
-            ctx.fillText(`Fecha: ${new Date().toLocaleDateString()}`, 100 * scale, 350 * scale);
-            ctx.fillText(`Calidad: ${dpi} DPI`, 100 * scale, 400 * scale);
-            ctx.fillText(`Color: ${color === 'color' ? 'Color' : color === 'grayscale' ? 'Escala de grises' : 'Blanco y negro'}`, 100 * scale, 450 * scale);
-            
-            // Contenido
-            ctx.font = `${28 * scale}px Arial`;
-            ctx.fillText('Documento escaneado desde:', 100 * scale, 600 * scale);
-            ctx.fillText(selectedPrinter.name, 100 * scale, 650 * scale);
-            ctx.fillText(`Configuración: ${dpi} DPI, ${color}`, 100 * scale, 700 * scale);
-            
-            const imageData = canvas.toDataURL('image/jpeg', 0.95);
-            addImageFromScanner(imageData, `escaneo_${selectedPrinter.name}_${dpi}dpi`);
-            
-            step3Status.innerHTML = `✅ Escaneo completado exitosamente\n` +
-                                  `🖨️ Desde: ${selectedPrinter.name}\n` +
-                                  `📊 ${dpi} DPI | ${color === 'color' ? 'Color' : color === 'grayscale' ? 'Grises' : 'B/N'}\n` +
-                                  `💾 Documento agregado a la lista`;
-            
-            setTimeout(() => {
-                closeScannerModal();
-                alert('✅ Documento escaneado correctamente\n📄 El documento ha sido agregado a tu lista de imágenes');
-            }, 2000);
-        }
-
-        function addImageFromScanner(imageData, scanInfo) {
-            const imageDataObj = {
-                src: imageData,
-                name: `${scanInfo}_${new Date().getTime()}.jpg`,
-                enhancedSrc: imageData,
-                filter: 'document',
-                rotation: 0,
-                crop: null,
-                source: 'scanner',
-                originalData: imageData
-            };
-            
-            images.push(imageDataObj);
-            
-            if (images.length === 1) {
-                currentImageIndex = 0;
-                updateComparisonView();
-                applyFilter('document');
-            }
-            
-            updatePreviewSection();
-        }
-
-        // ... (resto de las funciones se mantienen igual)
-
-        // Manejar la selección de archivos
+        // Manejar la selección de archivos - SIN LÍMITE
         function handleFileSelect(event) {
             const files = event.target.files;
             if (files.length === 0) return;
             
-            const filesToProcess = Math.min(files.length, 10);
             let loadedCount = 0;
+            const totalFiles = files.length;
             
-            for (let i = 0; i < filesToProcess; i++) {
+            for (let i = 0; i < totalFiles; i++) {
                 const file = files[i];
                 if (!file.type.match('image.*')) continue;
                 
@@ -1384,17 +739,19 @@
                         filter: 'document',
                         rotation: 0,
                         crop: null,
-                        originalData: e.target.result
+                        originalData: e.target.result,
+                        cropHistory: []
                     };
                     
                     images.push(imageData);
                     loadedCount++;
                     
-                    if (loadedCount === filesToProcess) {
-                        currentImageIndex = 0;
+                    if (loadedCount === totalFiles) {
+                        currentImageIndex = images.length - 1;
                         updateComparisonView();
                         applyFilter('document');
                         updatePreviewSection();
+                        alert(`✅ ${loadedCount} imagen(es) agregada(s) correctamente\n📊 Total: ${images.length} imágenes`);
                     }
                 };
                 reader.readAsDataURL(file);
@@ -1425,8 +782,24 @@
             `;
             
             imageCounter.textContent = `Imagen ${currentImageIndex + 1} de ${images.length}`;
+            imageInfo.textContent = `📊 ${images.length} imágenes cargadas | 💾 Tamaño total: ${calculateTotalSize()} MB`;
             prevBtn.disabled = currentImageIndex === 0;
             nextBtn.disabled = currentImageIndex === images.length - 1;
+            
+            // Actualizar estado de botones de historial
+            updateCropHistoryButtons();
+        }
+
+        // Calcular tamaño total de las imágenes
+        function calculateTotalSize() {
+            let totalSize = 0;
+            images.forEach(img => {
+                // Estimación aproximada del tamaño (base64)
+                const base64 = img.src.split(',')[1];
+                const sizeInBytes = base64.length * (3/4);
+                totalSize += sizeInBytes;
+            });
+            return (totalSize / (1024 * 1024)).toFixed(2);
         }
 
         // Navegación
@@ -1452,13 +825,13 @@
                 previewSection.style.display = 'none';
                 uploadSection.style.display = 'block';
                 takePhotoBtn.style.display = 'none';
-                scanMoreBtn.style.display = 'none';
+                addMoreBtn.style.display = 'none';
                 return;
             }
             previewSection.style.display = 'block';
             uploadSection.style.display = 'none';
             takePhotoBtn.style.display = 'inline-block';
-            scanMoreBtn.style.display = 'inline-block';
+            addMoreBtn.style.display = 'inline-block';
         }
 
         // Aplicar filtro
@@ -1519,9 +892,12 @@
                     ctx.putImageData(imageData, 0, 0);
                 }
                 
+                // APLICAR RECORTE CORREGIDO
                 if (currentImage.crop) {
                     const cropCanvas = document.createElement('canvas');
                     const cropCtx = cropCanvas.getContext('2d');
+                    
+                    // Usar las coordenadas EXACTAS del recorte
                     cropCanvas.width = currentImage.crop.width;
                     cropCanvas.height = currentImage.crop.height;
                     
@@ -1546,7 +922,7 @@
             };
         }
 
-        // FILTROS (sin cambios)
+        // FILTROS
         function applyEnhancedDocumentFilter(data, intensity) {
             let grayscale = [];
             for (let i = 0; i < data.length; i += 4) {
@@ -1642,7 +1018,7 @@
             alert(`Filtro aplicado a todas las ${images.length} imágenes`);
         }
 
-        // GENERAR PDF MEJORADO
+        // GENERAR PDF MEJORADO - IMÁGENES HORIZONTALES
         function generatePDF() {
             if (images.length === 0) {
                 alert('Por favor, selecciona al menos una imagen.');
@@ -1651,14 +1027,14 @@
             
             try {
                 const pdf = new jsPDF({
-                    orientation: 'portrait',
+                    orientation: 'landscape',
                     unit: 'mm',
                     format: 'a4',
                     compress: pdfQuality !== 'high'
                 });
                 
-                const pageWidth = 210;
-                const pageHeight = 297;
+                const pageWidth = 297;
+                const pageHeight = 210;
                 
                 let jpegQuality;
                 switch(pdfQuality) {
@@ -1676,61 +1052,388 @@
                 if (pdfLayout === 'onePerPage') {
                     images.forEach((image, index) => {
                         if (index > 0) pdf.addPage();
-                        const imgSrc = image.originalData || image.enhancedSrc || image.src;
-                        pdf.addImage(imgSrc, 'JPEG', 0, 0, pageWidth, pageHeight, undefined, 'FAST', 0, jpegQuality);
+                        const imgSrc = image.enhancedSrc || image.src;
+                        pdf.addImage(imgSrc, 'JPEG', 10, 10, pageWidth - 20, pageHeight - 20, undefined, 'FAST', 0, jpegQuality);
                     });
                 } else {
                     for (let i = 0; i < images.length; i += 2) {
                         if (i > 0) pdf.addPage();
                         
-                        const img1Src = images[i].originalData || images[i].enhancedSrc || images[i].src;
-                        pdf.addImage(img1Src, 'JPEG', 0, 0, pageWidth, pageHeight / 2, undefined, 'FAST', 0, jpegQuality);
+                        const img1Src = images[i].enhancedSrc || images[i].src;
+                        pdf.addImage(img1Src, 'JPEG', 10, 10, pageWidth - 20, (pageHeight - 30) / 2, undefined, 'FAST', 0, jpegQuality);
                         
                         if (i + 1 < images.length) {
-                            const img2Src = images[i + 1].originalData || images[i + 1].enhancedSrc || images[i + 1].src;
-                            pdf.addImage(img2Src, 'JPEG', 0, pageHeight / 2, pageWidth, pageHeight / 2, undefined, 'FAST', 0, jpegQuality);
+                            const img2Src = images[i + 1].enhancedSrc || images[i + 1].src;
+                            pdf.addImage(img2Src, 'JPEG', 10, (pageHeight - 30) / 2 + 15, pageWidth - 20, (pageHeight - 30) / 2, undefined, 'FAST', 0, jpegQuality);
                         }
                     }
                 }
                 
                 pdf.save('documentos_mejorados.pdf');
-                alert(`✅ PDF generado correctamente con ${images.length} imágenes\n📊 Calidad: ${pdfQuality === 'high' ? 'Alta' : pdfQuality === 'medium' ? 'Media' : 'Básica'}\n📄 Formato: ${pdfLayout === 'onePerPage' ? '1 por página' : '2 por página'}`);
+                alert(`✅ PDF generado correctamente con ${images.length} imágenes\n📊 Calidad: ${pdfQuality === 'high' ? 'Alta' : pdfQuality === 'medium' ? 'Media' : 'Básica'}\n📄 Formato: ${pdfLayout === 'onePerPage' ? '1 por página' : '2 por página'}\n🔄 Orientación: Horizontal`);
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error al generar PDF. Verifica que las imágenes sean válidas.');
             }
         }
 
-        // Funciones de recorte (sin cambios)
+        // FUNCIONES DE RECORTE CORREGIDAS - RECORTE PRECISO
         function activateCrop() {
             if (images.length === 0) return;
             isCropping = true;
             const overlay = document.getElementById('cropOverlay');
             const enhancedImg = document.getElementById('enhancedImage');
             if (!overlay || !enhancedImg) return;
+            
             overlay.style.display = 'block';
-            const containerRect = overlay.getBoundingClientRect();
-            const cropWidth = containerRect.width * 0.8;
-            const cropHeight = containerRect.height * 0.8;
-            const cropX = (containerRect.width - cropWidth) / 2;
-            const cropY = (containerRect.height - cropHeight) / 2;
-            createCropArea(cropX, cropY, cropWidth, cropHeight);
-            setupCropEvents();
+            
+            // Limpiar área de recorte existente
+            const existingCrop = overlay.querySelector('.crop-area');
+            if (existingCrop) {
+                existingCrop.remove();
+            }
+            
+            // Configurar eventos para dibujar el área de recorte
+            setupCropDrawing(overlay, enhancedImg);
         }
         
-        // ... (resto de funciones de recorte se mantienen igual)
+        function setupCropDrawing(overlay, enhancedImg) {
+            isDrawingCrop = false;
+            
+            overlay.onmousedown = function(e) {
+                isDrawingCrop = true;
+                const rect = overlay.getBoundingClientRect();
+                cropStartX = e.clientX - rect.left;
+                cropStartY = e.clientY - rect.top;
+                
+                // Crear área de recorte
+                createCropArea(cropStartX, cropStartY, 0, 0);
+            };
+            
+            overlay.onmousemove = function(e) {
+                if (!isDrawingCrop) return;
+                
+                const rect = overlay.getBoundingClientRect();
+                cropEndX = e.clientX - rect.left;
+                cropEndY = e.clientY - rect.top;
+                
+                // Actualizar área de recorte
+                updateCropArea(cropStartX, cropStartY, cropEndX, cropEndY);
+            };
+            
+            overlay.onmouseup = function() {
+                isDrawingCrop = false;
+            };
+        }
+        
+        function createCropArea(x, y, width, height) {
+            const overlay = document.getElementById('cropOverlay');
+            
+            // Limpiar área existente
+            const existingCrop = overlay.querySelector('.crop-area');
+            if (existingCrop) {
+                existingCrop.remove();
+            }
+            
+            cropArea = document.createElement('div');
+            cropArea.className = 'crop-area';
+            cropArea.style.left = x + 'px';
+            cropArea.style.top = y + 'px';
+            cropArea.style.width = Math.abs(width) + 'px';
+            cropArea.style.height = Math.abs(height) + 'px';
+            
+            // Agregar manijas de redimensionamiento
+            const handles = ['tl', 'tr', 'bl', 'br'];
+            handles.forEach(handle => {
+                const handleEl = document.createElement('div');
+                handleEl.className = `crop-handle handle-${handle}`;
+                cropArea.appendChild(handleEl);
+            });
+            
+            overlay.appendChild(cropArea);
+            
+            // Configurar eventos para las manijas
+            setupCropHandles();
+        }
+        
+        function updateCropArea(startX, startY, endX, endY) {
+            if (!cropArea) return;
+            
+            const x = Math.min(startX, endX);
+            const y = Math.min(startY, endY);
+            const width = Math.abs(endX - startX);
+            const height = Math.abs(endY - startY);
+            
+            cropArea.style.left = x + 'px';
+            cropArea.style.top = y + 'px';
+            cropArea.style.width = width + 'px';
+            cropArea.style.height = height + 'px';
+        }
+        
+        function setupCropHandles() {
+            if (!cropArea) return;
+            
+            const handles = cropArea.querySelectorAll('.crop-handle');
+            handles.forEach(handle => {
+                handle.addEventListener('mousedown', startResize);
+            });
+            
+            // Evento para mover el área completa
+            cropArea.addEventListener('mousedown', startDrag);
+        }
+        
+        function startDrag(e) {
+            if (e.target.classList.contains('crop-handle')) return;
+            
+            e.preventDefault();
+            isDragging = true;
+            dragHandle = null;
+            
+            const overlay = document.getElementById('cropOverlay');
+            const rect = overlay.getBoundingClientRect();
+            startX = e.clientX - rect.left;
+            startY = e.clientY - rect.top;
+            startLeft = parseInt(cropArea.style.left);
+            startTop = parseInt(cropArea.style.top);
+            
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+        }
+        
+        function startResize(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            isDragging = true;
+            dragHandle = e.target.className.split(' ')[1].split('-')[1];
+            
+            const overlay = document.getElementById('cropOverlay');
+            const rect = overlay.getBoundingClientRect();
+            startX = e.clientX - rect.left;
+            startY = e.clientY - rect.top;
+            startLeft = parseInt(cropArea.style.left);
+            startTop = parseInt(cropArea.style.top);
+            startWidth = parseInt(cropArea.style.width);
+            startHeight = parseInt(cropArea.style.height);
+            
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', stopDrag);
+        }
+        
+        function drag(e) {
+            if (!isDragging || dragHandle) return;
+            e.preventDefault();
+            
+            const overlay = document.getElementById('cropOverlay');
+            const rect = overlay.getBoundingClientRect();
+            const newX = e.clientX - rect.left - startX + startLeft;
+            const newY = e.clientY - rect.top - startY + startTop;
+            
+            // Limitar el movimiento dentro del área de la imagen
+            const maxX = rect.width - parseInt(cropArea.style.width);
+            const maxY = rect.height - parseInt(cropArea.style.height);
+            
+            cropArea.style.left = Math.max(0, Math.min(maxX, newX)) + 'px';
+            cropArea.style.top = Math.max(0, Math.min(maxY, newY)) + 'px';
+        }
+        
+        function resize(e) {
+            if (!isDragging || !dragHandle) return;
+            e.preventDefault();
+            
+            const overlay = document.getElementById('cropOverlay');
+            const rect = overlay.getBoundingClientRect();
+            const deltaX = e.clientX - rect.left - startX;
+            const deltaY = e.clientY - rect.top - startY;
+            
+            let newLeft = startLeft;
+            let newTop = startTop;
+            let newWidth = startWidth;
+            let newHeight = startHeight;
+            
+            // Ajustar según la manija utilizada
+            if (dragHandle.includes('r')) {
+                newWidth = Math.max(10, startWidth + deltaX);
+            }
+            if (dragHandle.includes('b')) {
+                newHeight = Math.max(10, startHeight + deltaY);
+            }
+            if (dragHandle.includes('l')) {
+                newWidth = Math.max(10, startWidth - deltaX);
+                newLeft = startLeft + deltaX;
+            }
+            if (dragHandle.includes('t')) {
+                newHeight = Math.max(10, startHeight - deltaY);
+                newTop = startTop + deltaY;
+            }
+            
+            // Limitar el tamaño dentro del área de la imagen
+            const maxWidth = rect.width - newLeft;
+            const maxHeight = rect.height - newTop;
+            
+            newWidth = Math.min(newWidth, maxWidth);
+            newHeight = Math.min(newHeight, maxHeight);
+            newLeft = Math.max(0, newLeft);
+            newTop = Math.max(0, newTop);
+            
+            cropArea.style.left = newLeft + 'px';
+            cropArea.style.top = newTop + 'px';
+            cropArea.style.width = newWidth + 'px';
+            cropArea.style.height = newHeight + 'px';
+        }
+        
+        function stopDrag() {
+            isDragging = false;
+            dragHandle = null;
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('mouseup', stopDrag);
+            document.removeEventListener('mousemove', resize);
+        }
+        
+        function applyCrop() {
+            if (!isCropping || !cropArea || images.length === 0) return;
+            
+            const currentImage = images[currentImageIndex];
+            const overlay = document.getElementById('cropOverlay');
+            const enhancedImg = document.getElementById('enhancedImage');
+            
+            if (!overlay || !enhancedImg) return;
+            
+            const imgRect = enhancedImg.getBoundingClientRect();
+            const overlayRect = overlay.getBoundingClientRect();
+            
+            // Calcular proporciones EXACTAS
+            const scaleX = enhancedImg.naturalWidth / imgRect.width;
+            const scaleY = enhancedImg.naturalHeight / imgRect.height;
+            
+            // Calcular coordenadas de recorte en la imagen original
+            const cropX = parseInt(cropArea.style.left) * scaleX;
+            const cropY = parseInt(cropArea.style.top) * scaleY;
+            const cropWidth = parseInt(cropArea.style.width) * scaleX;
+            const cropHeight = parseInt(cropArea.style.height) * scaleY;
+            
+            // Asegurar que el recorte esté dentro de los límites de la imagen
+            const boundedCropX = Math.max(0, Math.min(enhancedImg.naturalWidth - cropWidth, cropX));
+            const boundedCropY = Math.max(0, Math.min(enhancedImg.naturalHeight - cropHeight, cropY));
+            const boundedCropWidth = Math.min(cropWidth, enhancedImg.naturalWidth - boundedCropX);
+            const boundedCropHeight = Math.min(cropHeight, enhancedImg.naturalHeight - boundedCropY);
+            
+            // Guardar en el historial antes de aplicar
+            if (!currentImage.cropHistory) currentImage.cropHistory = [];
+            currentImage.cropHistory.push({
+                crop: JSON.parse(JSON.stringify(currentImage.crop)), // Copia profunda
+                index: currentImage.cropHistory.length
+            });
+            
+            // Limitar el historial a 10 elementos
+            if (currentImage.cropHistory.length > 10) {
+                currentImage.cropHistory.shift();
+            }
+            
+            // Guardar información de recorte EXACTA
+            currentImage.crop = {
+                x: Math.round(boundedCropX),
+                y: Math.round(boundedCropY),
+                width: Math.round(boundedCropWidth),
+                height: Math.round(boundedCropHeight)
+            };
+            
+            console.log('Recorte aplicado:', currentImage.crop);
+            
+            // Aplicar el recorte
+            applyFilter(currentFilter);
+            
+            // Desactivar modo recorte
+            cancelCrop();
+            
+            // Actualizar botones de historial
+            updateCropHistoryButtons();
+            
+            alert(`✅ Recorte aplicado correctamente\n📏 Área: ${Math.round(boundedCropWidth)}x${Math.round(boundedCropHeight)} píxeles`);
+        }
+        
+        function cancelCrop() {
+            isCropping = false;
+            isDrawingCrop = false;
+            const overlay = document.getElementById('cropOverlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+                overlay.onmousedown = null;
+                overlay.onmousemove = null;
+                overlay.onmouseup = null;
+                
+                const cropArea = overlay.querySelector('.crop-area');
+                if (cropArea) {
+                    cropArea.remove();
+                }
+            }
+        }
+        
+        // FUNCIONES DE HISTORIAL DE RECORTE
+        function undoCrop() {
+            const currentImage = images[currentImageIndex];
+            if (!currentImage.cropHistory || currentImage.cropHistory.length === 0) return;
+            
+            const lastCrop = currentImage.cropHistory.pop();
+            currentImage.crop = lastCrop.crop;
+            
+            // Aplicar el filtro actual para actualizar la vista
+            applyFilter(currentFilter);
+            
+            // Actualizar botones de historial
+            updateCropHistoryButtons();
+            
+            alert('↶ Recorte deshecho');
+        }
+        
+        function resetCrop() {
+            const currentImage = images[currentImageIndex];
+            currentImage.crop = null;
+            currentImage.cropHistory = [];
+            
+            // Aplicar el filtro actual para actualizar la vista
+            applyFilter(currentFilter);
+            
+            // Actualizar botones de historial
+            updateCropHistoryButtons();
+            
+            alert('🔄 Imagen restaurada a su estado original');
+        }
+        
+        function updateCropHistoryButtons() {
+            const currentImage = images[currentImageIndex];
+            const hasHistory = currentImage.cropHistory && currentImage.cropHistory.length > 0;
+            const hasCrop = currentImage.crop !== null;
+            
+            undoCropBtn.disabled = !hasHistory;
+            resetCropBtn.disabled = !hasCrop;
+        }
+        
+        function rotateImage(degrees) {
+            if (images.length === 0) return;
+            
+            const currentImage = images[currentImageIndex];
+            currentImage.rotation = (currentImage.rotation + degrees) % 360;
+            
+            // Aplicar el filtro actual para actualizar la vista
+            applyFilter(currentFilter);
+        }
 
         function clearAll() {
-            images = [];
-            currentImageIndex = 0;
-            isCropping = false;
-            currentFilter = 'document';
-            cropArea = null;
-            filterIntensity.value = 5;
-            intensityValue.textContent = '5/10';
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('[data-filter="document"]').classList.add('active');
-            updatePreviewSection();
+            if (images.length === 0) return;
+            
+            if (confirm(`¿Estás seguro de que quieres eliminar todas las ${images.length} imágenes?`)) {
+                images = [];
+                currentImageIndex = 0;
+                isCropping = false;
+                currentFilter = 'document';
+                cropArea = null;
+                filterIntensity.value = 5;
+                intensityValue.textContent = '5/10';
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-filter="document"]').classList.add('active');
+                updatePreviewSection();
+                alert('🗑️ Todas las imágenes han sido eliminadas');
+            }
         }
 
         // Inicializar
