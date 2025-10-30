@@ -348,7 +348,7 @@
             }
         }
 
-        /* Estilos para el recorte CORREGIDO */
+        /* Estilos para el recorte */
         .crop-overlay {
             position: absolute;
             top: 0;
@@ -450,13 +450,35 @@
             color: #666;
             font-size: 0.9rem;
         }
+
+        .orientation-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+        .orientation-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .orientation-btn.active {
+            background: #138496;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Mejorador de Documentos Escaneados</h1>
-            <p class="subtitle">Sube, mejora y genera PDFs de alta calidad</p>
+            <p class="subtitle">Sube, mejora y genera PDFs de alta calidad en formato horizontal</p>
         </header>
         
         <div class="main-content">
@@ -476,6 +498,11 @@
                         <div class="quality-option" data-quality="medium">Calidad Media</div>
                         <div class="quality-option" data-quality="low">Tamaño Pequeño</div>
                     </div>
+                </div>
+
+                <div class="orientation-controls">
+                    <button class="orientation-btn active" id="forceHorizontalBtn">Forzar Horizontal en PDF</button>
+                    <button class="orientation-btn" id="keepOriginalBtn">Mantener Original</button>
                 </div>
             </div>
 
@@ -600,6 +627,8 @@
         const intensityValue = document.getElementById('intensityValue');
         const undoCropBtn = document.getElementById('undoCropBtn');
         const resetCropBtn = document.getElementById('resetCropBtn');
+        const forceHorizontalBtn = document.getElementById('forceHorizontalBtn');
+        const keepOriginalBtn = document.getElementById('keepOriginalBtn');
         
         // Elementos de calidad PDF
         const qualityOptions = document.querySelectorAll('.quality-option');
@@ -615,8 +644,9 @@
         let dragHandle = null;
         let startX, startY, startWidth, startHeight, startLeft, startTop;
         let pdfQuality = 'high';
+        let forceHorizontal = true; // Nueva variable para forzar orientación horizontal
         
-        // Variables para el recorte CORREGIDO
+        // Variables para el recorte
         let cropStartX, cropStartY, cropEndX, cropEndY;
         let isDrawingCrop = false;
 
@@ -656,6 +686,19 @@
             onePerPageBtn.classList.remove('active');
             pdfLayout = 'twoPerPage';
         });
+
+        // Control de orientación
+        forceHorizontalBtn.addEventListener('click', () => {
+            forceHorizontalBtn.classList.add('active');
+            keepOriginalBtn.classList.remove('active');
+            forceHorizontal = true;
+        });
+
+        keepOriginalBtn.addEventListener('click', () => {
+            keepOriginalBtn.classList.add('active');
+            forceHorizontalBtn.classList.remove('active');
+            forceHorizontal = false;
+        });
         
         // Filtros preconfigurados
         document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -667,7 +710,7 @@
             });
         });
         
-        // Herramientas de recorte y rotación CORREGIDAS
+        // Herramientas de recorte y rotación
         cropBtn.addEventListener('click', activateCrop);
         applyCropBtn.addEventListener('click', applyCrop);
         cancelCropBtn.addEventListener('click', cancelCrop);
@@ -689,29 +732,40 @@
             const reader = new FileReader();
             
             reader.onload = function(e) {
-                const imageData = {
-                    src: e.target.result,
-                    name: `foto_${new Date().getTime()}.jpg`,
-                    enhancedSrc: e.target.result,
-                    filter: 'document',
-                    rotation: 0,
-                    crop: null,
-                    originalData: e.target.result,
-                    source: 'camera',
-                    cropHistory: []
+                const img = new Image();
+                img.onload = function() {
+                    // Determinar orientación de la imagen
+                    const isVertical = img.height > img.width;
+                    
+                    const imageData = {
+                        src: e.target.result,
+                        name: `foto_${new Date().getTime()}.jpg`,
+                        enhancedSrc: e.target.result,
+                        filter: 'document',
+                        rotation: 0,
+                        crop: null,
+                        originalData: e.target.result,
+                        source: 'camera',
+                        cropHistory: [],
+                        isVertical: isVertical, // Guardar información de orientación
+                        originalWidth: img.width,
+                        originalHeight: img.height
+                    };
+                    
+                    images.push(imageData);
+                    
+                    if (images.length === 1) {
+                        currentImageIndex = 0;
+                        updateComparisonView();
+                        applyFilter('document');
+                    }
+                    
+                    updatePreviewSection();
+                    
+                    let orientationInfo = isVertical ? 'vertical' : 'horizontal';
+                    alert(`✅ Foto capturada con cámara nativa\n📱 Calidad optimizada para móvil\n📐 Orientación: ${orientationInfo}`);
                 };
-                
-                images.push(imageData);
-                
-                if (images.length === 1) {
-                    currentImageIndex = 0;
-                    updateComparisonView();
-                    applyFilter('document');
-                }
-                
-                updatePreviewSection();
-                
-                alert('✅ Foto capturada con cámara nativa\n📱 Calidad optimizada para móvil');
+                img.src = e.target.result;
             };
             
             reader.readAsDataURL(file);
@@ -732,27 +786,37 @@
                 
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const imageData = {
-                        src: e.target.result,
-                        name: file.name,
-                        enhancedSrc: e.target.result,
-                        filter: 'document',
-                        rotation: 0,
-                        crop: null,
-                        originalData: e.target.result,
-                        cropHistory: []
+                    const img = new Image();
+                    img.onload = function() {
+                        // Determinar orientación de la imagen
+                        const isVertical = img.height > img.width;
+                        
+                        const imageData = {
+                            src: e.target.result,
+                            name: file.name,
+                            enhancedSrc: e.target.result,
+                            filter: 'document',
+                            rotation: 0,
+                            crop: null,
+                            originalData: e.target.result,
+                            cropHistory: [],
+                            isVertical: isVertical, // Guardar información de orientación
+                            originalWidth: img.width,
+                            originalHeight: img.height
+                        };
+                        
+                        images.push(imageData);
+                        loadedCount++;
+                        
+                        if (loadedCount === totalFiles) {
+                            currentImageIndex = images.length - 1;
+                            updateComparisonView();
+                            applyFilter('document');
+                            updatePreviewSection();
+                            alert(`✅ ${loadedCount} imagen(es) agregada(s) correctamente\n📊 Total: ${images.length} imágenes`);
+                        }
                     };
-                    
-                    images.push(imageData);
-                    loadedCount++;
-                    
-                    if (loadedCount === totalFiles) {
-                        currentImageIndex = images.length - 1;
-                        updateComparisonView();
-                        applyFilter('document');
-                        updatePreviewSection();
-                        alert(`✅ ${loadedCount} imagen(es) agregada(s) correctamente\n📊 Total: ${images.length} imágenes`);
-                    }
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -782,7 +846,14 @@
             `;
             
             imageCounter.textContent = `Imagen ${currentImageIndex + 1} de ${images.length}`;
-            imageInfo.textContent = `📊 ${images.length} imágenes cargadas | 💾 Tamaño total: ${calculateTotalSize()} MB`;
+            
+            // Contar imágenes verticales y horizontales
+            const verticalCount = images.filter(img => img.isVertical).length;
+            const horizontalCount = images.length - verticalCount;
+            
+            imageInfo.innerHTML = `📊 ${images.length} imágenes cargadas | 💾 Tamaño total: ${calculateTotalSize()} MB<br>
+                                  📐 ${verticalCount} verticales | ➡️ ${horizontalCount} horizontales`;
+            
             prevBtn.disabled = currentImageIndex === 0;
             nextBtn.disabled = currentImageIndex === images.length - 1;
             
@@ -892,7 +963,7 @@
                     ctx.putImageData(imageData, 0, 0);
                 }
                 
-                // APLICAR RECORTE CORREGIDO
+                // APLICAR RECORTE
                 if (currentImage.crop) {
                     const cropCanvas = document.createElement('canvas');
                     const cropCtx = cropCanvas.getContext('2d');
@@ -1018,7 +1089,7 @@
             alert(`Filtro aplicado a todas las ${images.length} imágenes`);
         }
 
-        // GENERAR PDF MEJORADO - IMÁGENES HORIZONTALES
+        // GENERAR PDF MEJORADO - CON OPCIÓN DE FORZAR HORIZONTAL
         function generatePDF() {
             if (images.length === 0) {
                 alert('Por favor, selecciona al menos una imagen.');
@@ -1027,14 +1098,14 @@
             
             try {
                 const pdf = new jsPDF({
-                    orientation: 'landscape',
+                    orientation: 'landscape', // Siempre PDF horizontal
                     unit: 'mm',
                     format: 'a4',
                     compress: pdfQuality !== 'high'
                 });
                 
-                const pageWidth = 297;
-                const pageHeight = 210;
+                const pageWidth = 297; // Ancho en horizontal (A4 landscape)
+                const pageHeight = 210; // Alto en horizontal (A4 landscape)
                 
                 let jpegQuality;
                 switch(pdfQuality) {
@@ -1049,35 +1120,82 @@
                         break;
                 }
                 
-                if (pdfLayout === 'onePerPage') {
-                    images.forEach((image, index) => {
-                        if (index > 0) pdf.addPage();
-                        const imgSrc = image.enhancedSrc || image.src;
-                        pdf.addImage(imgSrc, 'JPEG', 10, 10, pageWidth - 20, pageHeight - 20, undefined, 'FAST', 0, jpegQuality);
-                    });
-                } else {
-                    for (let i = 0; i < images.length; i += 2) {
-                        if (i > 0) pdf.addPage();
-                        
-                        const img1Src = images[i].enhancedSrc || images[i].src;
-                        pdf.addImage(img1Src, 'JPEG', 10, 10, pageWidth - 20, (pageHeight - 30) / 2, undefined, 'FAST', 0, jpegQuality);
-                        
-                        if (i + 1 < images.length) {
-                            const img2Src = images[i + 1].enhancedSrc || images[i + 1].src;
-                            pdf.addImage(img2Src, 'JPEG', 10, (pageHeight - 30) / 2 + 15, pageWidth - 20, (pageHeight - 30) / 2, undefined, 'FAST', 0, jpegQuality);
-                        }
+                // Procesar cada imagen
+                images.forEach((image, index) => {
+                    if (index > 0) {
+                        pdf.addPage();
                     }
-                }
+                    
+                    const imgSrc = image.enhancedSrc || image.src;
+                    const img = new Image();
+                    
+                    img.onload = function() {
+                        let imgWidth = img.width;
+                        let imgHeight = img.height;
+                        
+                        // Si forzamos horizontal y la imagen es vertical, rotamos
+                        if (forceHorizontal && image.isVertical) {
+                            // Intercambiar dimensiones para rotar
+                            [imgWidth, imgHeight] = [imgHeight, imgWidth];
+                        }
+                        
+                        // Calcular dimensiones para ajustar a la página manteniendo proporción
+                        const pageMargin = 10;
+                        const availableWidth = pageWidth - (2 * pageMargin);
+                        const availableHeight = pageHeight - (2 * pageMargin);
+                        
+                        let finalWidth, finalHeight;
+                        
+                        // Calcular dimensiones manteniendo proporción
+                        const widthRatio = availableWidth / imgWidth;
+                        const heightRatio = availableHeight / imgHeight;
+                        const scale = Math.min(widthRatio, heightRatio);
+                        
+                        finalWidth = imgWidth * scale;
+                        finalHeight = imgHeight * scale;
+                        
+                        // Centrar en la página
+                        const x = (pageWidth - finalWidth) / 2;
+                        const y = (pageHeight - finalHeight) / 2;
+                        
+                        // Crear canvas temporal si necesitamos rotar
+                        if (forceHorizontal && image.isVertical) {
+                            const tempCanvas = document.createElement('canvas');
+                            const tempCtx = tempCanvas.getContext('2d');
+                            tempCanvas.width = imgHeight; // Intercambiar dimensiones
+                            tempCanvas.height = imgWidth;
+                            
+                            // Rotar la imagen 90 grados
+                            tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
+                            tempCtx.rotate(90 * Math.PI / 180);
+                            tempCtx.drawImage(img, -img.width / 2, -img.height / 2);
+                            
+                            // Usar la imagen rotada
+                            const rotatedImage = tempCanvas.toDataURL('image/jpeg', jpegQuality);
+                            pdf.addImage(rotatedImage, 'JPEG', x, y, finalWidth, finalHeight);
+                        } else {
+                            // Usar la imagen original
+                            pdf.addImage(imgSrc, 'JPEG', x, y, finalWidth, finalHeight);
+                        }
+                        
+                        // Si es la última imagen, guardar el PDF
+                        if (index === images.length - 1) {
+                            pdf.save('documentos_mejorados.pdf');
+                            const rotatedCount = forceHorizontal ? images.filter(img => img.isVertical).length : 0;
+                            alert(`✅ PDF generado correctamente con ${images.length} imágenes\n📊 Calidad: ${pdfQuality === 'high' ? 'Alta' : pdfQuality === 'medium' ? 'Media' : 'Básica'}\n📄 Formato: ${pdfLayout === 'onePerPage' ? '1 por página' : '2 por página'}\n🔄 ${rotatedCount} imágenes rotadas a horizontal`);
+                        }
+                    };
+                    
+                    img.src = imgSrc;
+                });
                 
-                pdf.save('documentos_mejorados.pdf');
-                alert(`✅ PDF generado correctamente con ${images.length} imágenes\n📊 Calidad: ${pdfQuality === 'high' ? 'Alta' : pdfQuality === 'medium' ? 'Media' : 'Básica'}\n📄 Formato: ${pdfLayout === 'onePerPage' ? '1 por página' : '2 por página'}\n🔄 Orientación: Horizontal`);
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error al generar PDF. Verifica que las imágenes sean válidas.');
             }
         }
 
-        // FUNCIONES DE RECORTE CORREGIDAS - RECORTE PRECISO
+        // FUNCIONES DE RECORTE (se mantienen igual que antes)
         function activateCrop() {
             if (images.length === 0) return;
             isCropping = true;
@@ -1337,8 +1455,6 @@
                 height: Math.round(boundedCropHeight)
             };
             
-            console.log('Recorte aplicado:', currentImage.crop);
-            
             // Aplicar el recorte
             applyFilter(currentFilter);
             
@@ -1413,6 +1529,11 @@
             
             const currentImage = images[currentImageIndex];
             currentImage.rotation = (currentImage.rotation + degrees) % 360;
+            
+            // Actualizar información de orientación
+            if (degrees === 90 || degrees === -90) {
+                currentImage.isVertical = !currentImage.isVertical;
+            }
             
             // Aplicar el filtro actual para actualizar la vista
             applyFilter(currentFilter);
