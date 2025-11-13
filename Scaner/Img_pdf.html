@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mejorador de Documentos Escaneados</title>
+    <title>Conversor de Imágenes a PDF</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
@@ -14,14 +14,14 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: #333;
             min-height: 100vh;
             padding: 20px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
@@ -30,120 +30,51 @@
         }
 
         header {
-            background: linear-gradient(to right, #1e3c72, #2a5298);
+            background: linear-gradient(to right, #2575fc, #6a11cb);
             color: white;
             padding: 25px;
             text-align: center;
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             margin-bottom: 10px;
         }
 
         .subtitle {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             opacity: 0.9;
         }
 
         .main-content {
-            padding: 25px;
+            padding: 30px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
-        }
-
-        .config-section {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .config-options {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .config-btn {
-            background: white;
-            border: 2px solid #1e3c72;
-            color: #1e3c72;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .config-btn.active {
-            background: #1e3c72;
-            color: white;
+            gap: 30px;
         }
 
         .upload-section {
             background-color: #f8f9fa;
-            border: 2px dashed #1e3c72;
+            border: 2px dashed #6a11cb;
             border-radius: 10px;
-            padding: 25px;
+            padding: 30px;
             text-align: center;
             transition: all 0.3s ease;
         }
 
         .upload-section:hover {
             background-color: #eef2ff;
-            border-color: #2a5298;
-        }
-
-        .upload-options {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        .upload-option {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 150px;
-        }
-
-        .upload-option:hover {
-            border-color: #1e3c72;
-            background: #f8f9fa;
-        }
-
-        .upload-option-icon {
-            font-size: 40px;
-            color: #1e3c72;
-        }
-
-        .upload-option-text {
-            font-weight: 600;
-            color: #1e3c72;
-            text-align: center;
+            border-color: #2575fc;
         }
 
         .upload-icon {
-            font-size: 50px;
-            color: #1e3c72;
+            font-size: 60px;
+            color: #6a11cb;
             margin-bottom: 15px;
         }
 
         .upload-text {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-size: 1.1rem;
         }
 
@@ -152,46 +83,32 @@
         }
 
         .btn {
-            background: linear-gradient(to right, #1e3c72, #2a5298);
+            background: linear-gradient(to right, #6a11cb, #2575fc);
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 0.95rem;
+            padding: 12px 25px;
+            font-size: 1rem;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
-            margin: 5px;
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
         }
 
         .btn:active {
             transform: translateY(0);
         }
 
-        .btn-success {
-            background: linear-gradient(to right, #11998e, #38ef7d);
-        }
-
-        .btn-warning {
-            background: linear-gradient(to right, #f46b45, #eea849);
-        }
-
-        .btn-danger {
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
-        }
-
-        .btn-info {
-            background: linear-gradient(to right, #007bff, #0056b3);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(to right, #6c757d, #495057);
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .preview-section {
@@ -199,137 +116,91 @@
         }
 
         .preview-title {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             margin-bottom: 20px;
-            color: #1e3c72;
+            color: #2575fc;
             text-align: center;
         }
 
-        .image-comparison-container {
+        .image-preview {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
-        .comparison-box {
+        .preview-item {
+            position: relative;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            background: white;
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
 
-        .comparison-header {
-            background: #f8f9fa;
-            padding: 12px;
-            text-align: center;
-            font-weight: bold;
-            border-bottom: 1px solid #eee;
-            font-size: 1rem;
+        .preview-item:hover {
+            transform: translateY(-5px);
         }
 
-        .comparison-image-container {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            min-height: 400px;
-        }
-
-        .comparison-image {
+        .preview-img {
             width: 100%;
-            height: 100%;
-            max-height: 500px;
-            object-fit: contain;
+            height: 200px;
+            object-fit: cover;
             display: block;
-            padding: 10px;
         }
 
-        .tools-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .filters-panel, .crop-panel {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .panel-title {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: #1e3c72;
-            text-align: center;
-        }
-
-        .filter-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .filter-btn {
-            background: white;
-            border: 2px solid #1e3c72;
-            color: #1e3c72;
-            padding: 10px;
-            border-radius: 8px;
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .filter-btn:hover {
-            background: #1e3c72;
-            color: white;
-        }
-
-        .filter-btn.active {
-            background: #1e3c72;
-            color: white;
-        }
-
-        .crop-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .rotation-controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
+            font-weight: bold;
         }
 
         .actions {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             margin-top: 20px;
-            flex-wrap: wrap;
+        }
+
+        .info-section {
+            background-color: #eef2ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .info-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #6a11cb;
+        }
+
+        .info-list {
+            padding-left: 20px;
+        }
+
+        .info-list li {
+            margin-bottom: 8px;
         }
 
         footer {
             text-align: center;
-            padding: 15px;
+            padding: 20px;
             color: #666;
             font-size: 0.9rem;
             border-top: 1px solid #eee;
         }
 
         @media (max-width: 768px) {
-            .image-comparison-container, .tools-section {
-                grid-template-columns: 1fr;
-            }
-            
-            .filter-buttons {
-                grid-template-columns: 1fr;
+            .image-preview {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
             
             .actions {
@@ -341,259 +212,50 @@
                 width: 100%;
                 max-width: 300px;
             }
-
-            .upload-options {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        /* Estilos para el recorte */
-        .crop-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            cursor: crosshair;
-            display: none;
-            background: rgba(0,0,0,0.3);
-        }
-
-        .crop-area {
-            position: absolute;
-            border: 2px solid #ff0000;
-            background: rgba(255, 0, 0, 0.1);
-            cursor: move;
-            box-sizing: border-box;
-        }
-
-        .crop-handle {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: #ff0000;
-            border: 2px solid white;
-            border-radius: 50%;
-        }
-
-        .handle-tl { top: -6px; left: -6px; cursor: nw-resize; }
-        .handle-tr { top: -6px; right: -6px; cursor: ne-resize; }
-        .handle-bl { bottom: -6px; left: -6px; cursor: sw-resize; }
-        .handle-br { bottom: -6px; right: -6px; cursor: se-resize; }
-
-        .image-counter {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.9rem;
-        }
-
-        .navigation-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .crop-instructions {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 0.9rem;
-            color: #856404;
-        }
-
-        .quality-control {
-            margin-top: 15px;
-            padding: 10px;
-            background: #e9ecef;
-            border-radius: 5px;
-        }
-
-        .quality-slider {
-            width: 100%;
-            margin: 10px 0;
-        }
-
-        /* Nuevos estilos para mejoras */
-        .crop-history-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .history-btn {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .history-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        .image-info {
-            text-align: center;
-            margin: 10px 0;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .orientation-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: center;
-        }
-
-        .orientation-btn {
-            background: #17a2b8;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .orientation-btn.active {
-            background: #138496;
-            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Mejorador de Documentos Escaneados</h1>
-            <p class="subtitle">Sube, mejora y genera PDFs de alta calidad en formato horizontal</p>
+            <h1>Conversor de Imágenes a PDF</h1>
+            <p class="subtitle">Convierte tus imágenes a PDF con 2 imágenes por página</p>
         </header>
         
         <div class="main-content">
-            <!-- Sección de configuración -->
-            <div class="config-section" id="configSection">
-                <h3>Configuración del PDF</h3>
-                <p>Selecciona cómo quieres organizar las imágenes en el PDF:</p>
-                <div class="config-options">
-                    <button class="config-btn active" id="onePerPage">1 Imagen por Página</button>
-                    <button class="config-btn" id="twoPerPage">2 Imágenes por Página</button>
-                </div>
-
-                <div class="pdf-quality">
-                    <label>Calidad del PDF:</label>
-                    <div class="quality-options">
-                        <div class="quality-option selected" data-quality="high">Alta Calidad</div>
-                        <div class="quality-option" data-quality="medium">Calidad Media</div>
-                        <div class="quality-option" data-quality="low">Tamaño Pequeño</div>
-                    </div>
-                </div>
-
-                <div class="orientation-controls">
-                    <button class="orientation-btn active" id="forceHorizontalBtn">Forzar Horizontal en PDF</button>
-                    <button class="orientation-btn" id="keepOriginalBtn">Mantener Original</button>
-                </div>
-            </div>
-
             <div class="upload-section" id="uploadSection">
-                <div class="upload-icon">📄</div>
-                <h2 class="upload-text">Sube o captura tus documentos</h2>
-                <p>Múltiples formas de obtener tus imágenes - Sin límite de imágenes</p>
-                
-                <div class="upload-options">
-                    <div class="upload-option" id="fileUploadOption">
-                        <div class="upload-option-icon">📁</div>
-                        <div class="upload-option-text">Subir Archivos</div>
-                    </div>
-                    <div class="upload-option" id="cameraOption">
-                        <div class="upload-option-icon">📷</div>
-                        <div class="upload-option-text">Cámara Nativa</div>
-                    </div>
-                </div>
-                
+                <div class="upload-icon">📷</div>
+                <h2 class="upload-text">Selecciona tus imágenes</h2>
+                <p>Formatos soportados: JPG, PNG, GIF</p>
                 <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
-                <input type="file" id="cameraInput" class="file-input" accept="image/*" capture="environment">
+                <button class="btn" id="selectBtn">Seleccionar Imágenes</button>
             </div>
             
             <div class="preview-section" id="previewSection">
-                <h2 class="preview-title">Mejora tus Documentos</h2>
-                
-                <div class="image-info" id="imageInfo">
-                    <!-- Información de imágenes cargadas -->
-                </div>
-                
-                <div class="navigation-buttons">
-                    <button class="btn" id="prevBtn">← Anterior</button>
-                    <span id="imageCounter">Imagen 1 de 1</span>
-                    <button class="btn" id="nextBtn">Siguiente →</button>
-                </div>
-                
-                <div class="image-comparison-container" id="comparisonContainer">
-                    <!-- Se llenará dinámicamente con JavaScript -->
-                </div>
-                
-                <div class="tools-section">
-                    <div class="filters-panel">
-                        <h3 class="panel-title">Filtros Preconfigurados</h3>
-                        <div class="filter-buttons">
-                            <button class="filter-btn" data-filter="original">Original</button>
-                            <button class="filter-btn active" data-filter="document">Documento Mejorado</button>
-                            <button class="filter-btn" data-filter="aclarar">Aclarar Moderado</button>
-                            <button class="filter-btn" data-filter="textoOscuro">Texto Más Oscuro</button>
-                            <button class="filter-btn" data-filter="contrast">Alto Contraste</button>
-                            <button class="btn btn-success" id="applyToAllBtn">Aplicar a Todos</button>
-                        </div>
-                        
-                        <div class="quality-control">
-                            <label>Intensidad del Filtro:</label>
-                            <input type="range" min="1" max="10" value="5" class="quality-slider" id="filterIntensity">
-                            <span id="intensityValue">5/10</span>
-                        </div>
-                    </div>
-                    
-                    <div class="crop-panel">
-                        <h3 class="panel-title">Herramientas de Recorte</h3>
-                        <div class="crop-instructions">
-                            💡 <strong>Instrucciones:</strong> Activa recorte, ajusta el área roja EXACTAMENTE donde quieres recortar y aplica
-                        </div>
-                        <div class="crop-controls">
-                            <button class="btn" id="cropBtn">Activar Recorte</button>
-                            <button class="btn btn-success" id="applyCropBtn">Aplicar Recorte</button>
-                            <button class="btn btn-danger" id="cancelCropBtn">Cancelar Recorte</button>
-                        </div>
-                        <div class="crop-history-controls">
-                            <button class="history-btn" id="undoCropBtn" disabled>↶ Deshacer Recorte</button>
-                            <button class="history-btn" id="resetCropBtn">🔄 Restaurar Original</button>
-                        </div>
-                        <div class="rotation-controls">
-                            <button class="btn btn-warning" id="rotateLeftBtn">↺ Girar Izquierda</button>
-                            <button class="btn btn-warning" id="rotateRightBtn">↻ Girar Derecha</button>
-                        </div>
-                    </div>
-                </div>
-                
+                <h2 class="preview-title">Vista Previa de Imágenes</h2>
+                <div class="image-preview" id="imagePreview"></div>
                 <div class="actions">
                     <button class="btn" id="addMoreBtn">Agregar Más Imágenes</button>
-                    <button class="btn btn-info" id="takePhotoBtn">Usar Cámara</button>
-                    <button class="btn btn-success" id="generateBtn">Generar PDF Mejorado</button>
-                    <button class="btn btn-danger" id="clearBtn">Limpiar Todo</button>
+                    <button class="btn" id="generateBtn">Generar PDF</button>
+                    <button class="btn" id="clearBtn">Limpiar Todo</button>
                 </div>
+            </div>
+            
+            <div class="info-section">
+                <h3 class="info-title">Instrucciones:</h3>
+                <ul class="info-list">
+                    <li>Selecciona las imágenes que deseas convertir a PDF</li>
+                    <li>Puedes seleccionar múltiples imágenes a la vez</li>
+                    <li>Las imágenes se organizarán automáticamente, 2 por página</li>
+                    <li>El tamaño de página será carta (8.5" x 11")</li>
+                    <li>Las imágenes ocuparán casi todo el espacio de la página sin márgenes</li>
+                    <li>Haz clic en "Generar PDF" para crear y descargar tu documento</li>
+                </ul>
             </div>
         </div>
         
         <footer>
-            <p>Mejorador de Documentos Escaneados &copy; 2023</p>
+            <p>Conversor de Imágenes a PDF &copy; 2023</p>
         </footer>
     </div>
 
@@ -603,962 +265,170 @@
         
         // Elementos DOM
         const fileInput = document.getElementById('fileInput');
-        const cameraInput = document.getElementById('cameraInput');
+        const selectBtn = document.getElementById('selectBtn');
         const addMoreBtn = document.getElementById('addMoreBtn');
-        const takePhotoBtn = document.getElementById('takePhotoBtn');
         const generateBtn = document.getElementById('generateBtn');
         const clearBtn = document.getElementById('clearBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const applyToAllBtn = document.getElementById('applyToAllBtn');
-        const onePerPageBtn = document.getElementById('onePerPage');
-        const twoPerPageBtn = document.getElementById('twoPerPage');
         const uploadSection = document.getElementById('uploadSection');
         const previewSection = document.getElementById('previewSection');
-        const comparisonContainer = document.getElementById('comparisonContainer');
-        const imageCounter = document.getElementById('imageCounter');
-        const imageInfo = document.getElementById('imageInfo');
-        const cropBtn = document.getElementById('cropBtn');
-        const applyCropBtn = document.getElementById('applyCropBtn');
-        const cancelCropBtn = document.getElementById('cancelCropBtn');
-        const rotateLeftBtn = document.getElementById('rotateLeftBtn');
-        const rotateRightBtn = document.getElementById('rotateRightBtn');
-        const filterIntensity = document.getElementById('filterIntensity');
-        const intensityValue = document.getElementById('intensityValue');
-        const undoCropBtn = document.getElementById('undoCropBtn');
-        const resetCropBtn = document.getElementById('resetCropBtn');
-        const forceHorizontalBtn = document.getElementById('forceHorizontalBtn');
-        const keepOriginalBtn = document.getElementById('keepOriginalBtn');
+        const imagePreview = document.getElementById('imagePreview');
         
-        // Elementos de calidad PDF
-        const qualityOptions = document.querySelectorAll('.quality-option');
-
-        // Variables globales
+        // Array para almacenar las imágenes
         let images = [];
-        let currentImageIndex = 0;
-        let isCropping = false;
-        let currentFilter = 'document';
-        let cropArea = null;
-        let pdfLayout = 'onePerPage';
-        let isDragging = false;
-        let dragHandle = null;
-        let startX, startY, startWidth, startHeight, startLeft, startTop;
-        let pdfQuality = 'high';
-        let forceHorizontal = true; // Nueva variable para forzar orientación horizontal
         
-        // Variables para el recorte
-        let cropStartX, cropStartY, cropEndX, cropEndY;
-        let isDrawingCrop = false;
-
         // Event listeners
-        fileUploadOption.addEventListener('click', () => fileInput.click());
-        cameraOption.addEventListener('click', () => cameraInput.click());
+        selectBtn.addEventListener('click', () => fileInput.click());
+        addMoreBtn.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', handleFileSelect);
-        cameraInput.addEventListener('change', handleCameraCapture);
         generateBtn.addEventListener('click', generatePDF);
         clearBtn.addEventListener('click', clearAll);
-        prevBtn.addEventListener('click', showPreviousImage);
-        nextBtn.addEventListener('click', showNextImage);
-        applyToAllBtn.addEventListener('click', applyCurrentFilterToAll);
-        filterIntensity.addEventListener('input', updateIntensityValue);
-        filterIntensity.addEventListener('change', () => applyFilter(currentFilter));
-        takePhotoBtn.addEventListener('click', () => cameraInput.click());
-        addMoreBtn.addEventListener('click', () => fileInput.click());
         
-        // Event listeners de calidad PDF
-        qualityOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                qualityOptions.forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                pdfQuality = this.getAttribute('data-quality');
-            });
-        });
-
-        // Configuración de PDF
-        onePerPageBtn.addEventListener('click', () => {
-            onePerPageBtn.classList.add('active');
-            twoPerPageBtn.classList.remove('active');
-            pdfLayout = 'onePerPage';
-        });
-        
-        twoPerPageBtn.addEventListener('click', () => {
-            twoPerPageBtn.classList.add('active');
-            onePerPageBtn.classList.remove('active');
-            pdfLayout = 'twoPerPage';
-        });
-
-        // Control de orientación
-        forceHorizontalBtn.addEventListener('click', () => {
-            forceHorizontalBtn.classList.add('active');
-            keepOriginalBtn.classList.remove('active');
-            forceHorizontal = true;
-        });
-
-        keepOriginalBtn.addEventListener('click', () => {
-            keepOriginalBtn.classList.add('active');
-            forceHorizontalBtn.classList.remove('active');
-            forceHorizontal = false;
-        });
-        
-        // Filtros preconfigurados
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentFilter = this.getAttribute('data-filter');
-                applyFilter(currentFilter);
-            });
-        });
-        
-        // Herramientas de recorte y rotación
-        cropBtn.addEventListener('click', activateCrop);
-        applyCropBtn.addEventListener('click', applyCrop);
-        cancelCropBtn.addEventListener('click', cancelCrop);
-        rotateLeftBtn.addEventListener('click', () => rotateImage(-90));
-        rotateRightBtn.addEventListener('click', () => rotateImage(90));
-        undoCropBtn.addEventListener('click', undoCrop);
-        resetCropBtn.addEventListener('click', resetCrop);
-
-        function updateIntensityValue() {
-            intensityValue.textContent = `${filterIntensity.value}/10`;
-        }
-
-        // Función para manejar captura de cámara nativa
-        function handleCameraCapture(event) {
+        // Manejar la selección de archivos
+        function handleFileSelect(event) {
             const files = event.target.files;
+            
             if (files.length === 0) return;
             
-            const file = files[0];
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    // Determinar orientación de la imagen
-                    const isVertical = img.height > img.width;
-                    
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Verificar que sea una imagen
+                if (!file.type.match('image.*')) {
+                    alert('Por favor, selecciona solo archivos de imagen.');
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
                     const imageData = {
                         src: e.target.result,
-                        name: `foto_${new Date().getTime()}.jpg`,
-                        enhancedSrc: e.target.result,
-                        filter: 'document',
-                        rotation: 0,
-                        crop: null,
-                        originalData: e.target.result,
-                        source: 'camera',
-                        cropHistory: [],
-                        isVertical: isVertical, // Guardar información de orientación
-                        originalWidth: img.width,
-                        originalHeight: img.height
+                        name: file.name
                     };
                     
                     images.push(imageData);
-                    
-                    if (images.length === 1) {
-                        currentImageIndex = 0;
-                        updateComparisonView();
-                        applyFilter('document');
-                    }
-                    
-                    updatePreviewSection();
-                    
-                    let orientationInfo = isVertical ? 'vertical' : 'horizontal';
-                    alert(`✅ Foto capturada con cámara nativa\n📱 Calidad optimizada para móvil\n📐 Orientación: ${orientationInfo}`);
+                    updatePreview();
                 };
-                img.src = e.target.result;
-            };
-            
-            reader.readAsDataURL(file);
-            cameraInput.value = '';
-        }
-
-        // Manejar la selección de archivos - SIN LÍMITE
-        function handleFileSelect(event) {
-            const files = event.target.files;
-            if (files.length === 0) return;
-            
-            let loadedCount = 0;
-            const totalFiles = files.length;
-            
-            for (let i = 0; i < totalFiles; i++) {
-                const file = files[i];
-                if (!file.type.match('image.*')) continue;
                 
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        // Determinar orientación de la imagen
-                        const isVertical = img.height > img.width;
-                        
-                        const imageData = {
-                            src: e.target.result,
-                            name: file.name,
-                            enhancedSrc: e.target.result,
-                            filter: 'document',
-                            rotation: 0,
-                            crop: null,
-                            originalData: e.target.result,
-                            cropHistory: [],
-                            isVertical: isVertical, // Guardar información de orientación
-                            originalWidth: img.width,
-                            originalHeight: img.height
-                        };
-                        
-                        images.push(imageData);
-                        loadedCount++;
-                        
-                        if (loadedCount === totalFiles) {
-                            currentImageIndex = images.length - 1;
-                            updateComparisonView();
-                            applyFilter('document');
-                            updatePreviewSection();
-                            alert(`✅ ${loadedCount} imagen(es) agregada(s) correctamente\n📊 Total: ${images.length} imágenes`);
-                        }
-                    };
-                    img.src = e.target.result;
-                };
                 reader.readAsDataURL(file);
             }
+            
+            // Limpiar el input para permitir seleccionar el mismo archivo otra vez
             fileInput.value = '';
         }
-
-        // Actualizar la vista de comparación
-        function updateComparisonView() {
-            if (images.length === 0) return;
-            
-            const currentImage = images[currentImageIndex];
-            comparisonContainer.innerHTML = `
-                <div class="comparison-box">
-                    <div class="comparison-header">Imagen Original</div>
-                    <div class="comparison-image-container">
-                        <span class="image-counter">${currentImageIndex + 1} / ${images.length}</span>
-                        <img src="${currentImage.src}" alt="Original" class="comparison-image" id="originalImage">
-                    </div>
-                </div>
-                <div class="comparison-box">
-                    <div class="comparison-header">Imagen Mejorada</div>
-                    <div class="comparison-image-container" id="enhancedContainer">
-                        <img src="${currentImage.enhancedSrc}" alt="Mejorada" class="comparison-image" id="enhancedImage">
-                        <div class="crop-overlay" id="cropOverlay"></div>
-                    </div>
-                </div>
-            `;
-            
-            imageCounter.textContent = `Imagen ${currentImageIndex + 1} de ${images.length}`;
-            
-            // Contar imágenes verticales y horizontales
-            const verticalCount = images.filter(img => img.isVertical).length;
-            const horizontalCount = images.length - verticalCount;
-            
-            imageInfo.innerHTML = `📊 ${images.length} imágenes cargadas | 💾 Tamaño total: ${calculateTotalSize()} MB<br>
-                                  📐 ${verticalCount} verticales | ➡️ ${horizontalCount} horizontales`;
-            
-            prevBtn.disabled = currentImageIndex === 0;
-            nextBtn.disabled = currentImageIndex === images.length - 1;
-            
-            // Actualizar estado de botones de historial
-            updateCropHistoryButtons();
-        }
-
-        // Calcular tamaño total de las imágenes
-        function calculateTotalSize() {
-            let totalSize = 0;
-            images.forEach(img => {
-                // Estimación aproximada del tamaño (base64)
-                const base64 = img.src.split(',')[1];
-                const sizeInBytes = base64.length * (3/4);
-                totalSize += sizeInBytes;
-            });
-            return (totalSize / (1024 * 1024)).toFixed(2);
-        }
-
-        // Navegación
-        function showPreviousImage() {
-            if (currentImageIndex > 0) {
-                currentImageIndex--;
-                updateComparisonView();
-                applyFilter(currentFilter);
-            }
-        }
         
-        function showNextImage() {
-            if (currentImageIndex < images.length - 1) {
-                currentImageIndex++;
-                updateComparisonView();
-                applyFilter(currentFilter);
-            }
-        }
-
-        // Actualizar la sección de vista previa
-        function updatePreviewSection() {
+        // Actualizar la vista previa
+        function updatePreview() {
             if (images.length === 0) {
                 previewSection.style.display = 'none';
                 uploadSection.style.display = 'block';
-                takePhotoBtn.style.display = 'none';
-                addMoreBtn.style.display = 'none';
                 return;
             }
+            
             previewSection.style.display = 'block';
             uploadSection.style.display = 'none';
-            takePhotoBtn.style.display = 'inline-block';
-            addMoreBtn.style.display = 'inline-block';
-        }
-
-        // Aplicar filtro
-        function applyFilter(filterName) {
-            if (images.length === 0) return;
             
-            const currentImage = images[currentImageIndex];
-            const img = new Image();
-            img.src = currentImage.src;
-            
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                if (currentImage.rotation !== 0) {
-                    if (currentImage.rotation % 180 === 0) {
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                    } else {
-                        canvas.width = img.height;
-                        canvas.height = img.width;
-                    }
-                    
-                    ctx.save();
-                    ctx.translate(canvas.width / 2, canvas.height / 2);
-                    ctx.rotate(currentImage.rotation * Math.PI / 180);
-                    ctx.drawImage(img, -img.width / 2, -img.height / 2, img.width, img.height);
-                    ctx.restore();
-                } else {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.drawImage(img, 0, 0);
-                }
-                
-                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                let data = imageData.data;
-                
-                const intensity = parseInt(filterIntensity.value) / 10;
-                
-                switch(filterName) {
-                    case 'document':
-                        applyEnhancedDocumentFilter(data, intensity);
-                        break;
-                    case 'aclarar':
-                        applyModerateBrightnessFilter(data, intensity);
-                        break;
-                    case 'textoOscuro':
-                        applyDarkerTextFilter(data, intensity);
-                        break;
-                    case 'contrast':
-                        applyHighContrastFilter(data, intensity);
-                        break;
-                    default:
-                        break;
-                }
-                
-                if (filterName !== 'original') {
-                    ctx.putImageData(imageData, 0, 0);
-                }
-                
-                // APLICAR RECORTE
-                if (currentImage.crop) {
-                    const cropCanvas = document.createElement('canvas');
-                    const cropCtx = cropCanvas.getContext('2d');
-                    
-                    // Usar las coordenadas EXACTAS del recorte
-                    cropCanvas.width = currentImage.crop.width;
-                    cropCanvas.height = currentImage.crop.height;
-                    
-                    cropCtx.drawImage(
-                        canvas, 
-                        currentImage.crop.x, 
-                        currentImage.crop.y, 
-                        currentImage.crop.width, 
-                        currentImage.crop.height,
-                        0, 0, 
-                        currentImage.crop.width, 
-                        currentImage.crop.height
-                    );
-                    
-                    currentImage.enhancedSrc = cropCanvas.toDataURL('image/jpeg', 0.9);
-                } else {
-                    currentImage.enhancedSrc = canvas.toDataURL('image/jpeg', 0.9);
-                }
-                
-                currentImage.filter = filterName;
-                updateComparisonView();
-            };
-        }
-
-        // FILTROS
-        function applyEnhancedDocumentFilter(data, intensity) {
-            let grayscale = [];
-            for (let i = 0; i < data.length; i += 4) {
-                const gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
-                grayscale.push(gray);
-            }
-            
-            let threshold = 128;
-            if (intensity > 0.5) {
-                threshold = 128 - (intensity - 0.5) * 50;
-            } else {
-                threshold = 128 + (0.5 - intensity) * 50;
-            }
-            
-            let grayIndex = 0;
-            for (let i = 0; i < data.length; i += 4) {
-                const gray = grayscale[grayIndex++];
-                const adjustedThreshold = Math.max(50, Math.min(200, threshold));
-                
-                if (gray > adjustedThreshold) {
-                    data[i] = data[i+1] = data[i+2] = 255;
-                } else {
-                    data[i] = data[i+1] = data[i+2] = 0;
-                }
-            }
-        }
-        
-        function applyModerateBrightnessFilter(data, intensity) {
-            const brightness = 1.0 + (intensity * 0.4);
-            for (let i = 0; i < data.length; i += 4) {
-                data[i] = Math.min(255, data[i] * brightness);
-                data[i+1] = Math.min(255, data[i+1] * brightness);
-                data[i+2] = Math.min(255, data[i+2] * brightness);
-            }
-        }
-        
-        function applyDarkerTextFilter(data, intensity) {
-            for (let i = 0; i < data.length; i += 4) {
-                const gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
-                const threshold = 180 - (intensity * 40);
-                if (gray > threshold) {
-                    data[i] = data[i+1] = data[i+2] = 255;
-                } else {
-                    data[i] = data[i+1] = data[i+2] = 0;
-                }
-            }
-        }
-        
-        function applyHighContrastFilter(data, intensity) {
-            const contrast = 1.0 + (intensity * 2.0);
-            const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-            for (let i = 0; i < data.length; i += 4) {
-                data[i] = Math.max(0, Math.min(255, factor * (data[i] - 128) + 128));
-                data[i+1] = Math.max(0, Math.min(255, factor * (data[i+1] - 128) + 128));
-                data[i+2] = Math.max(0, Math.min(255, factor * (data[i+2] - 128) + 128));
-            }
-        }
-
-        // Aplicar filtro actual a todas las imágenes
-        function applyCurrentFilterToAll() {
-            if (images.length === 0) return;
+            imagePreview.innerHTML = '';
             
             images.forEach((image, index) => {
-                if (index !== currentImageIndex) {
-                    const tempImg = new Image();
-                    tempImg.src = image.src;
-                    
-                    tempImg.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        canvas.width = tempImg.width;
-                        canvas.height = tempImg.height;
-                        ctx.drawImage(tempImg, 0, 0);
-                        
-                        let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                        let data = imageData.data;
-                        const intensity = parseInt(filterIntensity.value) / 10;
-                        
-                        switch(currentFilter) {
-                            case 'document': applyEnhancedDocumentFilter(data, intensity); break;
-                            case 'aclarar': applyModerateBrightnessFilter(data, intensity); break;
-                            case 'textoOscuro': applyDarkerTextFilter(data, intensity); break;
-                            case 'contrast': applyHighContrastFilter(data, intensity); break;
-                        }
-                        
-                        ctx.putImageData(imageData, 0, 0);
-                        image.enhancedSrc = canvas.toDataURL('image/jpeg', 0.9);
-                        image.filter = currentFilter;
-                    };
-                }
+                const previewItem = document.createElement('div');
+                previewItem.className = 'preview-item';
+                
+                const img = document.createElement('img');
+                img.src = image.src;
+                img.alt = image.name;
+                img.className = 'preview-img';
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.textContent = '×';
+                removeBtn.addEventListener('click', () => removeImage(index));
+                
+                previewItem.appendChild(img);
+                previewItem.appendChild(removeBtn);
+                imagePreview.appendChild(previewItem);
             });
-            
-            alert(`Filtro aplicado a todas las ${images.length} imágenes`);
         }
-
-        // GENERAR PDF MEJORADO - CON OPCIÓN DE FORZAR HORIZONTAL
+        
+        // Eliminar una imagen
+        function removeImage(index) {
+            images.splice(index, 1);
+            updatePreview();
+        }
+        
+        // Limpiar todas las imágenes
+        function clearAll() {
+            images = [];
+            updatePreview();
+        }
+        
+        // Generar el PDF
         function generatePDF() {
             if (images.length === 0) {
                 alert('Por favor, selecciona al menos una imagen.');
                 return;
             }
             
-            try {
-                const pdf = new jsPDF({
-                    orientation: 'landscape', // Siempre PDF horizontal
-                    unit: 'mm',
-                    format: 'a4',
-                    compress: pdfQuality !== 'high'
-                });
-                
-                const pageWidth = 297; // Ancho en horizontal (A4 landscape)
-                const pageHeight = 210; // Alto en horizontal (A4 landscape)
-                
-                let jpegQuality;
-                switch(pdfQuality) {
-                    case 'high':
-                        jpegQuality = 1.0;
-                        break;
-                    case 'medium':
-                        jpegQuality = 0.8;
-                        break;
-                    case 'low':
-                        jpegQuality = 0.6;
-                        break;
+            // Crear un nuevo documento PDF con tamaño carta (en pulgadas)
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'in',
+                format: 'letter'
+            });
+            
+            // Tamaño de página carta: 8.5 x 11 pulgadas
+            const pageWidth = 8.5;
+            const pageHeight = 11;
+            
+            // Sin márgenes - usar toda la página
+            const usableWidth = pageWidth;
+            const usableHeight = pageHeight;
+            
+            // Tamaño para cada imagen (2 por página)
+            const imgWidth = usableWidth;
+            const imgHeight = usableHeight / 2;
+            
+            let currentPage = 0;
+            let yPosition = 0;
+            
+            // Procesar cada imagen
+            images.forEach((image, index) => {
+                // Si es la primera imagen de la página o después de agregar dos imágenes
+                if (index % 2 === 0 && index > 0) {
+                    pdf.addPage();
+                    currentPage++;
+                    yPosition = 0;
                 }
                 
-                // Procesar cada imagen
-                images.forEach((image, index) => {
-                    if (index > 0) {
-                        pdf.addPage();
-                    }
+                // Cargar la imagen y agregarla al PDF
+                const img = new Image();
+                img.src = image.src;
+                
+                // Calcular dimensiones manteniendo la relación de aspecto
+                let finalWidth = imgWidth;
+                let finalHeight = (img.height * imgWidth) / img.width;
+                
+                // Si la altura es mayor que el espacio disponible, ajustar
+                if (finalHeight > imgHeight) {
+                    finalHeight = imgHeight;
+                    finalWidth = (img.width * imgHeight) / img.height;
                     
-                    const imgSrc = image.enhancedSrc || image.src;
-                    const img = new Image();
-                    
-                    img.onload = function() {
-                        let imgWidth = img.width;
-                        let imgHeight = img.height;
-                        
-                        // Si forzamos horizontal y la imagen es vertical, rotamos
-                        if (forceHorizontal && image.isVertical) {
-                            // Intercambiar dimensiones para rotar
-                            [imgWidth, imgHeight] = [imgHeight, imgWidth];
-                        }
-                        
-                        // Calcular dimensiones para ajustar a la página manteniendo proporción
-                        const pageMargin = 10;
-                        const availableWidth = pageWidth - (2 * pageMargin);
-                        const availableHeight = pageHeight - (2 * pageMargin);
-                        
-                        let finalWidth, finalHeight;
-                        
-                        // Calcular dimensiones manteniendo proporción
-                        const widthRatio = availableWidth / imgWidth;
-                        const heightRatio = availableHeight / imgHeight;
-                        const scale = Math.min(widthRatio, heightRatio);
-                        
-                        finalWidth = imgWidth * scale;
-                        finalHeight = imgHeight * scale;
-                        
-                        // Centrar en la página
-                        const x = (pageWidth - finalWidth) / 2;
-                        const y = (pageHeight - finalHeight) / 2;
-                        
-                        // Crear canvas temporal si necesitamos rotar
-                        if (forceHorizontal && image.isVertical) {
-                            const tempCanvas = document.createElement('canvas');
-                            const tempCtx = tempCanvas.getContext('2d');
-                            tempCanvas.width = imgHeight; // Intercambiar dimensiones
-                            tempCanvas.height = imgWidth;
-                            
-                            // Rotar la imagen 90 grados
-                            tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
-                            tempCtx.rotate(90 * Math.PI / 180);
-                            tempCtx.drawImage(img, -img.width / 2, -img.height / 2);
-                            
-                            // Usar la imagen rotada
-                            const rotatedImage = tempCanvas.toDataURL('image/jpeg', jpegQuality);
-                            pdf.addImage(rotatedImage, 'JPEG', x, y, finalWidth, finalHeight);
-                        } else {
-                            // Usar la imagen original
-                            pdf.addImage(imgSrc, 'JPEG', x, y, finalWidth, finalHeight);
-                        }
-                        
-                        // Si es la última imagen, guardar el PDF
-                        if (index === images.length - 1) {
-                            pdf.save('documentos_mejorados.pdf');
-                            const rotatedCount = forceHorizontal ? images.filter(img => img.isVertical).length : 0;
-                            alert(`✅ PDF generado correctamente con ${images.length} imágenes\n📊 Calidad: ${pdfQuality === 'high' ? 'Alta' : pdfQuality === 'medium' ? 'Media' : 'Básica'}\n📄 Formato: ${pdfLayout === 'onePerPage' ? '1 por página' : '2 por página'}\n🔄 ${rotatedCount} imágenes rotadas a horizontal`);
-                        }
-                    };
-                    
-                    img.src = imgSrc;
-                });
-                
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al generar PDF. Verifica que las imágenes sean válidas.');
-            }
-        }
-
-        // FUNCIONES DE RECORTE (se mantienen igual que antes)
-        function activateCrop() {
-            if (images.length === 0) return;
-            isCropping = true;
-            const overlay = document.getElementById('cropOverlay');
-            const enhancedImg = document.getElementById('enhancedImage');
-            if (!overlay || !enhancedImg) return;
-            
-            overlay.style.display = 'block';
-            
-            // Limpiar área de recorte existente
-            const existingCrop = overlay.querySelector('.crop-area');
-            if (existingCrop) {
-                existingCrop.remove();
-            }
-            
-            // Configurar eventos para dibujar el área de recorte
-            setupCropDrawing(overlay, enhancedImg);
-        }
-        
-        function setupCropDrawing(overlay, enhancedImg) {
-            isDrawingCrop = false;
-            
-            overlay.onmousedown = function(e) {
-                isDrawingCrop = true;
-                const rect = overlay.getBoundingClientRect();
-                cropStartX = e.clientX - rect.left;
-                cropStartY = e.clientY - rect.top;
-                
-                // Crear área de recorte
-                createCropArea(cropStartX, cropStartY, 0, 0);
-            };
-            
-            overlay.onmousemove = function(e) {
-                if (!isDrawingCrop) return;
-                
-                const rect = overlay.getBoundingClientRect();
-                cropEndX = e.clientX - rect.left;
-                cropEndY = e.clientY - rect.top;
-                
-                // Actualizar área de recorte
-                updateCropArea(cropStartX, cropStartY, cropEndX, cropEndY);
-            };
-            
-            overlay.onmouseup = function() {
-                isDrawingCrop = false;
-            };
-        }
-        
-        function createCropArea(x, y, width, height) {
-            const overlay = document.getElementById('cropOverlay');
-            
-            // Limpiar área existente
-            const existingCrop = overlay.querySelector('.crop-area');
-            if (existingCrop) {
-                existingCrop.remove();
-            }
-            
-            cropArea = document.createElement('div');
-            cropArea.className = 'crop-area';
-            cropArea.style.left = x + 'px';
-            cropArea.style.top = y + 'px';
-            cropArea.style.width = Math.abs(width) + 'px';
-            cropArea.style.height = Math.abs(height) + 'px';
-            
-            // Agregar manijas de redimensionamiento
-            const handles = ['tl', 'tr', 'bl', 'br'];
-            handles.forEach(handle => {
-                const handleEl = document.createElement('div');
-                handleEl.className = `crop-handle handle-${handle}`;
-                cropArea.appendChild(handleEl);
-            });
-            
-            overlay.appendChild(cropArea);
-            
-            // Configurar eventos para las manijas
-            setupCropHandles();
-        }
-        
-        function updateCropArea(startX, startY, endX, endY) {
-            if (!cropArea) return;
-            
-            const x = Math.min(startX, endX);
-            const y = Math.min(startY, endY);
-            const width = Math.abs(endX - startX);
-            const height = Math.abs(endY - startY);
-            
-            cropArea.style.left = x + 'px';
-            cropArea.style.top = y + 'px';
-            cropArea.style.width = width + 'px';
-            cropArea.style.height = height + 'px';
-        }
-        
-        function setupCropHandles() {
-            if (!cropArea) return;
-            
-            const handles = cropArea.querySelectorAll('.crop-handle');
-            handles.forEach(handle => {
-                handle.addEventListener('mousedown', startResize);
-            });
-            
-            // Evento para mover el área completa
-            cropArea.addEventListener('mousedown', startDrag);
-        }
-        
-        function startDrag(e) {
-            if (e.target.classList.contains('crop-handle')) return;
-            
-            e.preventDefault();
-            isDragging = true;
-            dragHandle = null;
-            
-            const overlay = document.getElementById('cropOverlay');
-            const rect = overlay.getBoundingClientRect();
-            startX = e.clientX - rect.left;
-            startY = e.clientY - rect.top;
-            startLeft = parseInt(cropArea.style.left);
-            startTop = parseInt(cropArea.style.top);
-            
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('mouseup', stopDrag);
-        }
-        
-        function startResize(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            isDragging = true;
-            dragHandle = e.target.className.split(' ')[1].split('-')[1];
-            
-            const overlay = document.getElementById('cropOverlay');
-            const rect = overlay.getBoundingClientRect();
-            startX = e.clientX - rect.left;
-            startY = e.clientY - rect.top;
-            startLeft = parseInt(cropArea.style.left);
-            startTop = parseInt(cropArea.style.top);
-            startWidth = parseInt(cropArea.style.width);
-            startHeight = parseInt(cropArea.style.height);
-            
-            document.addEventListener('mousemove', resize);
-            document.addEventListener('mouseup', stopDrag);
-        }
-        
-        function drag(e) {
-            if (!isDragging || dragHandle) return;
-            e.preventDefault();
-            
-            const overlay = document.getElementById('cropOverlay');
-            const rect = overlay.getBoundingClientRect();
-            const newX = e.clientX - rect.left - startX + startLeft;
-            const newY = e.clientY - rect.top - startY + startTop;
-            
-            // Limitar el movimiento dentro del área de la imagen
-            const maxX = rect.width - parseInt(cropArea.style.width);
-            const maxY = rect.height - parseInt(cropArea.style.height);
-            
-            cropArea.style.left = Math.max(0, Math.min(maxX, newX)) + 'px';
-            cropArea.style.top = Math.max(0, Math.min(maxY, newY)) + 'px';
-        }
-        
-        function resize(e) {
-            if (!isDragging || !dragHandle) return;
-            e.preventDefault();
-            
-            const overlay = document.getElementById('cropOverlay');
-            const rect = overlay.getBoundingClientRect();
-            const deltaX = e.clientX - rect.left - startX;
-            const deltaY = e.clientY - rect.top - startY;
-            
-            let newLeft = startLeft;
-            let newTop = startTop;
-            let newWidth = startWidth;
-            let newHeight = startHeight;
-            
-            // Ajustar según la manija utilizada
-            if (dragHandle.includes('r')) {
-                newWidth = Math.max(10, startWidth + deltaX);
-            }
-            if (dragHandle.includes('b')) {
-                newHeight = Math.max(10, startHeight + deltaY);
-            }
-            if (dragHandle.includes('l')) {
-                newWidth = Math.max(10, startWidth - deltaX);
-                newLeft = startLeft + deltaX;
-            }
-            if (dragHandle.includes('t')) {
-                newHeight = Math.max(10, startHeight - deltaY);
-                newTop = startTop + deltaY;
-            }
-            
-            // Limitar el tamaño dentro del área de la imagen
-            const maxWidth = rect.width - newLeft;
-            const maxHeight = rect.height - newTop;
-            
-            newWidth = Math.min(newWidth, maxWidth);
-            newHeight = Math.min(newHeight, maxHeight);
-            newLeft = Math.max(0, newLeft);
-            newTop = Math.max(0, newTop);
-            
-            cropArea.style.left = newLeft + 'px';
-            cropArea.style.top = newTop + 'px';
-            cropArea.style.width = newWidth + 'px';
-            cropArea.style.height = newHeight + 'px';
-        }
-        
-        function stopDrag() {
-            isDragging = false;
-            dragHandle = null;
-            document.removeEventListener('mousemove', drag);
-            document.removeEventListener('mouseup', stopDrag);
-            document.removeEventListener('mousemove', resize);
-        }
-        
-        function applyCrop() {
-            if (!isCropping || !cropArea || images.length === 0) return;
-            
-            const currentImage = images[currentImageIndex];
-            const overlay = document.getElementById('cropOverlay');
-            const enhancedImg = document.getElementById('enhancedImage');
-            
-            if (!overlay || !enhancedImg) return;
-            
-            const imgRect = enhancedImg.getBoundingClientRect();
-            const overlayRect = overlay.getBoundingClientRect();
-            
-            // Calcular proporciones EXACTAS
-            const scaleX = enhancedImg.naturalWidth / imgRect.width;
-            const scaleY = enhancedImg.naturalHeight / imgRect.height;
-            
-            // Calcular coordenadas de recorte en la imagen original
-            const cropX = parseInt(cropArea.style.left) * scaleX;
-            const cropY = parseInt(cropArea.style.top) * scaleY;
-            const cropWidth = parseInt(cropArea.style.width) * scaleX;
-            const cropHeight = parseInt(cropArea.style.height) * scaleY;
-            
-            // Asegurar que el recorte esté dentro de los límites de la imagen
-            const boundedCropX = Math.max(0, Math.min(enhancedImg.naturalWidth - cropWidth, cropX));
-            const boundedCropY = Math.max(0, Math.min(enhancedImg.naturalHeight - cropHeight, cropY));
-            const boundedCropWidth = Math.min(cropWidth, enhancedImg.naturalWidth - boundedCropX);
-            const boundedCropHeight = Math.min(cropHeight, enhancedImg.naturalHeight - boundedCropY);
-            
-            // Guardar en el historial antes de aplicar
-            if (!currentImage.cropHistory) currentImage.cropHistory = [];
-            currentImage.cropHistory.push({
-                crop: JSON.parse(JSON.stringify(currentImage.crop)), // Copia profunda
-                index: currentImage.cropHistory.length
-            });
-            
-            // Limitar el historial a 10 elementos
-            if (currentImage.cropHistory.length > 10) {
-                currentImage.cropHistory.shift();
-            }
-            
-            // Guardar información de recorte EXACTA
-            currentImage.crop = {
-                x: Math.round(boundedCropX),
-                y: Math.round(boundedCropY),
-                width: Math.round(boundedCropWidth),
-                height: Math.round(boundedCropHeight)
-            };
-            
-            // Aplicar el recorte
-            applyFilter(currentFilter);
-            
-            // Desactivar modo recorte
-            cancelCrop();
-            
-            // Actualizar botones de historial
-            updateCropHistoryButtons();
-            
-            alert(`✅ Recorte aplicado correctamente\n📏 Área: ${Math.round(boundedCropWidth)}x${Math.round(boundedCropHeight)} píxeles`);
-        }
-        
-        function cancelCrop() {
-            isCropping = false;
-            isDrawingCrop = false;
-            const overlay = document.getElementById('cropOverlay');
-            if (overlay) {
-                overlay.style.display = 'none';
-                overlay.onmousedown = null;
-                overlay.onmousemove = null;
-                overlay.onmouseup = null;
-                
-                const cropArea = overlay.querySelector('.crop-area');
-                if (cropArea) {
-                    cropArea.remove();
+                    // Centrar horizontalmente
+                    const xPosition = (imgWidth - finalWidth) / 2;
+                    pdf.addImage(img, 'JPEG', xPosition, yPosition, finalWidth, finalHeight);
+                } else {
+                    // Centrar verticalmente en el espacio disponible
+                    const verticalSpace = imgHeight - finalHeight;
+                    pdf.addImage(img, 'JPEG', 0, yPosition + (verticalSpace / 2), finalWidth, finalHeight);
                 }
-            }
+                
+                // Actualizar posición Y para la siguiente imagen
+                yPosition += imgHeight;
+            });
+            
+            // Guardar el PDF
+            pdf.save('imagenes_convertidas.pdf');
         }
-        
-        // FUNCIONES DE HISTORIAL DE RECORTE
-        function undoCrop() {
-            const currentImage = images[currentImageIndex];
-            if (!currentImage.cropHistory || currentImage.cropHistory.length === 0) return;
-            
-            const lastCrop = currentImage.cropHistory.pop();
-            currentImage.crop = lastCrop.crop;
-            
-            // Aplicar el filtro actual para actualizar la vista
-            applyFilter(currentFilter);
-            
-            // Actualizar botones de historial
-            updateCropHistoryButtons();
-            
-            alert('↶ Recorte deshecho');
-        }
-        
-        function resetCrop() {
-            const currentImage = images[currentImageIndex];
-            currentImage.crop = null;
-            currentImage.cropHistory = [];
-            
-            // Aplicar el filtro actual para actualizar la vista
-            applyFilter(currentFilter);
-            
-            // Actualizar botones de historial
-            updateCropHistoryButtons();
-            
-            alert('🔄 Imagen restaurada a su estado original');
-        }
-        
-        function updateCropHistoryButtons() {
-            const currentImage = images[currentImageIndex];
-            const hasHistory = currentImage.cropHistory && currentImage.cropHistory.length > 0;
-            const hasCrop = currentImage.crop !== null;
-            
-            undoCropBtn.disabled = !hasHistory;
-            resetCropBtn.disabled = !hasCrop;
-        }
-        
-        function rotateImage(degrees) {
-            if (images.length === 0) return;
-            
-            const currentImage = images[currentImageIndex];
-            currentImage.rotation = (currentImage.rotation + degrees) % 360;
-            
-            // Actualizar información de orientación
-            if (degrees === 90 || degrees === -90) {
-                currentImage.isVertical = !currentImage.isVertical;
-            }
-            
-            // Aplicar el filtro actual para actualizar la vista
-            applyFilter(currentFilter);
-        }
-
-        function clearAll() {
-            if (images.length === 0) return;
-            
-            if (confirm(`¿Estás seguro de que quieres eliminar todas las ${images.length} imágenes?`)) {
-                images = [];
-                currentImageIndex = 0;
-                isCropping = false;
-                currentFilter = 'document';
-                cropArea = null;
-                filterIntensity.value = 5;
-                intensityValue.textContent = '5/10';
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                document.querySelector('[data-filter="document"]').classList.add('active');
-                updatePreviewSection();
-                alert('🗑️ Todas las imágenes han sido eliminadas');
-            }
-        }
-
-        // Inicializar
-        updateIntensityValue();
     </script>
 </body>
 </html>
